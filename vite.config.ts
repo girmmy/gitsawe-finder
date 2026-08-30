@@ -27,8 +27,8 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'ግጻዌ · Gitsawe — EOTC Lectionary',
-        short_name: 'Gitsawe',
+        name: 'Gitsawe Finder · ግጻዌ',
+        short_name: 'Gitsawe Finder',
         description: 'Daily and Sunday readings of the Ethiopian Orthodox Tewahedo Church.',
         theme_color: '#92251b',
         background_color: '#f4ecdb',

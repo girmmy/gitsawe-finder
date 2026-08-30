@@ -36,9 +36,10 @@ export const UI = {
   showingNow: { en: 'Showing now', am: 'አሁን የሚታየው' },
   switchTo: { en: 'Show these instead', am: 'ይህን አሳይ' },
   fromScan: { en: 'from the page scans', am: 'ከመጽሐፉ ገጽ' },
+  scanTitle: { en: 'Not yet checked by a deacon. ', am: 'ገና በዲያቆን አልተረጋገጠም። ' },
   scanWarning: {
-    en: 'Transcribed from the page scans — please check it against the book.',
-    am: 'ከመጽሐፉ ገጽ ምስል የተገለበጠ ነው — እባክዎ ከመጽሐፉ ጋር ያረጋግጡ።',
+    en: 'These readings were transcribed by eye from the page scans. Confirm them against the book before serving.',
+    am: 'እነዚህ ንባባት ከመጽሐፉ ገጽ ምስል በዓይን የተገለበጡ ናቸው። ከማገልገልዎ በፊት ከመጽሐፉ ጋር ያረጋግጡ።',
   },
   openInBook: { en: 'Open that page →', am: 'ያንን ገጽ ክፈት →' },
   noRecord: {

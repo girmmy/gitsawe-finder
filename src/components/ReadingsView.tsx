@@ -52,7 +52,16 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
           </>
         )}
         {primary.unverified && (
-          <p className="unverified" role="note">{t('scanWarning', lang)}</p>
+          <div className="scan-warning" role="note">
+            <span className="scan-warning-mark" aria-hidden="true">⚠</span>
+            <span className="scan-warning-text">
+              <strong>{t('scanTitle', lang)}</strong>
+              {t('scanWarning', lang)}
+              {(primary.record as { source?: string }).source && (
+                <span className="scan-source">{(primary.record as { source?: string }).source}</span>
+              )}
+            </span>
+          </div>
         )}
         <CopyAllBar day={day} primary={primary} books={books} lang={lang} />
       </div>

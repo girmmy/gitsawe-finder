@@ -5,34 +5,49 @@ import { loadBooks, loadDaily, loadExtra, loadMonthly, loadSeasonal, type BookNa
 import type { DayInfo } from './lib/types';
 import { t, type Lang } from './lib/labels';
 import { gregDateString } from './lib/format';
+import { hrefFor, mezmurKey, navigate, parseHash, type Route } from './lib/router';
 import ReadingsView from './components/ReadingsView';
 import MezmurIndex, { buildIndex, type MezmurEntry } from './components/MezmurIndex';
 import SundayHero from './components/SundayHero';
 import PdfView from './components/PdfView';
 import AboutView from './components/AboutView';
-
-/** One tab bar, one place to be. About lives in the footer. */
-type Section = 'sunday' | 'date' | 'mezmur' | 'book' | 'about';
+import NotFound from './components/NotFound';
 
 /** The coming Sunday, or today when today is a Sunday. */
 function comingSundayJDN(from: number): number {
   return from + ((7 - jdnToWeekday(from)) % 7);
 }
 
+const isoOf = (jdn: number) => {
+  const g = jdnToGreg(jdn);
+  return `${g.year}-${String(g.month).padStart(2, '0')}-${String(g.day).padStart(2, '0')}`;
+};
+
+const jdnOfISO = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return gregToJDN(y, m, d);
+};
+
 export default function App() {
-  const [section, setSection] = useState<Section>('sunday');
-  const [jdn, setJdn] = useState(todayJDN());
+  const [route, setRoute] = useState<Route>(() => parseHash(window.location.hash));
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('gitsawe-lang') as Lang) || 'en');
 
   const [day, setDay] = useState<DayInfo | null>(null);
   const [sunday, setSunday] = useState<DayInfo | null>(null);
   const [books, setBooks] = useState<BookNames>({});
   const [index, setIndex] = useState<MezmurEntry[]>([]);
-  const [picked, setPicked] = useState<MezmurEntry | null>(null);
-  const [pdfPage, setPdfPage] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => { localStorage.setItem('gitsawe-lang', lang); }, [lang]);
+
+  useEffect(() => {
+    const onHash = () => setRoute(parseHash(window.location.hash));
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  /** The date the calendar tab is looking at. */
+  const jdn = route.name === 'date' ? jdnOfISO(route.iso) : todayJDN();
 
   useEffect(() => {
     let alive = true;
@@ -64,28 +79,28 @@ export default function App() {
     return () => { alive = false; };
   }, []);
 
-  const openPdfAt = useCallback((page: number) => { setPdfPage(page); setSection('book'); }, []);
-  const goToday = useCallback(() => setJdn(todayJDN()), []);
-  const goNextSunday = useCallback(() => setJdn((j) => j + ((7 - jdnToWeekday(j)) % 7 || 7)), []);
+  const go = useCallback((r: Route) => navigate(r), []);
+  const openPdfAt = useCallback((page: number) => go({ name: 'book', page }), [go]);
 
-  const gregISO = useMemo(() => {
-    const g = jdnToGreg(jdn);
-    return `${g.year}-${String(g.month).padStart(2, '0')}-${String(g.day).padStart(2, '0')}`;
-  }, [jdn]);
+  const picked = useMemo(
+    () => (route.name === 'mezmurItem' ? index.find((e) => mezmurKey(e.mezmur) === route.key) ?? null : null),
+    [route, index],
+  );
 
-  const onPickDate = (value: string) => {
-    const [y, m, d] = value.split('-').map(Number);
-    if (y && m && d) setJdn(gregToJDN(y, m, d));
-  };
+  // Which tab reads as current for each route.
+  const tabOf = (r: Route) =>
+    r.name === 'date' ? 'date'
+    : r.name === 'mezmur' || r.name === 'mezmurItem' ? 'mezmur'
+    : r.name === 'book' ? 'book'
+    : r.name === 'sunday' ? 'sunday'
+    : null;
+  const current = tabOf(route);
 
-  /** Jump to a date and show it on the calendar tab. */
-  const openDate = (target: number) => { setJdn(target); setSection('date'); };
-
-  const TABS: { key: Section; label: string }[] = [
-    { key: 'sunday', label: t('thisSunday', lang) },
-    { key: 'date', label: t('byDay', lang) },
-    { key: 'mezmur', label: t('byMezmur', lang) },
-    { key: 'book', label: t('pdf', lang) },
+  const TABS: { key: string; label: string; route: Route }[] = [
+    { key: 'sunday', label: t('thisSunday', lang), route: { name: 'sunday' } },
+    { key: 'date', label: t('byDay', lang), route: { name: 'date', iso: isoOf(todayJDN()) } },
+    { key: 'mezmur', label: t('byMezmur', lang), route: { name: 'mezmur' } },
+    { key: 'book', label: t('pdf', lang), route: { name: 'book', page: null } },
   ];
 
   return (
@@ -95,13 +110,13 @@ export default function App() {
 
       <header className="masthead">
         <div className="masthead-row">
-          <button className="brand" onClick={() => { setSection('sunday'); setPicked(null); }} aria-label="Gitsawe — home">
+          <a className="brand" href="#/" aria-label="Gitsawe Finder — home">
             <CrossMark />
             <span className="brand-text">
               <span className="brand-geez">ግጻዌ</span>
-              <span className="brand-latin">Gitsawe</span>
+              <span className="brand-latin">Gitsawe Finder</span>
             </span>
-          </button>
+          </a>
           <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'am' : 'en')}
             aria-label={lang === 'en' ? 'Switch to Amharic' : 'Switch to English'}>
             {lang === 'en' ? 'አማርኛ' : 'English'}
@@ -110,31 +125,33 @@ export default function App() {
 
         <nav className="tabs" aria-label="Main">
           {TABS.map((tab) => (
-            <button
+            <a
               key={tab.key}
-              className={section === tab.key ? 'tab on' : 'tab'}
-              aria-current={section === tab.key ? 'page' : undefined}
-              onClick={() => { setSection(tab.key); if (tab.key !== 'mezmur') setPicked(null); }}
+              className={current === tab.key ? 'tab on' : 'tab'}
+              aria-current={current === tab.key ? 'page' : undefined}
+              href={hrefFor(tab.route)}
             >
               {tab.label}
-            </button>
+            </a>
           ))}
         </nav>
       </header>
 
       <main id="main">
-        {section === 'about' && <AboutView lang={lang} />}
+        {route.name === 'notFound' && <NotFound path={route.path} lang={lang} onGo={() => undefined} />}
 
-        {section === 'book' && <PdfView lang={lang} page={pdfPage} />}
+        {route.name === 'about' && <AboutView lang={lang} />}
 
-        {section === 'sunday' && (
+        {route.name === 'book' && <PdfView lang={lang} page={route.page} />}
+
+        {route.name === 'sunday' && (
           sunday ? (
             <>
               <SundayHero
                 day={sunday}
                 lang={lang}
                 isToday={sunday.jdn === todayJDN()}
-                onOpen={() => openDate(sunday.jdn)}
+                onOpen={() => go({ name: 'date', iso: isoOf(sunday.jdn) })}
               />
               <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang}
                 headless onOpenPdf={openPdfAt} />
@@ -142,16 +159,19 @@ export default function App() {
           ) : <p className="loading">{t('loadingReadings', lang)}</p>
         )}
 
-        {section === 'date' && (
+        {route.name === 'date' && (
           <>
             {day && <DateBanner day={day} lang={lang} />}
             <div className="daynav" role="group" aria-label="Date navigation">
-              <button className="btn ghost" onClick={() => setJdn(jdn - 1)} aria-label="Previous day">‹</button>
-              <input className="datepick" type="date" value={gregISO}
-                onChange={(e) => onPickDate(e.target.value)} aria-label="Pick a date" />
-              <button className="btn ghost" onClick={() => setJdn(jdn + 1)} aria-label="Next day">›</button>
-              <button className="btn" onClick={goToday}>{t('today', lang)}</button>
-              <button className="btn" onClick={goNextSunday}>{t('nextSunday', lang)}</button>
+              <a className="btn ghost" href={hrefFor({ name: 'date', iso: isoOf(jdn - 1) })} aria-label="Previous day">‹</a>
+              <input className="datepick" type="date" value={isoOf(jdn)}
+                onChange={(e) => e.target.value && go({ name: 'date', iso: e.target.value })}
+                aria-label="Pick a date" />
+              <a className="btn ghost" href={hrefFor({ name: 'date', iso: isoOf(jdn + 1) })} aria-label="Next day">›</a>
+              <a className="btn" href={hrefFor({ name: 'date', iso: isoOf(todayJDN()) })}>{t('today', lang)}</a>
+              <a className="btn" href={hrefFor({ name: 'date', iso: isoOf(jdn + ((7 - jdnToWeekday(jdn)) % 7 || 7)) })}>
+                {t('nextSunday', lang)}
+              </a>
             </div>
             {error && <p className="error" role="alert">Could not load the readings: {error}</p>}
             {!error && !day && <p className="loading">{t('loadingReadings', lang)}</p>}
@@ -159,54 +179,50 @@ export default function App() {
           </>
         )}
 
-        {section === 'mezmur' && (
-          picked ? (
+        {route.name === 'mezmur' && (
+          index.length
+            ? <MezmurIndex entries={index} lang={lang}
+                onOpen={(e) => go({ name: 'mezmurItem', key: mezmurKey(e.mezmur) })} />
+            : <p className="loading">{t('loadingReadings', lang)}</p>
+        )}
+
+        {route.name === 'mezmurItem' && (
+          !index.length ? <p className="loading">{t('loadingReadings', lang)}</p>
+          : !picked ? <NotFound path={`mezmur/${route.key}`} lang={lang} onGo={() => undefined} />
+          : (
             <>
-              <button className="btn back" onClick={() => setPicked(null)}>← {t('allMezmurs', lang)}</button>
-              <MezmurDetail entry={picked} day={day ?? sunday} books={books} lang={lang} onOpenPdf={openPdfAt} />
+              <a className="btn back" href={hrefFor({ name: 'mezmur' })}>← {t('allMezmurs', lang)}</a>
+              {day && (
+                <ReadingsView
+                  key={picked.key}
+                  day={{
+                    ...day,
+                    gapNote: null,
+                    gapPdfPage: null,
+                    candidates: [{
+                      kind: 'seasonal',
+                      record: picked.record,
+                      reasonEn: picked.group,
+                      reasonAm: picked.group,
+                      mezmur: picked.mezmur,
+                      unverified: picked.unverified,
+                    }],
+                  }}
+                  books={books}
+                  lang={lang}
+                  onOpenPdf={openPdfAt}
+                />
+              )}
             </>
-          ) : (
-            index.length
-              ? <MezmurIndex entries={index} lang={lang} onOpen={setPicked} />
-              : <p className="loading">{t('loadingReadings', lang)}</p>
           )
         )}
       </main>
 
       <footer className="colophon">
         <p>✠ መጽሐፈ ግጻዌ · The Lectionary of the Ethiopian Orthodox Tewahedo Church</p>
-        <button className="colophon-link" onClick={() => setSection('about')}>{t('about', lang)}</button>
+        <a className="colophon-link" href={hrefFor({ name: 'about' })}>{t('about', lang)}</a>
       </footer>
     </div>
-  );
-}
-
-/** One mezmur opened from the index, shown with its own heading. */
-function MezmurDetail({ entry, day, books, lang, onOpenPdf }: {
-  entry: MezmurEntry; day: DayInfo | null; books: BookNames; lang: Lang;
-  onOpenPdf: (page: number) => void;
-}) {
-  if (!day) return <p className="loading">{t('loadingReadings', lang)}</p>;
-  return (
-    <ReadingsView
-      key={entry.key}
-      day={{
-        ...day,
-        gapNote: null,
-        gapPdfPage: null,
-        candidates: [{
-          kind: 'seasonal',
-          record: entry.record,
-          reasonEn: entry.group,
-          reasonAm: entry.group,
-          mezmur: entry.mezmur,
-          unverified: entry.unverified,
-        }],
-      }}
-      books={books}
-      lang={lang}
-      onOpenPdf={onOpenPdf}
-    />
   );
 }
 

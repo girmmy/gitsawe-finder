@@ -13,7 +13,7 @@
  * always returned as a candidate too. Where the digitized data has no record
  * for a matching Sunday, we say so explicitly instead of guessing.
  */
-import { daysInEthMonth, ethToJDN, jdnToEth, jdnToGreg, jdnToWeekday } from './ethiopic';
+import { daysInEthMonth, ethToJDN, jdnToEth, jdnToGreg, jdnToWeekday, toGeez } from './ethiopic';
 import { bahireHasab, movableFeastJDN } from './bahirehasab';
 import type { Candidate, DayInfo, DayRecord, ExtraRecord, MonthlyRecord, SeasonalRecord } from './types';
 
@@ -321,11 +321,22 @@ function monthlyCandidates(ctx: Ctx, data: Dataset): Candidate[] {
     }
   }
 
-  // Hidar 4th/5th Sundays.
+  // ዘመነ አስተምህሮ. The book names these by day window, not by nth Sunday:
+  // ኢተዘከር covers Hidar 1–12, ሎቱ ስብሐት 13–19, and so on.
   if (eth.month === 3) {
-    const nthOfMonth = Math.ceil(eth.day / 7);
-    push(data.monthly.find((r) => r.month === 'hidar' && r.nthSunday === nthOfMonth),
-      `${ordinal(nthOfMonth)} Sunday of Hidar`, `ዘኅዳር ${nthOfMonth}ኛ ሰንበት`);
+    const windowed = data.extra.find((r) =>
+      r.period === 'astemhro' && r.fromDay != null && eth.day >= r.fromDay && eth.day <= r.toDay!);
+    if (windowed) {
+      out.push({
+        kind: 'extra', record: windowed, mezmur: windowed.mezmur, unverified: true,
+        reasonEn: `Sunday of Astemhro (Hidar ${windowed.fromDay}–${windowed.toDay})`,
+        reasonAm: `ዘአስተምህሮ (ኅዳር ${toGeez(windowed.fromDay!)}–${toGeez(windowed.toDay!)})`,
+      });
+    } else {
+      const nthOfMonth = Math.ceil(eth.day / 7);
+      push(data.monthly.find((r) => r.month === 'hidar' && r.nthSunday === nthOfMonth),
+        `${ordinal(nthOfMonth)} Sunday of Hidar`, `ዘኅዳር ${nthOfMonth}ኛ ሰንበት`);
+    }
   }
   return out;
 }

@@ -63,6 +63,10 @@ export interface ExtraRecord extends DayRecord {
   periodAm: string;
   periodEn: string;
   provenance: 'scan';
+  /** Inclusive Ethiopian day window, where the book gives one. */
+  fromDay?: number;
+  toDay?: number;
+  source?: string;
 }
 
 /** One resolved candidate: a record plus why it applies. */
