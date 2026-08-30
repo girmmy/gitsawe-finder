@@ -187,35 +187,32 @@ function MisbakRow({ reading, books, lang }: { reading: Reading; books: BookName
         {label.am} · {label.en}
         <span className="reader"> — {label.reader![lang]}</span>
       </p>
-      {reading.g && <MisbakLines reading={reading} />}
+      {reading.g && <MisbakLines reading={reading} lang={lang} />}
       {reading.a && <p className="amharic-text">{reading.a}</p>}
-      {!reading.el?.length && reading.e && <p className="english-text">“{reading.e}”</p>}
       <Citation cite={cite} />
     </div>
   );
 }
 
 /**
- * The misbak is chanted clause by clause, so each Ge'ez line is shown with its
- * own transliteration and, where the record gives one, its own translation.
+ * The misbak reads as one piece — the Ge'ez together, then its pronunciation.
+ * Only the translation is broken out clause by clause, since that is what a
+ * reader follows against the chant.
  */
-function MisbakLines({ reading }: { reading: Reading }) {
+function MisbakLines({ reading, lang }: { reading: Reading; lang: Lang }) {
   const geez = (reading.g ?? '').split('።').map((s) => s.trim()).filter(Boolean);
   const english = misbakEnglishLines(reading);
-  const paired = reading.el?.length === geez.length;
   return (
-    <ol className="misbak-lines">
-      {geez.map((line, i) => (
-        <li key={i}>
-          <span className="geez-text">{line}።</span>
-          <span className="translit-text">{translit(line)}</span>
-          {paired && <span className="english-text">{english[i]}</span>}
-        </li>
-      ))}
-      {!paired && english.length > 0 && (
-        <li className="misbak-blob"><span className="english-text">{english.join(' ')}</span></li>
+    <>
+      <p className="geez-text">{geez.map((l) => `${l}።`).join(' ')}</p>
+      <p className="translit-text">{geez.map((l) => translit(l)).join(' ')}</p>
+      {english.length > 0 && (
+        <div className="misbak-translation">
+          <p className="translation-label">{t('translation', lang)}</p>
+          {english.map((line, i) => <p key={i} className="english-text">{line}</p>)}
+        </div>
       )}
-    </ol>
+    </>
   );
 }
 

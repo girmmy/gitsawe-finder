@@ -419,26 +419,20 @@ body {
 }
 .reader { color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; font-style: italic; }
 
-/* The misbak, one chanted clause per row. */
-.misbak-lines { list-style: none; margin: 0.3rem 0 0; padding: 0; counter-reset: mline; }
-.misbak-lines > li {
-  counter-increment: mline; position: relative;
-  padding: 0.45rem 0 0.45rem 1.6rem; border-top: 1px dotted var(--line);
+/* The misbak sets as one piece; only its translation breaks into clauses. */
+.misbak .geez-text {
+  font-family: var(--ethiopic); font-size: 1.18rem; line-height: 1.9;
+  font-weight: 600; margin: 0.3rem 0 0.1rem;
 }
-.misbak-lines > li:first-child { border-top: none; }
-.misbak-lines > li::before {
-  content: counter(mline); position: absolute; left: 0; top: 0.55rem;
-  font-family: var(--serif-latin); font-size: 0.72rem; font-weight: 700;
-  color: var(--gold);
+.misbak-translation {
+  margin-top: 0.6rem; padding-top: 0.55rem; border-top: 1px dotted var(--line);
 }
-.misbak-lines .geez-text {
-  display: block; font-family: var(--ethiopic); font-size: 1.16rem;
-  line-height: 1.75; font-weight: 600;
+.translation-label {
+  margin: 0 0 0.25rem; font-family: var(--serif-latin); font-size: 0.7rem;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
 }
-.misbak-lines .translit-text { display: block; margin: 0.1rem 0 0; }
-.misbak-lines .english-text { display: block; margin: 0.15rem 0 0; font-size: 0.98rem; }
-.misbak-blob { padding-left: 0 !important; }
-.misbak-blob::before { content: none !important; }
+.misbak-translation .english-text { margin: 0 0 0.2rem; font-size: 0.99rem; line-height: 1.55; }
+.misbak-translation .english-text:last-child { margin-bottom: 0; }
 .amharic-text { font-family: var(--ethiopic); color: var(--ink-soft); margin: 0.25rem 0; line-height: 1.8; }
 .english-text {
   font-family: var(--serif-latin); font-style: italic; font-size: 1.02rem;
