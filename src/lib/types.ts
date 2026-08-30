@@ -63,9 +63,11 @@ export interface ExtraRecord extends DayRecord {
   periodAm: string;
   periodEn: string;
   provenance: 'scan';
-  /** Inclusive Ethiopian day window, where the book gives one. */
+  /** Inclusive Ethiopian day window within one month, where the book gives one. */
   fromDay?: number;
   toDay?: number;
+  /** A window that crosses a month boundary, e.g. Tahsas 29 – Tir 5. */
+  monthWindow?: { fromMonth: number; fromDay: number; toMonth: number; toDay: number };
   source?: string;
 }
 

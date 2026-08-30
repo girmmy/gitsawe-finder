@@ -317,6 +317,139 @@
     }
   },
   {
+    "id": "astemhro-3",
+    "period": "astemhro",
+    "order": 3,
+    "mezmur": "አምላከ ፍጹም በሀላዌሁ",
+    "fromDay": 20,
+    "toDay": 26,
+    "periodAm": "ዘመነ አስተምህሮ",
+    "periodEn": "Zemene Astemhro — ከኅዳር ፩ እስከ ታኅሣሥ ፯",
+    "title": "፫ኛ መዝሙር ዘአስተምህሮ፡ አምላከ ፍጹም በሀላዌሁ (ምኵራብ)",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ኅዳር — printed p. 385",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ቅረቡ ኀቤሁ።",
+          "bt": "መዝሙረ ዳዊት"
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ዑቁ እንከ ኢትዕበይዎ",
+          "bt": "ወደ ዕብራውያን",
+          "b": "HEB",
+          "c": 12,
+          "s": 25
+        }
+      ],
+      "catholic": [
+        {
+          "g": "ወናሁ ለአሕማርኒ ዘመጠነዝ አካሎን",
+          "bt": "የያዕቆብ መልእክት",
+          "b": "JAS",
+          "c": 3,
+          "s": 5,
+          "n": 13
+        }
+      ],
+      "acts": [
+        {
+          "g": "ወአመ ሰቡዕ መዋዕል ርእይዎ",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 21,
+          "s": 27
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወዐሪጎ ውስተ ሐመር ተለውዎ አርዳኢሁ",
+          "bt": "የማቴዎስ ወንጌል",
+          "b": "MAT",
+          "c": 8,
+          "s": 23
+        }
+      ],
+      "anaphora": [
+        "ዘእግዝእትነ"
+      ]
+    }
+  },
+  {
+    "id": "lidet-yiserq-kokeb",
+    "period": "lidet",
+    "order": 2,
+    "mezmur": "ይሠርቅ ኮከብ",
+    "monthWindow": {
+      "fromMonth": 4,
+      "fromDay": 29,
+      "toMonth": 5,
+      "toDay": 5
+    },
+    "periodAm": "ዘመነ ልደት",
+    "periodEn": "Zemene Lidet — ከታኅሣሥ ፳፱ እስከ ጥር ፭",
+    "title": "መዝሙር፡ ይሠርቅ ኮከብ (ልደት)",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ጥር — printed p. 387",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ወእነሂ በኵርየ እሬስዮ። ወልዑል ውእቱ እምነገሠተ ምድር። ወለዓለም አዐቅብ ሎቱ ሣህልየ።",
+          "e": "Also I will make him my firstborn, higher than the kings of the earth. My mercy will I keep for him for evermore.",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 88,
+          "s": 35,
+          "n": 37
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ወእፈቅድ ለክሙ አኀዊነ",
+          "bt": "ወደ ሮሜ ሰዎች",
+          "b": "ROM",
+          "c": 15,
+          "s": 25
+        }
+      ],
+      "catholic": [
+        {
+          "g": "አኀዊነ ለኵላ መንፈስ ኢታእመኑ",
+          "bt": "፩ኛ የዮሐንስ መልእክት",
+          "b": "1JN",
+          "c": 5,
+          "s": 1,
+          "n": 19
+        }
+      ],
+      "acts": [
+        {
+          "g": "ወአመ በጽሐ አድሜሁ ዘአስፈረዎ",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 7,
+          "s": 17,
+          "n": 33
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወተወሊዶ እግዚእ ኢየሱስ",
+          "bt": "የማቴዎስ ወንጌል",
+          "b": "MAT",
+          "c": 2,
+          "s": 1,
+          "n": 13
+        }
+      ],
+      "anaphora": [
+        "ዘዲዮስቆሮስ"
+      ]
+    }
+  },
+  {
     "id": "ayne-kulu-2",
     "period": "ayneKulu",
     "order": 2,

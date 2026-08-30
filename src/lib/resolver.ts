@@ -216,6 +216,21 @@ function windowCandidates(ctx: Ctx, data: Dataset): Candidate[] {
   // until Zewerede Sunday (Lent eve) — Nineveh is Mon–Wed and never takes a Sunday.
   const gena = at(4, 29);
   const zeweredeBound = movableFeastJDN(y, 'abiy_tsome') - 1;
+  // The book names the Christmastide Sundays by date window (ልደት, ናዝሬት ሕፃንት,
+  // …) rather than by nth Sunday, so a window match is offered alongside.
+  for (const rec of data.extra) {
+    const w = rec.monthWindow;
+    if (!isSunday || !w) continue;
+    const from = ethToJDN(y, w.fromMonth, w.fromDay);
+    const to = ethToJDN(w.toMonth < w.fromMonth ? y + 1 : y, w.toMonth, w.toDay);
+    if (jdn >= from && jdn <= to) {
+      out.push({
+        kind: 'extra', record: rec, mezmur: rec.mezmur, unverified: true,
+        reasonEn: rec.periodEn, reasonAm: rec.periodAm,
+      });
+    }
+  }
+
   if (isSunday && jdn > gena && jdn < zeweredeBound && jdn <= at(7, 10)) {
     const nth = nthSundaySince(gena + 1, jdn);
     push(findSeasonal(data, 'lidet', nth, null),

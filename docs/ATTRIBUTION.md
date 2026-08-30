@@ -42,6 +42,10 @@ above and were read off the page scans for this app:
 | `tsige-2` | ኪነ ጥበቡ መንክር ወዕፁብ | printed p. 382 (ወርኀ ጥቅምት) |
 | `tsige-4` | በዚአሁ ሐለፈ ክረምት | printed p. 382 (ወርኀ ጥቅምት) |
 | `tsige-5` | ጸገየ ወይን | printed p. 382–383 (ወርኀ ጥቅምት) |
+| `astemhro-1` | ኢተዘከር | printed p. 384 (ወርኀ ኅዳር) |
+| `astemhro-2` | ሎቱ ስብሐት | printed pp. 384–385 |
+| `astemhro-3` | አምላከ ፍጹም በሀላዌሁ | printed p. 385 |
+| `lidet-yiserq-kokeb` | ይሠርቅ ኮከብ | printed p. 387 (ወርኀ ጥር) |
 | `ayne-kulu-2` | ይሁበነ ዝናመ በጊዜሁ | printed p. 415 (ወርኀ ነሐሴ) |
 | `ayne-kulu-3` | ሰንበት ተዐቢ እምኵሉ ዕለት | old scan, p. 185 |
 | `goh-tsibah-4` | አምላኪየ ኄር | old scan, p. 185 |
@@ -66,12 +70,28 @@ the record says 6:24. Citations the book does not print are left out rather
 than inferred: `tsige-4` carries its misbak text with no reference, because the
 book gives it as a cross-reference to Sene 24 vespers.
 
+### A note on how the book indexes Sundays
+
+Two schemes are in play. The upstream dataset numbers Christmastide Sundays as
+`lidet` weeks 1, 3, 4, 5, 8 — the nth Sunday after Gena. The book instead names
+them by date window: ልደት runs Tahsas 29 – Tir 5, ናዝሬት ሕፃንት Tir 6 – 11, and so
+on. Astemhro is likewise windowed (ኢተዘከር Hidar 1–12, ሎቱ ስብሐት 13–19,
+አምላከ ፍጹም በሀላዌሁ 20–26).
+
+Records read from the book carry their window and match on it; the dataset's
+nth-Sunday records still appear alongside as alternates. Where the two disagree
+about a Sunday, both are shown rather than one being silently preferred.
+
 ### Still missing
 
-Roughly a dozen Sunday records remain undigitized: the Astemhro Sundays
-(printed p. 384), ዘመነ ልደት (p. 389), Eastertide (p. 405), and the Kremt and
-Filseta Sundays (p. 409–415). Until they are read the app names the section and
-opens the book at that page.
+- **ናዝሬት ሕፃንት** (ንጉሥኪ ጽዮን), printed p. 387 — read but *not recorded*: its
+  Pauline chapter is genuinely ambiguous between ሮሜ ፲፭ and ፲፮ at the scan's
+  150 ppi, and the incipit (ወርቱዕስ … ጽኑዓን) points to Romans 15:1 against a
+  glyph that may read 16. Needs a human eye.
+- **Eastertide** Sundays, printed p. 405.
+- **Kremt and Filseta** Sundays, printed pp. 409–415.
+
+Until they are read the app names the section and opens the book at that page.
 
 ## Bible text
 
