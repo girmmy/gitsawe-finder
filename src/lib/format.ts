@@ -1,7 +1,14 @@
-/** Plain-text builders for the copy / share buttons. */
+/**
+ * Plain-text builders for the copy / share buttons.
+ *
+ * The shape is the one a deacon actually posts to a group chat: the mezmur as
+ * the heading, the three epistles as bare English citations, the misbak as a
+ * psalm reference with its transliteration and translation line by line, the
+ * gospel, and the anaphora. No Ge'ez script, no reader labels, no incipits —
+ * those live in the app, not in the message.
+ */
 import { MONTHS, WEEKDAYS, toGeez } from './ethiopic';
 import type { BookNames } from './data';
-import { SERVICE_LABELS, SLOT_LABELS } from './labels';
 import { translit } from './translit';
 import { serviceOf, type Candidate, type DayInfo, type Reading, type Service } from './types';
 
@@ -17,7 +24,70 @@ export function gregDateString(day: DayInfo): string {
   return `${GREG_MONTHS[day.greg.month - 1]} ${day.greg.day}, ${day.greg.year}`;
 }
 
-/** Amharic citation like "ወደ ሮሜ ሰዎች ም… ቍ…" plus English citation. */
+/**
+ * Ethiopian (Septuagint) psalm chapter -> the KJV chapter it prints as.
+ * Only the plain one-to-one cases return a number; the split psalms return
+ * their KJV label as given.
+ */
+export function kjvPsalm(lxx: number): string {
+  if (lxx <= 8) return String(lxx);
+  if (lxx === 9) return '9-10';
+  if (lxx <= 112) return String(lxx + 1);
+  if (lxx === 113) return '114-115';
+  if (lxx === 114) return '116:1-9';
+  if (lxx === 115) return '116:10-19';
+  if (lxx <= 145) return String(lxx + 1);
+  if (lxx === 146) return '147:1-11';
+  if (lxx === 147) return '147:12-20';
+  return String(lxx);
+}
+
+/** The fourteen anaphoras, so ዘኤጲፋንዮስ reads as "Kidasse Epifanyos". */
+const ANAPHORAS: { match: string; name: string; english: string }[] = [
+  { match: 'ሐዋርያት', name: 'Hawaryat', english: 'Anaphora of the Apostles' },
+  { match: 'እግዚእነ', name: 'Egziene', english: 'Anaphora of Our Lord' },
+  { match: 'ነጐድጓድ', name: 'Yohannes Welde Negodgwad', english: 'Anaphora of St. John, Son of Thunder' },
+  { match: 'እግዝእትነ', name: 'Egzitene Maryam', english: 'Anaphora of St. Mary' },
+  { match: 'ማርያም', name: 'Maryam', english: 'Anaphora of St. Mary' },
+  { match: 'አትናቴዎስ', name: 'Atnatewos', english: 'Anaphora of St. Athanasius' },
+  { match: 'ባስልዮስ', name: 'Baselyos', english: 'Anaphora of St. Basil' },
+  { match: 'ኑሲስ', name: 'Gorgoryos ze-Nusis', english: 'Anaphora of St. Gregory of Nyssa' },
+  { match: 'ጎርጎርዮስ', name: 'Gorgoryos', english: 'Anaphora of St. Gregory' },
+  { match: 'ኤጲፋንዮስ', name: 'Epifanyos', english: 'Anaphora of St. Epiphanius' },
+  { match: 'አፈ ወርቅ', name: 'Yohannes Afe Werq', english: 'Anaphora of St. John Chrysostom' },
+  { match: 'ቄርሎስ', name: 'Qerlos', english: 'Anaphora of St. Cyril' },
+  { match: 'ሥሩግ', name: "Ya'eqob ze-Sirug", english: 'Anaphora of St. Jacob of Serug' },
+  { match: 'ዲዮስቆሮስ', name: 'Diyosqoros', english: 'Anaphora of St. Dioscorus' },
+  { match: 'ምዕት', name: 'Selestu Me\'et', english: 'Anaphora of the 318 Nicene Fathers' },
+];
+
+function anaphoraLine(names: string[]): string | null {
+  const parts = names.map((raw) => {
+    const known = ANAPHORAS.find((a) => raw.includes(a.match));
+    if (known) return `Kidasse ${known.name} (${known.english})`;
+    // Unknown: strip the relative ዘ- prefix and transliterate what is left.
+    const bare = raw.replace(/^ዘ/, '').replace(/\s*\(.*\)\s*$/, '').trim();
+    return `Kidasse ${translit(bare)}`;
+  });
+  return parts.length ? parts.join(' / ') : null;
+}
+
+/** "Hebrews 3:1-end", "James 5:1-12", "Psalm 144(145):15-16". */
+export function shortCitation(r: Reading, books: BookNames): string | null {
+  if (!r.b || r.c == null) return r.en ?? null;
+  const isPsalm = r.b === 'PSA';
+  const book = isPsalm ? 'Psalm' : (books[r.b]?.en ?? r.b);
+  const chapter = isPsalm ? `${r.c}(${kjvPsalm(r.c)})` : String(r.c);
+  if (r.s == null) return `${book} ${chapter}`;
+  // No end verse means the lectionary runs it to the end of the chapter.
+  const end = r.n == null ? 'end' : (r.n === r.s ? null : String(r.n));
+  return `${book} ${chapter}:${r.s}${end ? `-${end}` : ''}`;
+}
+
+/**
+ * The bilingual citation the app's reading panels show: the Amharic book name
+ * with Ge'ez numerals, and the English reference alongside it.
+ */
 export function citation(r: Reading, books: BookNames): { am: string | null; en: string | null } {
   let am: string | null = null;
   const bookAm = (r.b && books[r.b]?.am) || r.bt || null;
@@ -32,75 +102,83 @@ export function citation(r: Reading, books: BookNames): { am: string | null; en:
   return { am, en };
 }
 
-function readingLines(slot: string, list: Reading[] | undefined, books: BookNames): string[] {
-  if (!list?.length) return [];
-  const label = SLOT_LABELS[slot];
-  const lines: string[] = [];
-  for (const r of list) {
-    const cite = citation(r, books);
-    const head = `▸ ${label.am} · ${label.en}${label.reader ? ` (${label.reader.am})` : ''}`;
-    lines.push(head);
-    if (slot === 'msbak') {
-      if (r.g) {
-        lines.push(`  ${r.g}`);
-        lines.push(`  (${translit(r.g)})`);
-      }
-      if (r.a) lines.push(`  ${r.a}`);
-      if (r.e) lines.push(`  “${r.e}”`);
-    } else if (r.g || r.a) {
-      lines.push(`  ጥንተ ንባብ፦ ${r.g ?? r.a}${r.et ? ` … እስከ «${r.et}»` : ''}`);
-    }
-    const cites = [cite.am, cite.en].filter(Boolean).join('  ·  ');
-    if (cites) lines.push(`  — ${cites}`);
+/** Split a misbak into its clauses so translit and translation line up. */
+function geezLines(text: string): string[] {
+  return text.split('።').map((s) => s.trim()).filter(Boolean);
+}
+
+function englishLines(text: string): string[] {
+  return text
+    .split(/(?<=[;.])\s+/)
+    .map((s) => s.trim().replace(/[;.]$/, '').trim())
+    .filter(Boolean);
+}
+
+function block(title: string, lines: string[]): string[] {
+  return lines.length ? [`${title}:`, ...lines, ''] : [];
+}
+
+/** The message for one service, in the group-chat shape. */
+function serviceBody(svc: Service, books: BookNames): string[] {
+  const out: string[] = [];
+
+  const readings = (['pauline', 'catholic', 'acts'] as const)
+    .flatMap((slot) => (svc[slot] ?? []).map((r) => shortCitation(r, books)))
+    .filter((s): s is string => !!s);
+  out.push(...block('Readings', readings));
+
+  for (const m of svc.msbak ?? []) {
+    const lines: string[] = [];
+    const ref = shortCitation(m, books);
+    if (ref) lines.push(ref);
+    if (m.g) lines.push(...geezLines(m.g).map(translit));
+    out.push(...block('Misbak', lines));
+    if (m.e) out.push(...block('Translation', englishLines(m.e)));
   }
+
+  const gospel = (svc.gospel ?? []).map((r) => shortCitation(r, books)).filter((s): s is string => !!s);
+  out.push(...block('Gospel Reading', gospel));
+
+  const anaphora = anaphoraLine(svc.anaphora ?? []);
+  if (anaphora) out.push(anaphora);
+
+  return out;
+}
+
+/** The heading: the mezmur names the day. */
+function heading(day: DayInfo, primary: Candidate): string[] {
+  const lines: string[] = [];
+  if (primary.mezmur) {
+    lines.push(`ግጻዌ ዘመዝሙር ${primary.mezmur} (Lectionary for the Yaredian Mezmur ${translit(primary.mezmur)}):`);
+  } else {
+    // Titles come from the book already punctuated; don't end up with "።:".
+    const title = (primary.record.title ?? '').replace(/[።፡\s]+$/, '').trim();
+    lines.push(`ግጻዌ${title ? ` ${title}` : ''}:`);
+  }
+  const wd = WEEKDAYS[day.weekday];
+  lines.push(`${ethDateString(day)} · ${wd.en}, ${gregDateString(day)}`);
+  lines.push('');
   return lines;
 }
 
-function serviceLines(name: string, svc: Service | undefined, books: BookNames): string[] {
-  if (!svc) return [];
-  const slots = ['msbak', 'pauline', 'catholic', 'acts', 'gospel'] as const;
-  const body = slots.flatMap((s) => readingLines(s, svc[s], books));
-  if (svc.anaphora?.length) {
-    body.push(`▸ ቅዳሴ · Anaphora: ${svc.anaphora.join('፣ ')}`);
-  }
-  if (!body.length) return [];
-  const label = SERVICE_LABELS[name];
-  return [``, `━━ ${label.am} · ${label.en} ━━`, ...body];
-}
-
-/** The full shareable day text, ready for a group chat. */
+/** The whole day, ready to paste into a group chat. */
 export function formatDay(day: DayInfo, primary: Candidate, books: BookNames): string {
-  const lines: string[] = [];
-  lines.push(`✠ ግጻዌ · Gitsawe`);
-  lines.push(`${ethDateString(day)} — ${gregDateString(day)}`);
-  const wd = WEEKDAYS[day.weekday];
-  const badges: string[] = [`${wd.am} · ${wd.en}`];
-  if (day.season) badges.push(`${day.season.am}`);
-  lines.push(badges.join('  ·  '));
-  for (const f of day.feasts) lines.push(`✦ ${f.am} · ${f.en}`);
-  if (day.fasting?.active) lines.push(`✝ ${day.fasting.am} · ${day.fasting.en}`);
-  lines.push(``);
-  if (primary.mezmur) {
-    lines.push(`መዝሙር · Mezmur: ${primary.mezmur}  (${translit(primary.mezmur)})`);
-  }
-  lines.push(`※ ${primary.reasonAm} · ${primary.reasonEn}`);
-  if (primary.record.title) lines.push(`«${primary.record.title}»`);
-  for (const svc of ['serk', 'negh', 'kidassie']) {
-    lines.push(...serviceLines(svc, serviceOf(primary.record, svc), books));
-  }
-  const sinksar = primary.record.sinksar ?? [];
-  if (sinksar.length) {
-    lines.push(``, `━━ ስንክሳር · Synaxarium ━━`);
-    for (const s of sinksar) lines.push(`• ${s}`);
-  }
-  lines.push(``, `— via Gitsawe app`);
-  return lines.join('\n');
+  // The Liturgy is what gets shared; fall back to whatever the day has.
+  const svc = serviceOf(primary.record, 'kidassie')
+    ?? serviceOf(primary.record, 'negh')
+    ?? serviceOf(primary.record, 'serk');
+  const lines = heading(day, primary);
+  if (svc) lines.push(...serviceBody(svc, books));
+  return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
-/** One service only (for the per-service copy button). */
+/** One named service only, same shape. */
 export function formatService(day: DayInfo, primary: Candidate, name: string, books: BookNames): string {
-  const label = SERVICE_LABELS[name];
-  const head = `✠ ${label.am} · ${label.en} — ${ethDateString(day)} (${gregDateString(day)})`;
-  const body = serviceLines(name, serviceOf(primary.record, name), books);
-  return [head, ...body.slice(2)].join('\n');
+  const svc = serviceOf(primary.record, name);
+  if (!svc) return '';
+  const label = { serk: 'ዘሠርክ (Vespers)', negh: 'ዘነግህ (Matins)', kidassie: 'ዘቅዳሴ (Divine Liturgy)' }[name] ?? name;
+  const lines = heading(day, primary);
+  lines.splice(2, 0, label, '');
+  lines.push(...serviceBody(svc, books));
+  return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }
