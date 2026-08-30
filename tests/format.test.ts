@@ -45,7 +45,7 @@ describe('the group-chat message', () => {
 
   it('matches the shape a deacon posts', () => {
     expect(text).toBe(
-`ግጻዌ ዘመዝሙር ይሁብን ዝናመ (Lectionary for the Yaredian Mezmur yihubin ziname):
+`ግጻዌ ዘመዝሙር ይሁበነ ዝናመ በጊዜሁ (Lectionary for the Yaredian Mezmur yihubene ziname begizehu):
 ነሐሴ ፳፬ ፳፻፲፰ ዓ.ም · Sunday, August 30, 2026
 
 Readings:
@@ -57,7 +57,7 @@ Misbak:
 Psalm 144(145):15-16
 ayne kwilu nefis yisefo kiyake
 inte tihubomu sisayomu begizehu
-tifetih yemaneke wetatsegib lekwlu hiyaw simreteke
+tisefih yemaneke wetatsegib lekwlu inissa zebesiratke
 
 Translation:
 The eyes of all wait upon thee

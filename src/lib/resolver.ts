@@ -304,8 +304,20 @@ function monthlyCandidates(ctx: Ctx, data: Dataset): Candidate[] {
   if (jdn >= tsigeStart && jdn <= tsigeEnd) {
     const nth = nthSundaySince(tsigeStart, jdn);
     if (nth <= 6) {
-      push(data.monthly.find((r) => r.month === 'tsige' && r.nthSunday === nth),
-        `${ordinal(nth)} Sunday of Tsige (Season of Flowers)`, `ዘጽጌ ${nth}ኛ ሰንበት`);
+      const monthlyRec = data.monthly.find((r) => r.month === 'tsige' && r.nthSunday === nth);
+      if (monthlyRec) {
+        push(monthlyRec, `${ordinal(nth)} Sunday of Tsige (Season of Flowers)`, `ዘጽጌ ${nth}ኛ ሰንበት`);
+      } else {
+        // Sundays the upstream dataset lacks, transcribed from the parish scan.
+        const rec = data.extra.find((r) => r.period === 'tsige' && r.order === nth);
+        if (rec) {
+          out.push({
+            kind: 'extra', record: rec, mezmur: rec.mezmur, unverified: true,
+            reasonEn: `${ordinal(nth)} Sunday of Tsige (Season of Flowers)`,
+            reasonAm: `ዘጽጌ ${nth}ኛ ሰንበት`,
+          });
+        }
+      }
     }
   }
 
@@ -453,19 +465,37 @@ export function resolveDay(jdn: number, data: Dataset): DayInfo {
 /**
  * Where the Sunday cycle for a date lives in the printed book.
  *
- * The Sunday section runs from PDF page 160 to 181; the printed folio is the
- * PDF page plus four (verified against pages 162/166 and 164/168). Pages below
- * were confirmed by reading the scans; the rest fall back to the section start.
+ * Page numbers are for the bundled edition (መጽሐፈ ግጻዌ ወመጽሐፈ ትክሊል, the scan
+ * supplied by the parish). Its mezmur sections are laid out by month and were
+ * located by reading the scans; the printed folio is the PDF page minus seven.
  */
+const SECTION_PAGES = [
+  { page: 388, am: 'ዘመዝሙር ወርኀ መስከረም', en: 'the Meskerem Sundays' },
+  { page: 389, am: 'ዘመዝሙር ወርኀ ጥቅምት', en: 'the ዘመነ ጽጌ Sundays' },
+  { page: 391, am: 'ዘመዝሙር ወርኀ ኅዳር', en: 'the አስተምህሮ Sundays' },
+  { page: 392, am: 'ዘመዝሙር ወርኀ ታኅሣሥ', en: 'the Advent Sundays' },
+  { page: 396, am: 'ዘመዝሙር ወርኀ የካቲት', en: 'the ዘመነ ልደት Sundays' },
+  { page: 412, am: 'ዘመዝሙር ዘዳግም ትንሣኤ', en: 'the Eastertide Sundays' },
+  { page: 416, am: 'ዘመዝሙር ወርኀ ሰኔ', en: 'the early ዘመነ ክረምት Sundays' },
+  { page: 420, am: 'ዘመዝሙር ወርኀ ነሐሴ', en: 'the Filseta and end-of-year Sundays' },
+] as const;
+
+function sectionPage(page: number): { page: number; label: string } {
+  const s = SECTION_PAGES.find((x) => x.page === page)!;
+  return { page, label: `${s.en} (${s.am}), page ${page} of the book` };
+}
+
 function sundaySectionPage(ctx: Ctx): { page: number; label: string } | null {
   const { eth, jdn } = ctx;
   const at = (m: number, d: number) => ethToJDN(eth.year, m, d);
-  const cite = (page: number, what: string) => ({ page, label: `${what}, PDF page ${page} (printed ${page + 4})` });
 
-  if (jdn >= at(1, 26) && jdn <= at(3, 5)) return cite(162, 'the ዘመነ ጽጌ Sundays');
-  if (eth.month === 1) return cite(160, 'the Meskerem Sundays');
-  if (jdn >= at(3, 1) && jdn <= at(4, 6)) return cite(164, 'the አስተምህሮ Sundays');
-  if (eth.month === 4 || eth.month === 5 || eth.month === 6) return cite(167, 'the ዘመነ ልደት Sundays');
-  if (eth.month >= 10) return cite(177, 'the ዘመነ ክረምት Sundays');
-  return cite(160, 'the Sunday section');
+  if (jdn >= at(1, 26) && jdn <= at(3, 5)) return sectionPage(389);
+  if (eth.month === 1) return sectionPage(388);
+  // ከኅዳር ፩ እስከ ታኅሣሥ ፯ አስተምህሮ ይትበሀል.
+  if (jdn >= at(3, 1) && jdn <= at(4, 7)) return sectionPage(391);
+  if (eth.month === 4) return sectionPage(392);
+  if (eth.month === 5 || eth.month === 6) return sectionPage(396);
+  if (eth.month >= 7 && eth.month <= 9) return sectionPage(412);
+  if (eth.month === 10 || eth.month === 11) return sectionPage(416);
+  return sectionPage(420);
 }

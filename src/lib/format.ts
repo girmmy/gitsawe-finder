@@ -98,7 +98,8 @@ export function citation(r: Reading, books: BookNames): { am: string | null; en:
       if (r.n != null && r.n !== r.s) am += `–${toGeez(r.n)}`;
     }
   }
-  const en = r.kjv ?? r.en ?? (r.b && r.c != null ? `${books[r.b]?.en ?? r.b} ${r.c}` : null);
+  // Prefer the explicit range ("Hebrews 3:1-end") over a vague "3:1ff".
+  const en = shortCitation(r, books) ?? r.kjv ?? r.en ?? null;
   return { am, en };
 }
 

@@ -1,17 +1,82 @@
 [
   {
+    "id": "tsige-2",
+    "period": "tsige",
+    "order": 2,
+    "mezmur": "ኪነ ጥበቡ መንክር ወዕፁብ",
+    "periodAm": "ዘመነ ጽጌ",
+    "periodEn": "Zemene Tsige — the Season of Flowers",
+    "title": "፪ኛ መዝሙር፡ ኪነ ጥበቡ መንክር ወዕፁብ",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ጥቅምት — printed p. 382",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ተዘከር እግዚኦ ከመ መሬት ንሕነ።",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 102,
+          "s": 14
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ውሉድኒ ተአዘዙ ለአዝማዲክሙ",
+          "bt": "ወደ ኤፌሶን ሰዎች",
+          "b": "EPH",
+          "c": 6,
+          "s": 1,
+          "n": 10
+        }
+      ],
+      "catholic": [
+        {
+          "g": "ወአስተርአየ ተአምር ዐቢይ",
+          "bt": "የዮሐንስ ራእይ",
+          "b": "REV",
+          "c": 12,
+          "s": 1,
+          "n": 13
+        }
+      ],
+      "acts": [
+        {
+          "g": "ወአመ ተፈጸመ ፵ ዓመት",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 7,
+          "s": 33,
+          "n": 50
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወመሰለ ሎሙ ወይቤሎሙ",
+          "bt": "የሉቃስ ወንጌል",
+          "b": "LUK",
+          "c": 12,
+          "s": 17,
+          "n": 37
+        }
+      ],
+      "anaphora": [
+        "ዘእግዝእትነ ማርያም"
+      ]
+    }
+  },
+  {
     "id": "ayne-kulu-2",
     "period": "ayneKulu",
     "order": 2,
-    "mezmur": "ይሁብን ዝናመ",
+    "mezmur": "ይሁበነ ዝናመ በጊዜሁ",
     "periodAm": "ደለያት · ዐይነ ኵሉ",
     "periodEn": "Deleyat / Ayne Kulu — the Sundays after Filseta, up to the Sunday of Abraham",
-    "title": "፪ኛ መዝሙር፡ ይሁብን ዝናመ በዚሁ",
+    "title": "መዝሙር፡ ይሁበነ ዝናመ በጊዜሁ",
     "provenance": "scan",
     "kidassie": {
       "msbak": [
         {
-          "g": "ዐይነ ኵሉ ነፍስ ይሴፎ ኪያከ። እንተ ትሁቦሙ ሲሳዮሙ በጊዜሁ። ትፈትሕ የማነከ ወታጸግብ ለኵሉ ሕያው ሥምረተከ።",
+          "g": "ዐይነ ኵሉ ነፍስ ይሴፎ ኪያከ። እንተ ትሁቦሙ ሲሳዮሙ በጊዜሁ። ትሰፍሕ የማነከ ወታጸግብ ለኵሉ እንስሳ ዘበሥርዓትከ።",
           "e": "The eyes of all wait upon thee; and thou givest them their meat in due season. Thou openest thine hand, and satisfiest the desire of every living thing.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
@@ -27,8 +92,7 @@
           "bt": "ወደ ዕብራውያን",
           "b": "HEB",
           "c": 3,
-          "s": 1,
-          "en": "Hebrews 3:1ff"
+          "s": 1
         }
       ],
       "catholic": [
@@ -38,7 +102,6 @@
           "b": "JAS",
           "c": 5,
           "s": 1,
-          "en": "James 5:1ff",
           "n": 12
         }
       ],
@@ -49,7 +112,6 @@
           "b": "ACT",
           "c": 22,
           "s": 1,
-          "en": "Acts 22:1ff",
           "n": 22
         }
       ],
@@ -59,14 +121,14 @@
           "bt": "የዮሐንስ ወንጌል",
           "b": "JHN",
           "c": 6,
-          "s": 41,
-          "en": "John 6:41ff"
+          "s": 41
         }
       ],
       "anaphora": [
         "ዘኤጲፋንዮስ"
       ]
-    }
+    },
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ነሐሴ — printed p. 415"
   },
   {
     "id": "ayne-kulu-3",

@@ -22,18 +22,43 @@ feast and mahlet collections were authored by the Sinq app (Apache-2.0).
 
 ## The book itself
 
-**መጽሐፈ ግጻዌ ወመዝሙር ከነምልክቱ** — distributed as a PDF by the Ethiopian Orthodox
-Tewahedo Church at [ethiopianorthodox.org](https://www.ethiopianorthodox.org).
-Bundled at `public/metsafe-gitsawe.pdf` and readable in the app.
+**መጽሐፈ ግጻዌ ወመጽሐፈ ትክሊል** — the parish's own scan, supplied by the deacon who
+reviewed this app because the earlier ethiopianorthodox.org copy was faded and
+hard to read. The source is 548 pages at 229 MB; `public/metsafe-gitsawe.pdf`
+carries the Gitsawe (pages 1–452, ending where መጽሐፈ ትክሊል begins), re-rendered
+at 100 dpi grayscale with contrast levelling — 46 MB and noticeably sharper
+than what it replaces. The PDF is excluded from the service-worker precache and
+fetched only when someone opens the Book tab.
+
+Its mezmur sections run by month; printed folio = PDF page − 7.
 
 ## Transcribed for this app
 
-The end-of-year Sunday records in `public/data/sunday-extra.json` — the
-ደለያት / ዐይነ ኵሉ Sundays and the ጎህ ጽባሕ Sunday — are not present in any dataset
-above. They were read off page 185 of the PDF for this app.
+`public/data/sunday-extra.json` holds Sunday records that are in no dataset
+above and were read off the page scans for this app:
 
-They carry `"provenance": "scan"` and the UI labels them *“transcribed from the
+| Record | Mezmur | Source |
+|---|---|---|
+| `tsige-2` | ኪነ ጥበቡ መንክር ወዕፁብ | printed p. 382 (ወርኀ ጥቅምት) |
+| `ayne-kulu-2` | ይሁበነ ዝናመ በጊዜሁ | printed p. 415 (ወርኀ ነሐሴ) |
+| `ayne-kulu-3` | ሰንበት ተዐቢ እምኵሉ ዕለት | old scan, p. 185 |
+| `goh-tsibah-4` | አምላኪየ ኄር | old scan, p. 185 |
+
+Each carries `"provenance": "scan"` and the UI labels it *“transcribed from the
 page scans — please check it against the book.”* Corrections belong in that file.
+
+`ayne-kulu-2` was corrected against the parish scan after the deacon's review:
+the mezmur is **ይሁበነ ዝናመ በጊዜሁ** (the earlier dataset spelling was wrong), and
+the third line of the misbak is **ትሰፍሕ የማነከ ወታጸግብ ለኵሉ እንስሳ ዘበሥርዓትከ** — not
+the ትፈትሕ … ሕያው ሥምረተከ the upstream data carried.
+
+### Still missing
+
+About a dozen Sunday records remain undigitized (some Tsige, Astemhro,
+ዘመነ ልደት, Eastertide, Kremt and Filseta Sundays). Verse numbers in these scans
+turn on a single stroke — ፲፮ against ፲፯ — so they are not transcribed by eye.
+The app names the section and opens the book at the right page instead; the
+readings themselves are best dictated by someone who reads the fidel.
 
 ## Bible text
 
