@@ -324,15 +324,15 @@ body {
 
 /* Readings we read off the scans ourselves say so, plainly. */
 .scan-warning {
-  display: flex; gap: 0.6rem; align-items: flex-start; text-align: left;
+  display: flex; gap: 0.8rem; align-items: center; justify-content: space-between;
+  text-align: left; flex-wrap: wrap;
   margin: 1rem auto 0; max-width: 54ch;
   padding: 0.7rem 0.9rem; border-radius: 4px;
-  border: 1px solid var(--rubric-soft);
-  background: color-mix(in srgb, var(--rubric) 8%, var(--panel));
+  border: 1px solid var(--line); background: var(--parchment-deep);
 }
-.scan-warning-mark { color: var(--rubric); font-size: 1.05rem; line-height: 1.4; }
+.scan-open { flex-shrink: 0; white-space: nowrap; }
 .scan-warning-text { font-size: 0.86rem; line-height: 1.55; color: var(--ink); }
-.scan-warning-text strong { color: var(--rubric); }
+.scan-warning-text strong { color: var(--ink); }
 .scan-source {
   display: block; margin-top: 0.3rem;
   color: var(--ink-soft); font-size: 0.82rem;

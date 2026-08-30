@@ -493,7 +493,7 @@ export function resolveDay(jdn: number, data: Dataset): DayInfo {
 
   const gap = isSunday && !hasOverride ? sundaySectionPage(ctx) : null;
   const gapNote = gap
-    ? `No Sunday-cycle record is digitized for this Sunday yet — showing the fixed daily reading. The book has it: ${gap.label}.`
+    ? `This Sunday's own readings are not in the app yet, so the fixed daily reading is shown instead. The book has them: ${gap.label}.`
     : null;
 
   return {

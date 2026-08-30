@@ -66,7 +66,8 @@
       "anaphora": [
         "ዘእግዝእትነ ማርያም"
       ]
-    }
+    },
+    "bookPage": 389
   },
   {
     "id": "tsige-4",
@@ -129,7 +130,8 @@
       "anaphora": [
         "ዘእግዝእትነ ማርያም"
       ]
-    }
+    },
+    "bookPage": 389
   },
   {
     "id": "tsige-5",
@@ -198,7 +200,8 @@
       "anaphora": [
         "ዘእግዝእትነ"
       ]
-    }
+    },
+    "bookPage": 389
   },
   {
     "id": "astemhro-1",
@@ -264,7 +267,8 @@
       "anaphora": [
         "ዘእግዚእነ"
       ]
-    }
+    },
+    "bookPage": 391
   },
   {
     "id": "astemhro-2",
@@ -329,7 +333,8 @@
       "anaphora": [
         "ዘአትናቴዎስ"
       ]
-    }
+    },
+    "bookPage": 391
   },
   {
     "id": "astemhro-3",
@@ -393,7 +398,8 @@
       "anaphora": [
         "ዘእግዝእትነ"
       ]
-    }
+    },
+    "bookPage": 392
   },
   {
     "id": "lidet-yiserq-kokeb",
@@ -469,7 +475,8 @@
       "anaphora": [
         "ዘዲዮስቆሮስ"
       ]
-    }
+    },
+    "bookPage": 394
   },
   {
     "id": "kremt-1",
@@ -544,7 +551,8 @@
       "anaphora": [
         "ዘእግዚእነ"
       ]
-    }
+    },
+    "bookPage": 416
   },
   {
     "id": "ayne-kulu-2",
@@ -614,7 +622,8 @@
         "ዘኤጲፋንዮስ"
       ]
     },
-    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ነሐሴ — printed p. 415"
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ነሐሴ — printed p. 415",
+    "bookPage": 422
   },
   {
     "id": "ayne-kulu-3",
@@ -685,7 +694,8 @@
       "anaphora": [
         "ዘአትናቴዎስ"
       ]
-    }
+    },
+    "bookPage": 422
   },
   {
     "id": "goh-tsibah-4",
@@ -758,6 +768,7 @@
       "anaphora": [
         "ዘእግዚእነ"
       ]
-    }
+    },
+    "bookPage": 422
   }
 ]

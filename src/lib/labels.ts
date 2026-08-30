@@ -37,11 +37,12 @@ export const UI = {
   showingNow: { en: 'Showing now', am: 'አሁን የሚታየው' },
   switchTo: { en: 'Show these instead', am: 'ይህን አሳይ' },
   fromScan: { en: 'from the page scans', am: 'ከመጽሐፉ ገጽ' },
-  scanTitle: { en: 'Not yet checked by a deacon. ', am: 'ገና በዲያቆን አልተረጋገጠም። ' },
+  scanTitle: { en: 'Some details here may be inaccurate. ', am: 'አንዳንድ ዝርዝሮች ትክክል ላይሆኑ ይችላሉ። ' },
   scanWarning: {
-    en: 'These readings were transcribed by eye from the page scans. Confirm them against the book before serving.',
-    am: 'እነዚህ ንባባት ከመጽሐፉ ገጽ ምስል በዓይን የተገለበጡ ናቸው። ከማገልገልዎ በፊት ከመጽሐፉ ጋር ያረጋግጡ።',
+    en: 'For the exact text, open the book itself.',
+    am: 'ትክክለኛውን ጽሑፍ ለማየት መጽሐፉን ይክፈቱ።',
   },
+  openBookAt: { en: 'Open the book', am: 'መጽሐፉን ክፈት' },
   openInBook: { en: 'Open that page →', am: 'ያንን ገጽ ክፈት →' },
   noRecord: {
     en: 'No record is digitized for this date — please consult the book.',

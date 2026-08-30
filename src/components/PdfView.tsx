@@ -11,7 +11,8 @@ export default function PdfView({ lang, page }: { lang: Lang; page?: number | nu
       <div className="pdfbar">
         <p className="pdf-title">
           መጽሐፈ ግጻዌ · Metsafe Gitsawe
-          {page && <span className="pdf-at"> — page {page} (printed {page + 4})</span>}
+          {/* In this edition the printed folio runs seven behind the PDF page. */}
+          {page && <span className="pdf-at"> — page {page} (printed {page - 7})</span>}
         </p>
         <a className="btn primary" href="/metsafe-gitsawe.pdf" download="Metsafe-Gitsawe.pdf">
           ⇩ {t('download', lang)}

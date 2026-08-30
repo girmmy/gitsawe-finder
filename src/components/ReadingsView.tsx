@@ -3,7 +3,7 @@ import type { BookNames } from '../lib/data';
 import { SERVICE_LABELS, SLOT_LABELS, t, type Lang } from '../lib/labels';
 import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/format';
 import { translit } from '../lib/translit';
-import { serviceOf, type Candidate, type DayInfo, type Reading, type Service } from '../lib/types';
+import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
 
 const SERVICES = ['serk', 'negh', 'kidassie'] as const;
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
@@ -48,20 +48,14 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
                 <span className="mezmur-translit">{translit(primary.mezmur)}</span>
               </p>
             )}
-            {primary.record.title && <h2 className="record-title">{primary.record.title}</h2>}
+            {/* The title often just restates the mezmur shown above it. */}
+            {primary.record.title && !(primary.mezmur && primary.record.title.includes(primary.mezmur)) && (
+              <h2 className="record-title">{primary.record.title}</h2>
+            )}
           </>
         )}
         {primary.unverified && (
-          <div className="scan-warning" role="note">
-            <span className="scan-warning-mark" aria-hidden="true">⚠</span>
-            <span className="scan-warning-text">
-              <strong>{t('scanTitle', lang)}</strong>
-              {t('scanWarning', lang)}
-              {(primary.record as { source?: string }).source && (
-                <span className="scan-source">{(primary.record as { source?: string }).source}</span>
-              )}
-            </span>
-          </div>
+          <ScanNote record={primary.record} lang={lang} onOpenPdf={onOpenPdf} />
         )}
         <CopyAllBar day={day} primary={primary} books={books} lang={lang} />
       </div>
@@ -188,6 +182,30 @@ function MisbakRow({ reading, books, lang }: { reading: Reading; books: BookName
       {reading.g && <MisbakLines reading={reading} lang={lang} />}
       {reading.a && <p className="amharic-text">{reading.a}</p>}
       <Citation cite={cite} />
+    </div>
+  );
+}
+
+/**
+ * Readings we read off the scans ourselves. Rather than a warning, this points
+ * at the book, which is the authority and is one tap away.
+ */
+function ScanNote({ record, lang, onOpenPdf }: {
+  record: DayRecord; lang: Lang; onOpenPdf?: (page: number) => void;
+}) {
+  const { source, bookPage } = record as { source?: string; bookPage?: number };
+  return (
+    <div className="scan-warning" role="note">
+      <span className="scan-warning-text">
+        <strong>{t('scanTitle', lang)}</strong>
+        {t('scanWarning', lang)}
+        {source && <span className="scan-source">{source}</span>}
+      </span>
+      {bookPage && onOpenPdf && (
+        <button className="btn small scan-open" onClick={() => onOpenPdf(bookPage)}>
+          {t('openBookAt', lang)} →
+        </button>
+      )}
     </div>
   );
 }

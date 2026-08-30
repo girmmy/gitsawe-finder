@@ -75,6 +75,8 @@ export interface ExtraRecord extends DayRecord {
   /** A window that crosses a month boundary, e.g. Tahsas 29 – Tir 5. */
   monthWindow?: { fromMonth: number; fromDay: number; toMonth: number; toDay: number };
   source?: string;
+  /** Page of the bundled PDF this record was read from. */
+  bookPage?: number;
 }
 
 /** One resolved candidate: a record plus why it applies. */
