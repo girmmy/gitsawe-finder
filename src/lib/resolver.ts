@@ -65,8 +65,23 @@ export function mezmurOf(
   }
   const title = record.title ?? '';
   const printed = title.match(/መዝሙር[፡:\s]*(.+?)(?:።|$)/);
-  if (printed) return printed[1].trim() || null;
-  return null;
+  return printed ? cleanMezmur(printed[1]) : null;
+}
+
+/**
+ * Titles carry scaffolding around the mezmur — a season word ("ዘፍልሰታ ዮም
+ * ንወድሳ"), an ordinal ("፪ተኛ ዘክረምት ይሠጠዎ"), a chant-house note ("(በታች ቤት)").
+ * Strip those so the index shows the name a deacon would say.
+ */
+export function cleanMezmur(raw: string): string | null {
+  let s = raw.trim();
+  s = s.replace(/\([^)]*\)/g, ' ');                       // (በታች ቤት), (በላይ ቤት)
+  s = s.replace(/^[፩-፺0-9]+\s*(ኛ|ተኛ)?\s*/, '');            // leading ordinal
+  s = s.replace(/^(ዘ)?(ፍልሰታ|ክረምት|ጽጌ|ልደት|አስተምህሮ|ትንሣኤ|ሆሳዕና)\s+/, ''); // season word
+  s = s.replace(/^በ\s*[፩-፺0-9]+\s*/, '');                   // "በ፪" counters
+  s = s.replace(/[፤፥፦፡]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  s = s.replace(/።$/, '').trim();
+  return s || null;
 }
 
 const SUNDAY = 0;

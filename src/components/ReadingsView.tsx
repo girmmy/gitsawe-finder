@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { BookNames } from '../lib/data';
 import { SERVICE_LABELS, SLOT_LABELS, t, type Lang } from '../lib/labels';
-import { citation, formatDay, formatService } from '../lib/format';
+import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/format';
 import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type Reading, type Service } from '../lib/types';
 
@@ -187,16 +187,35 @@ function MisbakRow({ reading, books, lang }: { reading: Reading; books: BookName
         {label.am} · {label.en}
         <span className="reader"> — {label.reader![lang]}</span>
       </p>
-      {reading.g && (
-        <>
-          <p className="geez-text">{reading.g}</p>
-          <p className="translit-text">{translit(reading.g)}</p>
-        </>
-      )}
+      {reading.g && <MisbakLines reading={reading} />}
       {reading.a && <p className="amharic-text">{reading.a}</p>}
-      {reading.e && <p className="english-text">“{reading.e}”</p>}
+      {!reading.el?.length && reading.e && <p className="english-text">“{reading.e}”</p>}
       <Citation cite={cite} />
     </div>
+  );
+}
+
+/**
+ * The misbak is chanted clause by clause, so each Ge'ez line is shown with its
+ * own transliteration and, where the record gives one, its own translation.
+ */
+function MisbakLines({ reading }: { reading: Reading }) {
+  const geez = (reading.g ?? '').split('።').map((s) => s.trim()).filter(Boolean);
+  const english = misbakEnglishLines(reading);
+  const paired = reading.el?.length === geez.length;
+  return (
+    <ol className="misbak-lines">
+      {geez.map((line, i) => (
+        <li key={i}>
+          <span className="geez-text">{line}።</span>
+          <span className="translit-text">{translit(line)}</span>
+          {paired && <span className="english-text">{english[i]}</span>}
+        </li>
+      ))}
+      {!paired && english.length > 0 && (
+        <li className="misbak-blob"><span className="english-text">{english.join(' ')}</span></li>
+      )}
+    </ol>
   );
 }
 

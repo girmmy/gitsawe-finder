@@ -18,7 +18,9 @@
           "c": 102,
           "s": 14,
           "n": 14,
-          "e": "For he knoweth our frame; he remembereth that we are dust."
+          "el": [
+            "Remember, O Lord, that we are dust."
+          ]
         }
       ],
       "pauline": [
@@ -80,7 +82,10 @@
       "msbak": [
         {
           "g": "አንተ ፈጠርከ ፀሐየ ወወርኀ።",
-          "bt": "መዝሙረ ዳዊት"
+          "bt": "መዝሙረ ዳዊት",
+          "el": [
+            "Thou hast made the sun and the moon."
+          ]
         }
       ],
       "pauline": [
@@ -140,12 +145,16 @@
       "msbak": [
         {
           "g": "ዐፀደ ወይን አፍለስከ እምግብጽ። ሰደድከ አሕዛበ ወተከልከ ኪያሃ። ወጼሐክ ፍኖተ ቅድሜሃ።",
-          "e": "Thou hast brought a vine out of Egypt: thou hast cast out the heathen, and planted it. Thou preparedst room before it.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 79,
           "s": 9,
-          "n": 10
+          "n": 10,
+          "el": [
+            "Thou hast brought a vine out of Egypt;",
+            "thou hast cast out the heathen, and planted it;",
+            "thou preparedst the way before it."
+          ]
         }
       ],
       "pauline": [
@@ -207,7 +216,10 @@
       "msbak": [
         {
           "g": "ኢትዝክር ለነ አበሳነ ዘትካት።",
-          "bt": "መዝሙረ ዳዊት"
+          "bt": "መዝሙረ ዳዊት",
+          "el": [
+            "Remember not against us our former iniquities."
+          ]
         }
       ],
       "pauline": [
@@ -270,7 +282,10 @@
       "msbak": [
         {
           "g": "ኵሎ ዘፈቀደ ገብረ እግዚአብሔር።",
-          "bt": "መዝሙረ ዳዊት"
+          "bt": "መዝሙረ ዳዊት",
+          "el": [
+            "Whatsoever the Lord pleased, that did he."
+          ]
         }
       ],
       "pauline": [
@@ -332,7 +347,10 @@
       "msbak": [
         {
           "g": "ቅረቡ ኀቤሁ።",
-          "bt": "መዝሙረ ዳዊት"
+          "bt": "መዝሙረ ዳዊት",
+          "el": [
+            "Draw near unto him."
+          ]
         }
       ],
       "pauline": [
@@ -397,12 +415,16 @@
       "msbak": [
         {
           "g": "ወእነሂ በኵርየ እሬስዮ። ወልዑል ውእቱ እምነገሠተ ምድር። ወለዓለም አዐቅብ ሎቱ ሣህልየ።",
-          "e": "Also I will make him my firstborn, higher than the kings of the earth. My mercy will I keep for him for evermore.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 88,
           "s": 35,
-          "n": 37
+          "n": 37,
+          "el": [
+            "Also I will make him my firstborn,",
+            "higher than the kings of the earth.",
+            "My mercy will I keep for him for evermore."
+          ]
         }
       ],
       "pauline": [
@@ -450,6 +472,81 @@
     }
   },
   {
+    "id": "kremt-1",
+    "period": "kremt",
+    "order": 1,
+    "mezmur": "ናኅብር ሰንበቶ",
+    "monthWindow": {
+      "fromMonth": 10,
+      "fromDay": 26,
+      "toMonth": 11,
+      "toDay": 3
+    },
+    "periodAm": "ዘመነ ክረምት",
+    "periodEn": "Zemene Kremt — ከሰኔ ፳፮ እስከ ሐምሌ ፫",
+    "title": "መዝሙር፡ ናኅብር ሰንበቶ",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ሰኔ — printed pp. 409–410",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "አንተሰ እግዚኦ መሓሪ ወመስተሣህል። ርኁቀ መዓት ወብዙኀ ምሕረት ወጻድቅ። ነጽር ላዕሌየ ወተሣሃለኒ።",
+          "el": [
+            "But thou, O Lord, art a God full of compassion, and gracious,",
+            "longsuffering, and plenteous in mercy and truth.",
+            "O turn unto me, and have mercy upon me."
+          ],
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 85,
+          "s": 15,
+          "n": 16
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ወበእንተዝ በከመ በጌጋየ ፩ ብእሲ",
+          "bt": "ወደ ሮሜ ሰዎች",
+          "b": "ROM",
+          "c": 5,
+          "s": 18
+        }
+      ],
+      "catholic": [
+        {
+          "g": "እምነ ቀሲስ ለጋይዮስ",
+          "bt": "፫ኛ የዮሐንስ መልእክት",
+          "b": "3JN",
+          "c": 1,
+          "s": 1
+        }
+      ],
+      "acts": [
+        {
+          "g": "ወበጽሐ ሀገረ ደርቤን ወልስጥራን",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 16,
+          "s": 1,
+          "n": 15
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወአውሥአ እግዚእ ኢየሱስ ዳግመ",
+          "bt": "የማቴዎስ ወንጌል",
+          "b": "MAT",
+          "c": 22,
+          "s": 1,
+          "n": 23
+        }
+      ],
+      "anaphora": [
+        "ዘእግዚእነ"
+      ]
+    }
+  },
+  {
     "id": "ayne-kulu-2",
     "period": "ayneKulu",
     "order": 2,
@@ -462,13 +559,17 @@
       "msbak": [
         {
           "g": "ዐይነ ኵሉ ነፍስ ይሴፎ ኪያከ። እንተ ትሁቦሙ ሲሳዮሙ በጊዜሁ። ትሰፍሕ የማነከ ወታጸግብ ለኵሉ እንስሳ ዘበሥርዓትከ።",
-          "e": "The eyes of all wait upon thee; and thou givest them their meat in due season. Thou openest thine hand, and satisfiest the desire of every living thing.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 144,
           "s": 15,
           "n": 16,
-          "kjv": "Psalm 145:15–16 (Eth. 144:15–16)"
+          "kjv": "Psalm 145:15–16 (Eth. 144:15–16)",
+          "el": [
+            "The eyes of all wait upon thee,",
+            "and thou givest them their meat in due season.",
+            "Thou openest thy right hand, and satisfiest every living creature according to thy ordinance."
+          ]
         }
       ],
       "pauline": [
@@ -528,13 +629,17 @@
       "msbak": [
         {
           "g": "ወሐመልማለ ለቅኔ እጓለ እመሕያው። ዘየሀቦሙ ሲሳዮሙ ለእንስሳ። ወለእጐለ ቋዓት እለ ይጼውዕዎ።",
-          "e": "He giveth to the beast his food, and to the young ravens which cry.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 146,
           "s": 8,
           "n": 9,
-          "kjv": "Psalm 147:8–9 (Eth. 146:8–9)"
+          "kjv": "Psalm 147:8–9 (Eth. 146:8–9)",
+          "el": [
+            "and green herb for the service of men,",
+            "who giveth to the beast his food,",
+            "and to the young ravens that call upon him."
+          ]
         }
       ],
       "pauline": [
@@ -595,13 +700,17 @@
       "msbak": [
         {
           "g": "እስመ ኀቤከ እጼሊ እግዚኦ። በጽባሕ ስማዕ ቃልየ። በጽባሕ እትዋደድ ቅድሜከ ወአስተርኢ ለከ።",
-          "e": "For unto thee will I pray, O LORD; my voice shalt thou hear in the morning; in the morning will I direct my prayer unto thee, and will look up.",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 5,
           "s": 2,
           "n": 3,
-          "kjv": "Psalm 5:2–3 (Eth. 5:2–3)"
+          "kjv": "Psalm 5:2–3 (Eth. 5:2–3)",
+          "el": [
+            "For unto thee will I pray, O Lord;",
+            "in the morning shalt thou hear my voice;",
+            "in the morning I will stand before thee, and will look up."
+          ]
         }
       ],
       "pauline": [

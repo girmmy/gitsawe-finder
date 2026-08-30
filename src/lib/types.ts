@@ -11,6 +11,12 @@ export interface Reading {
   et?: string;  // Ge'ez end-marker text ("read until …")
   en?: string;  // English citation, e.g. "Luke 4:17–23"
   kjv?: string; // KJV psalm citation, e.g. "Psalm 142 (Eth. 141:6–8)"
+  /**
+   * The misbak is chanted line by line, so its translation is held line by
+   * line too, index-aligned with the Ge'ez clauses. Without this the English
+   * has to be split by guesswork and stops lining up with what is sung.
+   */
+  el?: string[];
 }
 
 /** One service's readings. */

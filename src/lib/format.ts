@@ -108,8 +108,15 @@ function geezLines(text: string): string[] {
   return text.split('።').map((s) => s.trim()).filter(Boolean);
 }
 
-function englishLines(text: string): string[] {
-  return text
+/**
+ * The English of a misbak, one line per chanted clause. Where a record supplies
+ * `el` the lines are used as given; otherwise a single blob is split on
+ * sentence boundaries, which is a guess and can fall out of step with the Ge'ez.
+ */
+export function misbakEnglishLines(r: Reading): string[] {
+  if (r.el?.length) return r.el.map((s) => s.trim()).filter(Boolean);
+  if (!r.e) return [];
+  return r.e
     .split(/(?<=[;.])\s+/)
     .map((s) => s.trim().replace(/[;.]$/, '').trim())
     .filter(Boolean);
@@ -134,7 +141,7 @@ function serviceBody(svc: Service, books: BookNames): string[] {
     if (ref) lines.push(ref);
     if (m.g) lines.push(...geezLines(m.g).map(translit));
     out.push(...block('Misbak', lines));
-    if (m.e) out.push(...block('Translation', englishLines(m.e)));
+    out.push(...block('Translation', misbakEnglishLines(m)));
   }
 
   const gospel = (svc.gospel ?? []).map((r) => shortCitation(r, books)).filter((s): s is string => !!s);

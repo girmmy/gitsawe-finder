@@ -60,9 +60,9 @@ inte tihubomu sisayomu begizehu
 tisefih yemaneke wetatsegib lekwlu inissa zebesiratke
 
 Translation:
-The eyes of all wait upon thee
-and thou givest them their meat in due season
-Thou openest thine hand, and satisfiest the desire of every living thing
+The eyes of all wait upon thee,
+and thou givest them their meat in due season.
+Thou openest thy right hand, and satisfiest every living creature according to thy ordinance.
 
 Gospel Reading:
 John 6:41-end

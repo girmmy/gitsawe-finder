@@ -12,31 +12,45 @@ export interface MezmurEntry {
   unverified?: boolean;
 }
 
+type AnyRecord = SeasonalRecord | MonthlyRecord | ExtraRecord;
+
+const seasonIs = (r: AnyRecord, ...keys: string[]) =>
+  'season' in r && typeof r.season === 'string' && keys.includes(r.season);
+const monthIs = (r: AnyRecord, key: string) => 'month' in r && r.month === key;
+/** Records read from the book carry a `period`; match on its value, not its presence. */
+const periodIs = (r: AnyRecord, ...keys: string[]) =>
+  'period' in r && typeof r.period === 'string' && keys.includes(r.period);
+
 /** Human-facing names for the book's cycles, in the order the year runs. */
-const GROUPS: { match: (r: SeasonalRecord | MonthlyRecord | ExtraRecord) => boolean; name: string }[] = [
-  { name: 'መስከረም · Meskerem', match: (r) => 'month' in r && r.month === 'meskerem' },
-  { name: 'ዘመነ ጽጌ · Tsige', match: (r) => 'month' in r && r.month === 'tsige' },
-  { name: 'ኅዳር · Hidar', match: (r) => 'month' in r && r.month === 'hidar' },
-  { name: 'ጾመ ነቢያት · Advent', match: (r) => 'season' in r && r.season === 'genaTsom' },
-  { name: 'ዘመነ ልደት · Christmastide', match: (r) => 'season' in r && r.season === 'lidet' },
-  { name: 'ጾመ ነነዌ · Nineveh', match: (r) => 'season' in r && r.season === 'neneweTsom' },
-  { name: 'ዐቢይ ጾም · Great Lent', match: (r) => 'season' in r && (r.season === 'abiyTsom' || r.season === 'holy_thursday') },
-  { name: 'ዘመነ ትንሣኤ · Eastertide', match: (r) => 'season' in r && (r.season === 'tnsae' || r.season === 'erget') },
-  { name: 'ዘመነ ክረምት · Kremt', match: (r) => 'season' in r && ['kremt', 'astemhro', 'zere_demena'].includes(r.season) },
-  { name: 'ጾመ ፍልሰታ · Filseta', match: (r) => 'season' in r && r.season === 'filseta' },
-  { name: 'ዐይነ ኵሉ · End of the year', match: (r) => 'period' in r },
-  { name: 'ጳጉሜን · Pagumen', match: (r) => 'season' in r && r.season === 'pagumen' },
+const GROUPS: { match: (r: AnyRecord) => boolean; name: string }[] = [
+  { name: 'መስከረም · Meskerem', match: (r) => monthIs(r, 'meskerem') },
+  { name: 'ዘመነ ጽጌ · Tsige', match: (r) => monthIs(r, 'tsige') || periodIs(r, 'tsige') },
+  { name: 'ዘመነ አስተምህሮ · Astemhro', match: (r) => monthIs(r, 'hidar') || periodIs(r, 'astemhro') },
+  { name: 'ጾመ ነቢያት · Advent', match: (r) => seasonIs(r, 'genaTsom') },
+  { name: 'ዘመነ ልደት · Christmastide', match: (r) => seasonIs(r, 'lidet') || periodIs(r, 'lidet') },
+  { name: 'ጾመ ነነዌ · Nineveh', match: (r) => seasonIs(r, 'neneweTsom') },
+  { name: 'ዐቢይ ጾም · Great Lent', match: (r) => seasonIs(r, 'abiyTsom', 'holy_thursday') },
+  { name: 'ዘመነ ትንሣኤ · Eastertide', match: (r) => seasonIs(r, 'tnsae', 'erget') },
+  { name: 'ዘመነ ክረምት · Kremt', match: (r) => seasonIs(r, 'kremt', 'astemhro', 'zere_demena') || periodIs(r, 'kremt') },
+  { name: 'ጾመ ፍልሰታ · Filseta', match: (r) => seasonIs(r, 'filseta') },
+  { name: 'ጳጉሜን · Pagumen', match: (r) => seasonIs(r, 'pagumen') },
+  { name: 'ዐይነ ኵሉ · End of the year', match: (r) => periodIs(r, 'ayneKulu', 'gohTsibah') },
 ];
 
 export function buildIndex(
   seasonal: SeasonalRecord[], monthly: MonthlyRecord[], extra: ExtraRecord[],
 ): MezmurEntry[] {
-  const all = [...monthly, ...seasonal, ...extra] as (SeasonalRecord | MonthlyRecord | ExtraRecord)[];
+  const all = [...monthly, ...seasonal, ...extra] as AnyRecord[];
   const entries: MezmurEntry[] = [];
+  const seen = new Set<string>();
   all.forEach((r, i) => {
     const mezmur = mezmurOf(r as DayRecord & { mezmur?: string | null });
     if (!mezmur) return;
     const group = GROUPS.find((g) => g.match(r))?.name ?? 'ሌሎች · Other';
+    // The same Sunday can appear twice (a week and its Friday part); one card.
+    const dedupe = `${group}::${mezmur}`;
+    if (seen.has(dedupe)) return;
+    seen.add(dedupe);
     entries.push({
       key: `${group}-${mezmur}-${i}`,
       mezmur,

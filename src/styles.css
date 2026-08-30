@@ -20,7 +20,7 @@
 
   --serif-latin: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --serif-body: 'Literata', Georgia, serif;
-  --ethiopic: 'Noto Serif Ethiopic', 'Abyssinica SIL', 'Kefa', serif;
+  --ethiopic: 'Noto Sans Ethiopic', 'Kefa', 'Abyssinica SIL', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -419,10 +419,26 @@ body {
 }
 .reader { color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; font-style: italic; }
 
-.misbak .geez-text {
-  font-family: var(--ethiopic); font-size: 1.28rem; line-height: 1.85;
-  font-weight: 600; margin: 0.25rem 0;
+/* The misbak, one chanted clause per row. */
+.misbak-lines { list-style: none; margin: 0.3rem 0 0; padding: 0; counter-reset: mline; }
+.misbak-lines > li {
+  counter-increment: mline; position: relative;
+  padding: 0.45rem 0 0.45rem 1.6rem; border-top: 1px dotted var(--line);
 }
+.misbak-lines > li:first-child { border-top: none; }
+.misbak-lines > li::before {
+  content: counter(mline); position: absolute; left: 0; top: 0.55rem;
+  font-family: var(--serif-latin); font-size: 0.72rem; font-weight: 700;
+  color: var(--gold);
+}
+.misbak-lines .geez-text {
+  display: block; font-family: var(--ethiopic); font-size: 1.16rem;
+  line-height: 1.75; font-weight: 600;
+}
+.misbak-lines .translit-text { display: block; margin: 0.1rem 0 0; }
+.misbak-lines .english-text { display: block; margin: 0.15rem 0 0; font-size: 0.98rem; }
+.misbak-blob { padding-left: 0 !important; }
+.misbak-blob::before { content: none !important; }
 .amharic-text { font-family: var(--ethiopic); color: var(--ink-soft); margin: 0.25rem 0; line-height: 1.8; }
 .english-text {
   font-family: var(--serif-latin); font-style: italic; font-size: 1.02rem;

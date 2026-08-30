@@ -46,6 +46,7 @@ above and were read off the page scans for this app:
 | `astemhro-2` | ሎቱ ስብሐት | printed pp. 384–385 |
 | `astemhro-3` | አምላከ ፍጹም በሀላዌሁ | printed p. 385 |
 | `lidet-yiserq-kokeb` | ይሠርቅ ኮከብ | printed p. 387 (ወርኀ ጥር) |
+| `kremt-1` | ናኅብር ሰንበቶ | printed pp. 409–410 (ወርኀ ሰኔ) |
 | `ayne-kulu-2` | ይሁበነ ዝናመ በጊዜሁ | printed p. 415 (ወርኀ ነሐሴ) |
 | `ayne-kulu-3` | ሰንበት ተዐቢ እምኵሉ ዕለት | old scan, p. 185 |
 | `goh-tsibah-4` | አምላኪየ ኄር | old scan, p. 185 |
@@ -82,14 +83,30 @@ Records read from the book carry their window and match on it; the dataset's
 nth-Sunday records still appear alongside as alternates. Where the two disagree
 about a Sunday, both are shown rather than one being silently preferred.
 
+### The misbak follows the mezmur
+
+A Sunday's misbak is fixed by its mezmur, not by the calendar date — ዐይነ ኵሉ
+belongs to ይሁበነ ዝናመ በጊዜሁ, and travels with it. Records are therefore keyed by
+mezmur, and `tests/misbak.test.ts` asserts that pairing directly.
+
+The misbak is also chanted clause by clause, so its translation is stored the
+same way: `el` holds one English line per Ge'ez clause, index-aligned. A test
+asserts the counts match, because a translation that drifts out of step with
+what is sung is worse than none.
+
 ### Still missing
 
 - **ናዝሬት ሕፃንት** (ንጉሥኪ ጽዮን), printed p. 387 — read but *not recorded*: its
   Pauline chapter is genuinely ambiguous between ሮሜ ፲፭ and ፲፮ at the scan's
   150 ppi, and the incipit (ወርቱዕስ … ጽኑዓን) points to Romans 15:1 against a
   glyph that may read 16. Needs a human eye.
-- **Eastertide** Sundays, printed p. 405.
-- **Kremt and Filseta** Sundays, printed pp. 409–415.
+- **Eastertide 8–10.** These may not be real gaps. Printed p. 405 covers ዳግም
+  ትንሣኤ and the 3rd and 4th Sundays, which the dataset already has; the book
+  files the Sundays after Pentecost under the ወርኀ ሰኔ month section (አባ ገሪግ,
+  ናኅብር ሰንበቶ) rather than numbering them 8, 9, 10. The dataset's numbering
+  looks like an artefact of its own scheme rather than something the book
+  leaves out. Worth confirming with a deacon before chasing it further.
+- **Filseta** Sundays, printed pp. 411–415.
 
 Until they are read the app names the section and opens the book at that page.
 
