@@ -88,19 +88,29 @@ body {
   font-family: var(--serif-latin); font-size: 0.72rem; text-transform: uppercase;
   letter-spacing: 0.42em; color: var(--gold); font-weight: 600;
 }
-.nav { display: flex; gap: 0.15rem; align-items: center; flex-wrap: wrap; }
-.nav-link {
-  background: none; border: none; cursor: pointer;
-  font-family: var(--serif-latin); font-size: 0.95rem; font-weight: 500;
-  color: var(--ink-soft); padding: 0.35rem 0.65rem; border-radius: 2px;
-  border-bottom: 2px solid transparent;
-}
-.nav-link:hover { color: var(--rubric); }
-.nav-link.active { color: var(--rubric); border-bottom-color: var(--gold); }
-.nav-link.lang {
+.lang-toggle {
+  background: none; cursor: pointer; color: var(--ink-soft);
   border: 1px solid var(--line); border-radius: 999px;
-  font-family: var(--ethiopic); font-size: 0.85rem; padding: 0.25rem 0.7rem;
+  font-family: var(--ethiopic); font-size: 0.85rem; padding: 0.28rem 0.85rem;
 }
+.lang-toggle:hover { border-color: var(--gold); color: var(--rubric); }
+
+/* One tab bar: Sunday · Any date · Mezmurs · The book */
+.tabs {
+  display: flex; gap: 0.15rem; margin-top: 1rem;
+  border-bottom: 1px solid var(--line); overflow-x: auto;
+}
+.tab {
+  flex: 1 1 auto; white-space: nowrap; cursor: pointer;
+  background: none; border: none; color: var(--ink-soft);
+  font-family: var(--serif-latin); font-size: 0.98rem; font-weight: 600;
+  padding: 0.55rem 0.8rem; border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--rubric); }
+.tab.on { color: var(--rubric); border-bottom-color: var(--rubric); }
+
+.btn.back { margin-bottom: 1.1rem; }
 
 /* ── date banner ── */
 .banner {
@@ -138,19 +148,6 @@ body {
   display: inline-block; margin: 0.15rem 0.35rem; font-weight: 700;
   color: var(--rubric); font-family: var(--ethiopic); font-size: 1rem;
 }
-
-/* ── browse mode toggle ── */
-.browse-toggle {
-  display: flex; justify-content: center; gap: 0; margin: 1.5rem 0 0;
-  border: 1px solid var(--line); border-radius: 999px;
-  width: fit-content; margin-inline: auto; overflow: hidden;
-}
-.toggle {
-  background: none; border: none; cursor: pointer; color: var(--ink-soft);
-  font-family: var(--serif-latin); font-size: 0.9rem; font-weight: 600;
-  padding: 0.4rem 1.1rem;
-}
-.toggle.on { background: var(--rubric); color: #f8f1e2; }
 
 /* ── the coming Sunday: the app's headline ── */
 .hero {
@@ -193,7 +190,11 @@ body {
 .badge.feast-badge {
   font-family: var(--ethiopic); border-color: var(--rubric-soft); color: var(--rubric);
 }
-.hero-cta { margin-top: 1.2rem; }
+.hero-hint {
+  margin: 1.2rem 0 0.2rem; font-family: var(--serif-latin);
+  color: var(--ink-soft); font-size: 0.9rem;
+}
+.hero-cta { margin-top: 0.5rem; }
 
 /* ── mezmur index ── */
 .mezmur-index { margin-top: 1.5rem; }
@@ -278,6 +279,13 @@ body {
 .pdf-at { font-family: var(--serif-latin); font-weight: 400; color: var(--gold); font-size: 0.9rem; }
 
 .candidate-head { text-align: center; margin-bottom: 1.4rem; }
+/* Under the hero the head is just a toolbar; keep it visually attached. */
+.candidate-head.bar {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid var(--line); padding-bottom: 1.1rem; margin-bottom: 1.2rem;
+}
+.candidate-head.bar .unverified { margin: 0; border-top: none; padding-top: 0; }
+.candidate-head.bar .copybar { margin-top: 0; }
 .rubric.why {
   color: var(--gold); font-family: var(--serif-latin); font-style: italic;
   font-size: 1rem; margin: 0.2rem 0;
@@ -414,14 +422,23 @@ body {
 }
 .alternate {
   display: block; width: 100%; text-align: left; cursor: pointer;
-  background: transparent; border: 1px solid var(--line); border-left: 3px solid var(--gold);
+  background: transparent; border: 1px solid var(--line); border-left: 3px solid var(--line);
   color: var(--ink); padding: 0.6rem 0.9rem; margin-bottom: 0.5rem;
   font-family: inherit; font-size: 0.95rem; border-radius: 2px;
   transition: background 0.15s, border-color 0.15s;
 }
-.alternate:hover { background: var(--panel); border-color: var(--gold); }
+.alternate:hover { background: var(--panel); border-left-color: var(--gold); }
+.alternate.current {
+  background: var(--panel); border-left-color: var(--rubric); cursor: default;
+}
 .alternate-reason { display: block; color: var(--gold); font-family: var(--serif-latin); font-style: italic; font-size: 0.88rem; }
 .alternate-name { display: block; font-family: var(--ethiopic); font-weight: 600; margin-top: 0.1rem; }
+.alternate-state {
+  display: block; margin-top: 0.3rem; font-family: var(--serif-latin);
+  font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.alternate.current .alternate-state { color: var(--rubric); font-weight: 700; }
 
 /* pdf */
 .pdfview { margin-top: 1.4rem; }
@@ -444,13 +461,24 @@ body {
   font-size: 0.85rem; font-style: italic;
   border-top: 1px solid var(--line); padding-top: 1rem;
 }
+.colophon p { margin: 0 0 0.4rem; }
+.colophon-link {
+  background: none; border: none; cursor: pointer; color: var(--rubric);
+  font-family: var(--serif-latin); font-size: 0.85rem; text-decoration: underline;
+  text-underline-offset: 3px; padding: 0.2rem;
+}
 
 .error { color: var(--rubric); text-align: center; }
-.loading { text-align: center; color: var(--ink-soft); font-size: 1.6rem; }
+.loading {
+  text-align: center; color: var(--ink-soft);
+  font-family: var(--serif-latin); font-style: italic; font-size: 1rem;
+  padding: 2.5rem 0;
+}
 
 @media (max-width: 540px) {
   .panel { padding: 1rem 0.9rem 0.9rem; }
   .masthead-row { justify-content: center; }
+  .tab { padding: 0.55rem 0.4rem; font-size: 0.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

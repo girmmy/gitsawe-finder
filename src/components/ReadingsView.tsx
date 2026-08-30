@@ -18,9 +18,8 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
   const [selected, setSelected] = useState(0);
   const primary = day.candidates[selected] ?? day.candidates[0];
   if (!primary) {
-    return <p className="gap-note">No record digitized for this date — please consult the PDF.</p>;
+    return <p className="gap-note">{t('noRecord', lang)}</p>;
   }
-  const others = day.candidates.filter((_, i) => i !== selected);
 
   return (
     <div className="readings">
@@ -29,13 +28,13 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
           {day.gapNote}
           {day.gapPdfPage && onOpenPdf && (
             <button className="gap-link" onClick={() => onOpenPdf(day.gapPdfPage!)}>
-              Open that page →
+              {t('openInBook', lang)}
             </button>
           )}
         </p>
       )}
 
-      <div className="candidate-head">
+      <div className={headless ? 'candidate-head bar' : 'candidate-head'}>
         {!headless && (
           <>
             <p className="rubric why">
@@ -53,9 +52,7 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
           </>
         )}
         {primary.unverified && (
-          <p className="unverified" role="note">
-            Transcribed from the page scans — please check it against the book.
-          </p>
+          <p className="unverified" role="note">{t('scanWarning', lang)}</p>
         )}
         <CopyAllBar day={day} primary={primary} books={books} lang={lang} />
       </div>
@@ -74,16 +71,24 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
         </section>
       )}
 
-      {others.length > 0 && (
+      {day.candidates.length > 1 && (
         <section className="alternates">
           <h3 className="alternates-title">{t('alsoToday', lang)}</h3>
-          {others.map((c) => {
-            const idx = day.candidates.indexOf(c);
+          {day.candidates.map((c, idx) => {
+            const current = idx === selected;
             return (
-              <button key={idx} className="alternate" onClick={() => setSelected(idx)}>
+              <button
+                key={idx}
+                className={current ? 'alternate current' : 'alternate'}
+                aria-pressed={current}
+                onClick={() => setSelected(idx)}
+              >
                 <span className="alternate-reason">{lang === 'am' ? c.reasonAm : c.reasonEn}</span>
                 {c.mezmur && <span className="alternate-name">{t('mezmur', lang)}፦ {c.mezmur}</span>}
                 {!c.mezmur && c.record.title && <span className="alternate-name">{c.record.title}</span>}
+                <span className="alternate-state">
+                  {current ? `✓ ${t('showingNow', lang)}` : t('switchTo', lang)}
+                </span>
               </button>
             );
           })}

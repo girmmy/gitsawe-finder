@@ -54,8 +54,11 @@ export default function SundayHero({ day, lang, isToday, onOpen }: {
         {day.feasts.map((f) => <span key={f.en} className="badge feast-badge">✦ {f.am}</span>)}
       </div>
 
+      <p className="hero-hint">
+        {lang === 'am' ? 'የዚህ እሑድ ንባባት ከታች አሉ ↓' : 'This Sunday’s readings are below ↓'}
+      </p>
       <button className="btn hero-cta" onClick={onOpen}>
-        {lang === 'am' ? 'የዕለቱን ሙሉ አሳይ →' : 'See this day in the calendar →'}
+        {lang === 'am' ? 'በቀን መቁጠሪያ ክፈት' : 'Open in the calendar'}
       </button>
     </section>
   );

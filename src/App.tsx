@@ -4,15 +4,15 @@ import { resolveDay, type Dataset } from './lib/resolver';
 import { loadBooks, loadDaily, loadExtra, loadMonthly, loadSeasonal, type BookNames } from './lib/data';
 import type { DayInfo } from './lib/types';
 import { t, type Lang } from './lib/labels';
-import { ethDateString, gregDateString } from './lib/format';
+import { gregDateString } from './lib/format';
 import ReadingsView from './components/ReadingsView';
 import MezmurIndex, { buildIndex, type MezmurEntry } from './components/MezmurIndex';
 import SundayHero from './components/SundayHero';
 import PdfView from './components/PdfView';
 import AboutView from './components/AboutView';
 
-type View = 'day' | 'pdf' | 'about';
-type Browse = 'sunday' | 'day' | 'mezmur';
+/** One tab bar, one place to be. About lives in the footer. */
+type Section = 'sunday' | 'date' | 'mezmur' | 'book' | 'about';
 
 /** The coming Sunday, or today when today is a Sunday. */
 function comingSundayJDN(from: number): number {
@@ -20,17 +20,17 @@ function comingSundayJDN(from: number): number {
 }
 
 export default function App() {
+  const [section, setSection] = useState<Section>('sunday');
   const [jdn, setJdn] = useState(todayJDN());
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('gitsawe-lang') as Lang) || 'en');
-  const [view, setView] = useState<View>('day');
+
   const [day, setDay] = useState<DayInfo | null>(null);
-  const [books, setBooks] = useState<BookNames>({});
-  const [error, setError] = useState<string | null>(null);
-  const [browse, setBrowse] = useState<Browse>('sunday');
   const [sunday, setSunday] = useState<DayInfo | null>(null);
+  const [books, setBooks] = useState<BookNames>({});
   const [index, setIndex] = useState<MezmurEntry[]>([]);
   const [picked, setPicked] = useState<MezmurEntry | null>(null);
   const [pdfPage, setPdfPage] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => { localStorage.setItem('gitsawe-lang', lang); }, [lang]);
 
@@ -41,9 +41,8 @@ export default function App() {
     Promise.all([loadSeasonal(), loadMonthly(), loadExtra(), loadDaily(eth.month), loadBooks()])
       .then(([seasonal, monthly, extra, daily, bookNames]) => {
         if (!alive) return;
-        const data: Dataset = { seasonal, monthly, extra, daily };
         setBooks(bookNames);
-        setDay(resolveDay(jdn, data));
+        setDay(resolveDay(jdn, { seasonal, monthly, extra, daily } satisfies Dataset));
         setIndex(buildIndex(seasonal, monthly, extra));
       })
       .catch((e) => alive && setError(String(e)));
@@ -65,12 +64,9 @@ export default function App() {
     return () => { alive = false; };
   }, []);
 
-  const openPdfAt = useCallback((page: number) => { setPdfPage(page); setView('pdf'); }, []);
-
+  const openPdfAt = useCallback((page: number) => { setPdfPage(page); setSection('book'); }, []);
   const goToday = useCallback(() => setJdn(todayJDN()), []);
-  const goNextSunday = useCallback(() => {
-    setJdn((j) => j + ((7 - jdnToWeekday(j)) % 7 || 7));
-  }, []);
+  const goNextSunday = useCallback(() => setJdn((j) => j + ((7 - jdnToWeekday(j)) % 7 || 7)), []);
 
   const gregISO = useMemo(() => {
     const g = jdnToGreg(jdn);
@@ -82,110 +78,135 @@ export default function App() {
     if (y && m && d) setJdn(gregToJDN(y, m, d));
   };
 
+  /** Jump to a date and show it on the calendar tab. */
+  const openDate = (target: number) => { setJdn(target); setSection('date'); };
+
+  const TABS: { key: Section; label: string }[] = [
+    { key: 'sunday', label: t('thisSunday', lang) },
+    { key: 'date', label: t('byDay', lang) },
+    { key: 'mezmur', label: t('byMezmur', lang) },
+    { key: 'book', label: t('pdf', lang) },
+  ];
+
   return (
     <div className="app">
       <a className="skip-link" href="#main">Skip to readings</a>
       <div className="harag" aria-hidden="true" />
+
       <header className="masthead">
         <div className="masthead-row">
-          <button className="brand" onClick={() => { setView('day'); goToday(); }} aria-label="Gitsawe — home">
+          <button className="brand" onClick={() => { setSection('sunday'); setPicked(null); }} aria-label="Gitsawe — home">
             <CrossMark />
             <span className="brand-text">
               <span className="brand-geez">ግጻዌ</span>
               <span className="brand-latin">Gitsawe</span>
             </span>
           </button>
-          <nav className="nav" aria-label="Main">
-            <button className={view === 'day' ? 'nav-link active' : 'nav-link'} onClick={() => setView('day')}>{t('readings', lang)}</button>
-            <button className={view === 'pdf' ? 'nav-link active' : 'nav-link'} onClick={() => setView('pdf')}>{t('pdf', lang)}</button>
-            <button className={view === 'about' ? 'nav-link active' : 'nav-link'} onClick={() => setView('about')}>{t('about', lang)}</button>
-            <button className="nav-link lang" onClick={() => setLang(lang === 'en' ? 'am' : 'en')} aria-label="Switch language">
-              {lang === 'en' ? 'አማ' : 'EN'}
-            </button>
-          </nav>
+          <button className="lang-toggle" onClick={() => setLang(lang === 'en' ? 'am' : 'en')}
+            aria-label={lang === 'en' ? 'Switch to Amharic' : 'Switch to English'}>
+            {lang === 'en' ? 'አማርኛ' : 'English'}
+          </button>
         </div>
+
+        <nav className="tabs" aria-label="Main">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              className={section === tab.key ? 'tab on' : 'tab'}
+              aria-current={section === tab.key ? 'page' : undefined}
+              onClick={() => { setSection(tab.key); if (tab.key !== 'mezmur') setPicked(null); }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main id="main">
-        {view === 'about' && <AboutView lang={lang} />}
-        {view === 'pdf' && <PdfView lang={lang} page={pdfPage} />}
-        {view === 'day' && (
+        {section === 'about' && <AboutView lang={lang} />}
+
+        {section === 'book' && <PdfView lang={lang} page={pdfPage} />}
+
+        {section === 'sunday' && (
+          sunday ? (
+            <>
+              <SundayHero
+                day={sunday}
+                lang={lang}
+                isToday={sunday.jdn === todayJDN()}
+                onOpen={() => openDate(sunday.jdn)}
+              />
+              <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang}
+                headless onOpenPdf={openPdfAt} />
+            </>
+          ) : <p className="loading">{t('loadingReadings', lang)}</p>
+        )}
+
+        {section === 'date' && (
           <>
-            <div className="browse-toggle" role="group" aria-label="Browse mode">
-              <button className={browse === 'sunday' ? 'toggle on' : 'toggle'}
-                onClick={() => { setBrowse('sunday'); setPicked(null); }}>{t('thisSunday', lang)}</button>
-              <button className={browse === 'day' ? 'toggle on' : 'toggle'}
-                onClick={() => { setBrowse('day'); setPicked(null); }}>{t('byDay', lang)}</button>
-              <button className={browse === 'mezmur' ? 'toggle on' : 'toggle'}
-                onClick={() => setBrowse('mezmur')}>{t('byMezmur', lang)}</button>
+            {day && <DateBanner day={day} lang={lang} />}
+            <div className="daynav" role="group" aria-label="Date navigation">
+              <button className="btn ghost" onClick={() => setJdn(jdn - 1)} aria-label="Previous day">‹</button>
+              <input className="datepick" type="date" value={gregISO}
+                onChange={(e) => onPickDate(e.target.value)} aria-label="Pick a date" />
+              <button className="btn ghost" onClick={() => setJdn(jdn + 1)} aria-label="Next day">›</button>
+              <button className="btn" onClick={goToday}>{t('today', lang)}</button>
+              <button className="btn" onClick={goNextSunday}>{t('nextSunday', lang)}</button>
             </div>
-
-            {browse === 'sunday' && (
-              sunday ? (
-                <>
-                  <SundayHero
-                    day={sunday}
-                    lang={lang}
-                    isToday={sunday.jdn === todayJDN()}
-                    onOpen={() => { setJdn(sunday.jdn); setBrowse('day'); }}
-                  />
-                  <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang} headless onOpenPdf={openPdfAt} />
-                </>
-              ) : <p className="loading">…</p>
-            )}
-
-            {browse === 'day' && (
-              <>
-                {day && <DateBanner day={day} lang={lang} />}
-                <div className="daynav" role="group" aria-label="Date navigation">
-                  <button className="btn ghost" onClick={() => setJdn(jdn - 1)} aria-label="Previous day">‹</button>
-                  <input className="datepick" type="date" value={gregISO} onChange={(e) => onPickDate(e.target.value)} aria-label="Pick a date" />
-                  <button className="btn ghost" onClick={() => setJdn(jdn + 1)} aria-label="Next day">›</button>
-                  <button className="btn" onClick={goToday}>{t('today', lang)}</button>
-                  <button className="btn" onClick={goNextSunday}>{t('nextSunday', lang)}</button>
-                </div>
-                {error && <p className="error" role="alert">Could not load the readings: {error}</p>}
-                {!error && !day && <p className="loading">…</p>}
-                {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang} onOpenPdf={openPdfAt} />}
-              </>
-            )}
-
-            {browse === 'mezmur' && day && (
-              picked ? (
-                <>
-                  <button className="btn" onClick={() => setPicked(null)}>{t('backToDay', lang)}</button>
-                  <ReadingsView
-                    key={picked.key}
-                    day={{
-                      ...day,
-                      gapNote: null,
-                      candidates: [{
-                        kind: 'seasonal',
-                        record: picked.record,
-                        reasonEn: picked.group,
-                        reasonAm: picked.group,
-                        mezmur: picked.mezmur,
-                        unverified: picked.unverified,
-                      }],
-                    }}
-                    books={books}
-                    lang={lang}
-                  />
-                </>
-              ) : (
-                <MezmurIndex entries={index} lang={lang} onOpen={setPicked} />
-              )
-            )}
+            {error && <p className="error" role="alert">Could not load the readings: {error}</p>}
+            {!error && !day && <p className="loading">{t('loadingReadings', lang)}</p>}
+            {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang} onOpenPdf={openPdfAt} />}
           </>
+        )}
+
+        {section === 'mezmur' && (
+          picked ? (
+            <>
+              <button className="btn back" onClick={() => setPicked(null)}>← {t('allMezmurs', lang)}</button>
+              <MezmurDetail entry={picked} day={day ?? sunday} books={books} lang={lang} onOpenPdf={openPdfAt} />
+            </>
+          ) : (
+            index.length
+              ? <MezmurIndex entries={index} lang={lang} onOpen={setPicked} />
+              : <p className="loading">{t('loadingReadings', lang)}</p>
+          )
         )}
       </main>
 
       <footer className="colophon">
-        <p>
-          ✠ መጽሐፈ ግጻዌ · The Lectionary of the Ethiopian Orthodox Tewahedo Church
-        </p>
+        <p>✠ መጽሐፈ ግጻዌ · The Lectionary of the Ethiopian Orthodox Tewahedo Church</p>
+        <button className="colophon-link" onClick={() => setSection('about')}>{t('about', lang)}</button>
       </footer>
     </div>
+  );
+}
+
+/** One mezmur opened from the index, shown with its own heading. */
+function MezmurDetail({ entry, day, books, lang, onOpenPdf }: {
+  entry: MezmurEntry; day: DayInfo | null; books: BookNames; lang: Lang;
+  onOpenPdf: (page: number) => void;
+}) {
+  if (!day) return <p className="loading">{t('loadingReadings', lang)}</p>;
+  return (
+    <ReadingsView
+      key={entry.key}
+      day={{
+        ...day,
+        gapNote: null,
+        gapPdfPage: null,
+        candidates: [{
+          kind: 'seasonal',
+          record: entry.record,
+          reasonEn: entry.group,
+          reasonAm: entry.group,
+          mezmur: entry.mezmur,
+          unverified: entry.unverified,
+        }],
+      }}
+      books={books}
+      lang={lang}
+      onOpenPdf={onOpenPdf}
+    />
   );
 }
 
@@ -228,5 +249,3 @@ function CrossMark() {
     </svg>
   );
 }
-
-export { ethDateString };

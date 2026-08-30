@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { mezmurOf } from '../lib/resolver';
 import { skeleton, translit } from '../lib/translit';
-import type { Lang } from '../lib/labels';
+import { t, type Lang } from '../lib/labels';
 import type { DayRecord, ExtraRecord, MonthlyRecord, SeasonalRecord } from '../lib/types';
 
 export interface MezmurEntry {
@@ -94,7 +94,11 @@ export default function MezmurIndex({ entries, lang, onOpen }: {
               <button key={e.key} className="mezmur-card" onClick={() => onOpen(e)}>
                 <span className="mezmur-card-geez">{e.mezmur}</span>
                 <span className="mezmur-card-translit">{translit(e.mezmur)}</span>
-                {e.unverified && <span className="mezmur-card-flag">scan</span>}
+                {e.unverified && (
+                  <span className="mezmur-card-flag" title="Transcribed from the page scans — verify against the book">
+                    {t('fromScan', lang)}
+                  </span>
+                )}
               </button>
             ))}
           </div>
