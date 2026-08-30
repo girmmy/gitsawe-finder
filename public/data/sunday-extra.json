@@ -16,7 +16,9 @@
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 102,
-          "s": 14
+          "s": 14,
+          "n": 14,
+          "e": "For he knoweth our frame; he remembereth that we are dust."
         }
       ],
       "pauline": [
@@ -61,6 +63,131 @@
       ],
       "anaphora": [
         "ዘእግዝእትነ ማርያም"
+      ]
+    }
+  },
+  {
+    "id": "tsige-4",
+    "period": "tsige",
+    "order": 4,
+    "mezmur": "በዚአሁ ሐለፈ ክረምት",
+    "periodAm": "ዘመነ ጽጌ",
+    "periodEn": "Zemene Tsige — the Season of Flowers",
+    "title": "፬ኛ መዝሙር፡ በዚአሁ ሐለፈ ክረምት",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ጥቅምት — printed p. 382–383",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "አንተ ፈጠርከ ፀሐየ ወወርኀ።",
+          "bt": "መዝሙረ ዳዊት"
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ኢተአምሩኑ አኀዊነ ሕገ ንነግረክሙ",
+          "bt": "ወደ ሮሜ ሰዎች",
+          "b": "ROM",
+          "c": 7,
+          "s": 1,
+          "n": 14
+        }
+      ],
+      "catholic": [
+        {
+          "g": "ወይእዜኒ ሃይማኖትክሙ ወተስፋክሙ",
+          "bt": "፩ኛ የጴጥሮስ መልእክት",
+          "b": "1PE",
+          "c": 1,
+          "s": 21
+        }
+      ],
+      "acts": [
+        {
+          "g": "ስምዑ አኀዊነ ወአበዊነ",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 22,
+          "s": 1,
+          "n": 7
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወበእንተዝ እብለክሙ ኢትትከዙ",
+          "bt": "የማቴዎስ ወንጌል",
+          "b": "MAT",
+          "c": 6,
+          "s": 24
+        }
+      ],
+      "anaphora": [
+        "ዘእግዝእትነ ማርያም"
+      ]
+    }
+  },
+  {
+    "id": "tsige-5",
+    "period": "tsige",
+    "order": 5,
+    "mezmur": "ጸገየ ወይን",
+    "periodAm": "ዘመነ ጽጌ",
+    "periodEn": "Zemene Tsige — the Season of Flowers",
+    "title": "፭ኛ መዝሙር፡ ጸገየ ወይን",
+    "provenance": "scan",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ ጥቅምት — printed p. 382–383",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ዐፀደ ወይን አፍለስከ እምግብጽ። ሰደድከ አሕዛበ ወተከልከ ኪያሃ። ወጼሐክ ፍኖተ ቅድሜሃ።",
+          "e": "Thou hast brought a vine out of Egypt: thou hast cast out the heathen, and planted it. Thou preparedst room before it.",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 79,
+          "s": 9,
+          "n": 10
+        }
+      ],
+      "pauline": [
+        {
+          "g": "ለክሙ እብል ለአሕዛብ",
+          "bt": "ወደ ሮሜ ሰዎች",
+          "b": "ROM",
+          "c": 11,
+          "s": 13,
+          "n": 24
+        }
+      ],
+      "catholic": [
+        {
+          "g": "ወሰብ ርእየ ዝክቱ",
+          "bt": "የዮሐንስ ራእይ",
+          "b": "REV",
+          "c": 19,
+          "s": 13
+        }
+      ],
+      "acts": [
+        {
+          "g": "ወሰምዑ ሐዋርያት ወቢጾሙሂ",
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 14,
+          "s": 1,
+          "n": 19
+        }
+      ],
+      "gospel": [
+        {
+          "g": "ወይቤሎሙ ካልእተ ምሳሌሁ ስምዑ",
+          "bt": "የማቴዎስ ወንጌል",
+          "b": "MAT",
+          "c": 21,
+          "s": 33
+        }
+      ],
+      "anaphora": [
+        "ዘእግዝእትነ"
       ]
     }
   },

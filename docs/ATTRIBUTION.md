@@ -40,6 +40,8 @@ above and were read off the page scans for this app:
 | Record | Mezmur | Source |
 |---|---|---|
 | `tsige-2` | ኪነ ጥበቡ መንክር ወዕፁብ | printed p. 382 (ወርኀ ጥቅምት) |
+| `tsige-4` | በዚአሁ ሐለፈ ክረምት | printed p. 382 (ወርኀ ጥቅምት) |
+| `tsige-5` | ጸገየ ወይን | printed p. 382–383 (ወርኀ ጥቅምት) |
 | `ayne-kulu-2` | ይሁበነ ዝናመ በጊዜሁ | printed p. 415 (ወርኀ ነሐሴ) |
 | `ayne-kulu-3` | ሰንበት ተዐቢ እምኵሉ ዕለት | old scan, p. 185 |
 | `goh-tsibah-4` | አምላኪየ ኄር | old scan, p. 185 |
@@ -52,13 +54,24 @@ the mezmur is **ይሁበነ ዝናመ በጊዜሁ** (the earlier dataset spell
 the third line of the misbak is **ትሰፍሕ የማነከ ወታጸግብ ለኵሉ እንስሳ ዘበሥርዓትከ** — not
 the ትፈትሕ … ሕያው ሥምረተከ the upstream data carried.
 
+ዘመነ ጽጌ is now complete: all six Sundays resolve.
+
+### How these were read
+
+Each citation is confirmed twice — once from the printed chapter and verse, and
+once from the incipit beside it. Where the two disagree the incipit wins,
+because it identifies the verse on its own. That check caught a gospel read as
+Matthew 7:24 whose incipit (ወበእንተዝ እብለክሙ ኢትትከዙ) is plainly Matthew 6:25, so
+the record says 6:24. Citations the book does not print are left out rather
+than inferred: `tsige-4` carries its misbak text with no reference, because the
+book gives it as a cross-reference to Sene 24 vespers.
+
 ### Still missing
 
-About a dozen Sunday records remain undigitized (some Tsige, Astemhro,
-ዘመነ ልደት, Eastertide, Kremt and Filseta Sundays). Verse numbers in these scans
-turn on a single stroke — ፲፮ against ፲፯ — so they are not transcribed by eye.
-The app names the section and opens the book at the right page instead; the
-readings themselves are best dictated by someone who reads the fidel.
+Roughly a dozen Sunday records remain undigitized: the Astemhro Sundays
+(printed p. 384), ዘመነ ልደት (p. 389), Eastertide (p. 405), and the Kremt and
+Filseta Sundays (p. 409–415). Until they are read the app names the section and
+opens the book at that page.
 
 ## Bible text
 
