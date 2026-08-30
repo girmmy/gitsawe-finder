@@ -268,6 +268,14 @@ body {
   background: color-mix(in srgb, var(--rubric) 6%, var(--panel));
   padding: 0.7rem 1rem; font-size: 0.92rem; border-radius: 2px;
 }
+.gap-link {
+  display: inline-block; margin-left: 0.5rem; cursor: pointer;
+  background: var(--rubric); color: #f8f1e2; border: none; border-radius: 2px;
+  font-family: var(--serif-latin); font-weight: 600; font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+}
+.gap-link:hover { background: var(--rubric-soft); }
+.pdf-at { font-family: var(--serif-latin); font-weight: 400; color: var(--gold); font-size: 0.9rem; }
 
 .candidate-head { text-align: center; margin-bottom: 1.4rem; }
 .rubric.why {

@@ -60,11 +60,15 @@ export default function AboutView({ lang }: { lang: Lang }) {
             against the book and tell me about anything that is off.
           </p>
           <p>
-            A few other Sunday records (some Tsige, Christmastide and Kremt Sundays) are not yet
-            digitized at all. On those days the app says so plainly and falls back to the fixed
-            daily reading. The PDF is the authoritative text. Reading assignments also vary by
-            local tradition and by the direction of the church fathers; this app is an aid, not
-            an authority.
+            About fourteen other Sunday records — some Tsige, Astemhro, Christmastide, Eastertide
+            and Kremt Sundays — are in no published dataset. They are in the book, so rather than
+            transcribe blurry verse numbers and risk a wrong citation, the app tells you which
+            page carries them and opens the PDF there. Those readings are real; only the
+            digitisation is missing.
+          </p>
+          <p>
+            The PDF is the authoritative text. Reading assignments also vary by local tradition
+            and by the direction of the church fathers; this app is an aid, not an authority.
           </p>
           <h3>Privacy</h3>
           <p>

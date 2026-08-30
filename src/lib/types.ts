@@ -90,4 +90,6 @@ export interface DayInfo {
   candidates: Candidate[];
   /** Explicit note when a Sunday has no digitized Sunday-cycle record. */
   gapNote: string | null;
+  /** The PDF page carrying that Sunday's section, so the gap is one tap away. */
+  gapPdfPage: number | null;
 }

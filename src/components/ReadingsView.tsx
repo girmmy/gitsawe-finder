@@ -9,10 +9,11 @@ const SERVICES = ['serk', 'negh', 'kidassie'] as const;
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 
-export default function ReadingsView({ day, books, lang, headless = false }: {
+export default function ReadingsView({ day, books, lang, headless = false, onOpenPdf }: {
   day: DayInfo; books: BookNames; lang: Lang;
   /** Hide the mezmur header when a hero above already carries it. */
   headless?: boolean;
+  onOpenPdf?: (page: number) => void;
 }) {
   const [selected, setSelected] = useState(0);
   const primary = day.candidates[selected] ?? day.candidates[0];
@@ -23,7 +24,16 @@ export default function ReadingsView({ day, books, lang, headless = false }: {
 
   return (
     <div className="readings">
-      {day.gapNote && <p className="gap-note" role="note">{day.gapNote}</p>}
+      {day.gapNote && (
+        <p className="gap-note" role="note">
+          {day.gapNote}
+          {day.gapPdfPage && onOpenPdf && (
+            <button className="gap-link" onClick={() => onOpenPdf(day.gapPdfPage!)}>
+              Open that page →
+            </button>
+          )}
+        </p>
+      )}
 
       <div className="candidate-head">
         {!headless && (

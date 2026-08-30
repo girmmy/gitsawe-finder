@@ -433,8 +433,9 @@ export function resolveDay(jdn: number, data: Dataset): DayInfo {
     }
   }
 
-  const gapNote = isSunday && !hasOverride
-    ? 'No Sunday-cycle record is digitized for this Sunday yet — showing the fixed daily reading. Cross-check the PDF.'
+  const gap = isSunday && !hasOverride ? sundaySectionPage(ctx) : null;
+  const gapNote = gap
+    ? `No Sunday-cycle record is digitized for this Sunday yet — showing the fixed daily reading. The book has it: ${gap.label}.`
     : null;
 
   return {
@@ -445,5 +446,26 @@ export function resolveDay(jdn: number, data: Dataset): DayInfo {
     feasts: feastLabels(ctx),
     candidates,
     gapNote,
+    gapPdfPage: gap?.page ?? null,
   };
+}
+
+/**
+ * Where the Sunday cycle for a date lives in the printed book.
+ *
+ * The Sunday section runs from PDF page 160 to 181; the printed folio is the
+ * PDF page plus four (verified against pages 162/166 and 164/168). Pages below
+ * were confirmed by reading the scans; the rest fall back to the section start.
+ */
+function sundaySectionPage(ctx: Ctx): { page: number; label: string } | null {
+  const { eth, jdn } = ctx;
+  const at = (m: number, d: number) => ethToJDN(eth.year, m, d);
+  const cite = (page: number, what: string) => ({ page, label: `${what}, PDF page ${page} (printed ${page + 4})` });
+
+  if (jdn >= at(1, 26) && jdn <= at(3, 5)) return cite(162, 'the ዘመነ ጽጌ Sundays');
+  if (eth.month === 1) return cite(160, 'the Meskerem Sundays');
+  if (jdn >= at(3, 1) && jdn <= at(4, 6)) return cite(164, 'the አስተምህሮ Sundays');
+  if (eth.month === 4 || eth.month === 5 || eth.month === 6) return cite(167, 'the ዘመነ ልደት Sundays');
+  if (eth.month >= 10) return cite(177, 'the ዘመነ ክረምት Sundays');
+  return cite(160, 'the Sunday section');
 }

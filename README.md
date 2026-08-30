@@ -56,8 +56,13 @@ governs a given date:
    ordinary weekdays and stays available as a secondary panel otherwise.
 
 Every candidate carries the reason it applies, and the user can switch between
-them. Where nothing is digitized for a Sunday the app says so rather than
-guessing.
+them.
+
+Where nothing is digitized for a Sunday the app says so rather than guessing —
+and names the page of the book that carries it, with a button that opens the
+bundled PDF there. The section pages were located by reading the scans: the
+ዘመነ ጽጌ Sundays are on PDF page 162, the አስተምህሮ Sundays on 164, ዘመነ ልደት on 167,
+ዘመነ ክረምት on 177. Printed folio = PDF page + 4.
 
 ## Data provenance
 

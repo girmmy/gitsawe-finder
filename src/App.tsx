@@ -30,6 +30,7 @@ export default function App() {
   const [sunday, setSunday] = useState<DayInfo | null>(null);
   const [index, setIndex] = useState<MezmurEntry[]>([]);
   const [picked, setPicked] = useState<MezmurEntry | null>(null);
+  const [pdfPage, setPdfPage] = useState<number | null>(null);
 
   useEffect(() => { localStorage.setItem('gitsawe-lang', lang); }, [lang]);
 
@@ -63,6 +64,8 @@ export default function App() {
       .catch(() => undefined);
     return () => { alive = false; };
   }, []);
+
+  const openPdfAt = useCallback((page: number) => { setPdfPage(page); setView('pdf'); }, []);
 
   const goToday = useCallback(() => setJdn(todayJDN()), []);
   const goNextSunday = useCallback(() => {
@@ -105,7 +108,7 @@ export default function App() {
 
       <main id="main">
         {view === 'about' && <AboutView lang={lang} />}
-        {view === 'pdf' && <PdfView lang={lang} />}
+        {view === 'pdf' && <PdfView lang={lang} page={pdfPage} />}
         {view === 'day' && (
           <>
             <div className="browse-toggle" role="group" aria-label="Browse mode">
@@ -126,7 +129,7 @@ export default function App() {
                     isToday={sunday.jdn === todayJDN()}
                     onOpen={() => { setJdn(sunday.jdn); setBrowse('day'); }}
                   />
-                  <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang} headless />
+                  <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang} headless onOpenPdf={openPdfAt} />
                 </>
               ) : <p className="loading">…</p>
             )}
@@ -143,7 +146,7 @@ export default function App() {
                 </div>
                 {error && <p className="error" role="alert">Could not load the readings: {error}</p>}
                 {!error && !day && <p className="loading">…</p>}
-                {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang} />}
+                {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang} onOpenPdf={openPdfAt} />}
               </>
             )}
 
