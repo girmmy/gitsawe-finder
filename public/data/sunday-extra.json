@@ -1,0 +1,113 @@
+[
+  {
+    "id": "ayne-kulu-2",
+    "period": "ayneKulu",
+    "order": 2,
+    "mezmur": "ይሁብን ዝናመ",
+    "periodAm": "ደለያት · ዐይነ ኵሉ",
+    "periodEn": "Deleyat / Ayne Kulu — the Sundays after Filseta, up to the Sunday of Abraham",
+    "title": "፪ኛ መዝሙር፡ ይሁብን ዝናመ በዚሁ",
+    "provenance": "scan",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ዐይነ ኵሉ ነፍስ ይሴፎ ኪያከ። እንተ ትሁቦሙ ሲሳዮሙ በጊዜሁ። ትፈትሕ የማነከ ወታጸግብ ለኵሉ ሕያው ሥምረተከ።",
+          "e": "The eyes of all wait upon thee; and thou givest them their meat in due season. Thou openest thine hand, and satisfiest the desire of every living thing.",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 144,
+          "s": 15,
+          "n": 16,
+          "kjv": "Psalm 145:15–16 (Eth. 144:15–16)"
+        }
+      ],
+      "pauline": [
+        { "g": "ወይእዜኒ አኀዊነ ቅዱሳን", "bt": "ወደ ዕብራውያን", "b": "HEB", "c": 3, "s": 1, "en": "Hebrews 3:1ff" }
+      ],
+      "catholic": [
+        { "g": "ነዑ ይእዜኒ አብዕልት", "bt": "የያዕቆብ መልእክት", "b": "JAS", "c": 5, "s": 1, "en": "James 5:1ff" }
+      ],
+      "acts": [
+        { "g": "ወይቤ ስምዑ አኀዊነ ወአበዊነ", "bt": "ግብረ ሐዋርያት", "b": "ACT", "c": 22, "s": 1, "en": "Acts 22:1ff" }
+      ],
+      "gospel": [
+        { "g": "ወአንጐርጐሩ አይሁድ በእንቲአሁ", "bt": "የዮሐንስ ወንጌል", "b": "JHN", "c": 6, "s": 41, "en": "John 6:41ff" }
+      ],
+      "anaphora": ["ዘኤጲፋንዮስ"]
+    }
+  },
+  {
+    "id": "ayne-kulu-3",
+    "period": "ayneKulu",
+    "order": 3,
+    "mezmur": "ሰንበት ተዐቢ እምኵሉ ዕለት",
+    "periodAm": "ደለያት · ዐይነ ኵሉ",
+    "periodEn": "Deleyat / Ayne Kulu — the Sundays after Filseta, up to the Sunday of Abraham",
+    "title": "፫ኛ መዝሙር፡ ሰንበት ተዐቢ እምኵሉ ዕለት",
+    "provenance": "scan",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ወሐመልማለ ለቅኔ እጓለ እመሕያው። ዘየሀቦሙ ሲሳዮሙ ለእንስሳ። ወለእጐለ ቋዓት እለ ይጼውዕዎ።",
+          "e": "He giveth to the beast his food, and to the young ravens which cry.",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 146,
+          "s": 8,
+          "n": 9,
+          "kjv": "Psalm 147:8–9 (Eth. 146:8–9)"
+        }
+      ],
+      "pauline": [
+        { "g": "ወይእቲኒ ደቂቀ ሌዊ እለ ይነሥኡ ክህነተ", "bt": "ወደ ዕብራውያን", "b": "HEB", "c": 7, "s": 5, "en": "Hebrews 7:5ff" }
+      ],
+      "catholic": [
+        { "g": "ምንት ይበቍዕ አኀዊነ", "bt": "የያዕቆብ መልእክት", "b": "JAS", "c": 2, "s": 14, "en": "James 2:14ff" }
+      ],
+      "acts": [
+        { "g": "ወይቤሎ ሊቀ ካህናት", "bt": "ግብረ ሐዋርያት", "b": "ACT", "c": 7, "s": 1, "en": "Acts 7:1ff" }
+      ],
+      "gospel": [
+        { "g": "ወመሰለ ሎሙ ወይቤሎሙ", "bt": "የሉቃስ ወንጌል", "b": "LUK", "c": 13, "s": 18, "en": "Luke 13:18ff" }
+      ],
+      "anaphora": ["ዘአትናቴዎስ"]
+    }
+  },
+  {
+    "id": "goh-tsibah-4",
+    "period": "gohTsibah",
+    "order": 4,
+    "mezmur": "አምላኪየ ኄር",
+    "periodAm": "ጎህ · ነግህ · ጽባሕ · ብርሃን · መዓልት",
+    "periodEn": "Goh / Tsibah — from the Sunday of Abraham to the Sunday of John (the year's end)",
+    "title": "፬ኛ መዝሙር፡ አምላኪየ ኄር",
+    "provenance": "scan",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "እስመ ኀቤከ እጼሊ እግዚኦ። በጽባሕ ስማዕ ቃልየ። በጽባሕ እትዋደድ ቅድሜከ ወአስተርኢ ለከ።",
+          "e": "For unto thee will I pray, O LORD; my voice shalt thou hear in the morning; in the morning will I direct my prayer unto thee, and will look up.",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 5,
+          "s": 2,
+          "n": 3,
+          "kjv": "Psalm 5:2–3 (Eth. 5:2–3)"
+        }
+      ],
+      "pauline": [
+        { "g": "ለኵሉ ነፍስ መኰንን ተኰነኑ", "bt": "ወደ ሮሜ ሰዎች", "b": "ROM", "c": 13, "s": 1, "en": "Romans 13:1ff" }
+      ],
+      "catholic": [
+        { "g": "አስተብቍዑ እንከ አኀዊክሙ", "bt": "፩ኛ የጴጥሮስ መልእክት", "b": "1PE", "c": 2, "s": 11, "en": "1 Peter 2:11ff" }
+      ],
+      "acts": [
+        { "g": "ወዘየሐውር ብሔረ አስተጋብኡ ሎሙ", "bt": "ግብረ ሐዋርያት", "b": "ACT", "c": 21, "s": 1, "en": "Acts 21ff" }
+      ],
+      "gospel": [
+        { "g": "ወሰሚዖ ኢየሱስ ከመ ዮሐንስ ተአኅዘ", "bt": "የማቴዎስ ወንጌል", "b": "MAT", "c": 4, "s": 12, "n": 17, "et": "እምአሜሃ አኀዘ", "en": "Matthew 4:12–17" }
+      ],
+      "anaphora": ["ዘእግዚእነ"]
+    }
+  }
+]
