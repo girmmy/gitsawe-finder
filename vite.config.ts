@@ -30,8 +30,8 @@ export default defineConfig({
         name: 'Gitsawe Finder · ግጻዌ',
         short_name: 'Gitsawe Finder',
         description: 'Daily and Sunday readings of the Ethiopian Orthodox Tewahedo Church.',
-        theme_color: '#92251b',
-        background_color: '#f4ecdb',
+        theme_color: '#a3312b',
+        background_color: '#ffffff',
         display: 'standalone',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },

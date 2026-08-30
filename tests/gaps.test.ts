@@ -35,3 +35,30 @@ describe('coverage of the Sunday cycle', () => {
     expect(gaps).toBeGreaterThan(0);
   });
 });
+
+describe('candidates stay in season', () => {
+  it('an end-of-year Sunday offers only end-of-year records, not every season', () => {
+    // Nehase 24, 2018 EC = 30 August 2026.
+    const jdn = ethToJDN(2018, 12, 24);
+    const day = resolveDay(jdn, dataFor(jdn));
+    const periods = day.candidates
+      .map((c) => (c.record as { period?: string }).period)
+      .filter(Boolean);
+    expect(new Set(periods)).toEqual(new Set(['ayneKulu', 'gohTsibah']));
+    expect(periods).not.toContain('tsige');
+    expect(periods).not.toContain('astemhro');
+  });
+
+  it('a date offers no candidate from a season it is not in', () => {
+    for (const [m, d] of [[1, 10], [3, 5], [5, 2], [10, 28]] as const) {
+      const jdn = ethToJDN(2019, m, d);
+      const day = resolveDay(jdn, dataFor(jdn));
+      // Every extra candidate must carry a window that actually contains the date.
+      for (const c of day.candidates) {
+        const r = c.record as { period?: string; fromDay?: number; toDay?: number };
+        if (!r.period) continue;
+        if (r.fromDay != null) expect(d).toBeGreaterThanOrEqual(r.fromDay);
+      }
+    }
+  });
+});

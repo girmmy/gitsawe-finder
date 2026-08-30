@@ -287,9 +287,14 @@ function windowCandidates(ctx: Ctx, data: Dataset): Candidate[] {
     const lastDay = ethToJDN(eth.year, 13, daysInEthMonth(eth.year, 13));
     const yearsLastSunday = lastSundayOnOrBefore(lastDay);
     const isYohannes = jdn === yearsLastSunday;
+    // Only the two end-of-year cycles belong here — the Sunday that fits leads,
+    // the other follows as an alternate. Records from other seasons must not
+    // be swept in just because they are not the leading one.
+    const lead = isYohannes ? 'gohTsibah' : 'ayneKulu';
+    const other = isYohannes ? 'ayneKulu' : 'gohTsibah';
     const ordered = [
-      ...data.extra.filter((r) => r.period === (isYohannes ? 'gohTsibah' : 'ayneKulu')),
-      ...data.extra.filter((r) => r.period !== (isYohannes ? 'gohTsibah' : 'ayneKulu')),
+      ...data.extra.filter((r) => r.period === lead),
+      ...data.extra.filter((r) => r.period === other),
     ];
     for (const rec of ordered) {
       out.push({

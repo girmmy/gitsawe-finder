@@ -1,41 +1,39 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ግጻዌ · Gitsawe — an Ethiopian illuminated-manuscript interface.
-   Parchment ground, ink, rubric red, aged gold. Dark mode is the
-   night-vigil inversion: candlelit gold on deep umber.
+   ግጻዌ · Gitsawe — clean and legible, with one accent color: rubric
+   red. System fonts throughout — no display serif, no gold.
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* parchment day */
-  --parchment: #f4ecdb;
-  --parchment-deep: #ecdfc6;
-  --panel: #faf5e9;
-  --ink: #251c12;
-  --ink-soft: #57493a;
-  --rubric: #92251b;         /* the red of manuscript rubrics */
-  --rubric-soft: #b0473c;
-  --gold: #9a7420;
-  --gold-bright: #b98c2b;
-  --line: #d8c9a8;
-  --shadow: 0 2px 14px rgba(64, 44, 16, 0.12), 0 1px 3px rgba(64, 44, 16, 0.10);
+  --parchment: #fafaf9;      /* page background — near white */
+  --parchment-deep: #f1f0ee;
+  --panel: #ffffff;          /* cards */
+  --ink: #1c1c1c;
+  --ink-soft: #686662;
+  --rubric: #a3312b;         /* the single accent color */
+  --rubric-soft: #bb534c;
+  --gold: #8a887f;           /* meta text — muted neutral, not gold */
+  --gold-bright: #a3a199;
+  --line: #e4e2dd;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
-  --serif-latin: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --serif-body: 'Literata', Georgia, serif;
+  --serif-latin: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --serif-body: Georgia, 'Iowan Old Style', 'Times New Roman', ui-serif, serif;
   --ethiopic: 'Noto Sans Ethiopic', 'Kefa', 'Abyssinica SIL', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --parchment: #191009;
-    --parchment-deep: #120b06;
-    --panel: #23180d;
-    --ink: #efe2c8;
-    --ink-soft: #b3a184;
-    --rubric: #e06a50;
-    --rubric-soft: #c25640;
-    --gold: #d3a43c;
-    --gold-bright: #e8bc55;
-    --line: #45351f;
-    --shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+    --parchment: #111111;
+    --parchment-deep: #0a0a0a;
+    --panel: #1a1a1a;
+    --ink: #ececec;
+    --ink-soft: #9c9a95;
+    --rubric: #e0685e;
+    --rubric-soft: #c85850;
+    --gold: #93918a;
+    --gold-bright: #aaa8a1;
+    --line: #2a2a2a;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -46,8 +44,6 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--parchment);
-  background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(185, 140, 43, 0.07), transparent 60%);
   color: var(--ink);
   font-family: var(--serif-body), var(--ethiopic);
   line-height: 1.6;
@@ -62,13 +58,7 @@ body {
 }
 .skip-link:focus { left: 0; }
 
-/* ── a quiet rule where the harag band once was ── */
-.harag {
-  height: 3px;
-  margin: 0 -1.1rem;
-  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--rubric) 50%, var(--gold) 70%, transparent);
-  opacity: 0.7;
-}
+.harag { height: 2px; margin: 0 -1.1rem; background: var(--rubric); opacity: 0.85; }
 
 /* ── masthead ── */
 .masthead { padding: 1.1rem 0 0.4rem; }
@@ -86,7 +76,7 @@ body {
 .brand-geez { font-family: var(--ethiopic); font-size: 1.55rem; font-weight: 700; letter-spacing: 0.02em; }
 .brand-latin {
   font-family: var(--serif-latin); font-size: 0.72rem; text-transform: uppercase;
-  letter-spacing: 0.42em; color: var(--gold); font-weight: 600;
+  letter-spacing: 0.08em; color: var(--gold); font-weight: 600;
 }
 .lang-toggle {
   background: none; cursor: pointer; color: var(--ink-soft);
@@ -132,7 +122,7 @@ body {
 }
 .banner-year { color: var(--gold); font-weight: 600; font-size: 0.7em; }
 .banner-greg {
-  margin: 0; font-family: var(--serif-latin); font-style: italic;
+  margin: 0; font-family: var(--serif-latin);
   color: var(--ink-soft); font-size: 1.02rem;
 }
 .banner-badges { margin: 0.8rem 0 0; display: flex; gap: 0.45rem; justify-content: center; flex-wrap: wrap; }
@@ -158,12 +148,12 @@ body {
 }
 .hero-kicker {
   margin: 0; font-family: var(--serif-latin); font-size: 0.74rem;
-  letter-spacing: 0.32em; text-transform: uppercase; color: var(--rubric);
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--rubric);
   font-weight: 700;
 }
 .hero-label {
   margin: 1rem 0 0; font-family: var(--serif-latin); font-size: 0.7rem;
-  letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold);
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold);
 }
 .hero-mezmur {
   margin: 0.15rem 0 0.1rem; font-family: var(--ethiopic); font-weight: 800;
@@ -180,7 +170,7 @@ body {
 }
 .hero-date-sep { color: var(--gold); }
 .hero-why {
-  margin: 0.2rem 0 0; font-family: var(--serif-latin); font-style: italic;
+  margin: 0.2rem 0 0; font-family: var(--serif-latin);
   color: var(--gold); font-size: 0.92rem;
 }
 .hero-badges {
@@ -206,7 +196,7 @@ body {
 }
 .mezmur-group { margin-bottom: 1.6rem; }
 .mezmur-group-title {
-  font-family: var(--serif-latin); font-size: 0.78rem; letter-spacing: 0.2em;
+  font-family: var(--serif-latin); font-size: 0.78rem; letter-spacing: 0.05em;
   text-transform: uppercase; color: var(--gold); margin: 0 0 0.6rem;
   border-bottom: 1px solid var(--line); padding-bottom: 0.35rem;
 }
@@ -215,13 +205,13 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
 }
 .mezmur-card {
-  text-align: left; cursor: pointer; position: relative;
+  text-align: left; cursor: pointer;
   background: var(--panel); border: 1px solid var(--line);
-  border-left: 3px solid var(--gold); border-radius: 3px;
-  padding: 0.6rem 0.8rem; font-family: inherit; color: var(--ink);
-  transition: border-color 0.15s, transform 0.15s;
+  border-radius: 4px;
+  padding: 0.65rem 0.8rem; font-family: inherit; color: var(--ink);
+  transition: border-color 0.15s, background 0.15s;
 }
-.mezmur-card:hover { border-color: var(--rubric); transform: translateX(2px); }
+.mezmur-card:hover { border-color: var(--rubric); }
 .mezmur-card-geez {
   display: block; font-family: var(--ethiopic); font-weight: 700;
   font-size: 1.1rem; line-height: 1.4;
@@ -230,11 +220,12 @@ body {
   display: block; font-family: var(--serif-latin); font-style: italic;
   color: var(--ink-soft); font-size: 0.85rem;
 }
+/* Sits under the name rather than over it — long names were being covered. */
 .mezmur-card-flag {
-  position: absolute; top: 0.5rem; right: 0.6rem;
-  font-family: var(--serif-latin); font-size: 0.6rem; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--gold);
-  border: 1px solid var(--line); border-radius: 999px; padding: 0 0.35rem;
+  display: inline-block; margin-top: 0.3rem;
+  font-family: var(--serif-latin); font-size: 0.62rem; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--rubric);
+  border: 1px solid var(--line); border-radius: 3px; padding: 0.05rem 0.35rem;
 }
 
 /* ── date nav ── */
@@ -302,13 +293,13 @@ body {
   display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem;
   text-decoration: none; color: var(--ink); text-align: left;
   background: var(--panel); border: 1px solid var(--line);
-  border-left: 3px solid var(--gold); border-radius: 3px; padding: 0.6rem 0.9rem;
+  border-radius: 4px; padding: 0.6rem 0.9rem;
 }
-.notfound-ways a:hover { border-color: var(--rubric); border-left-color: var(--rubric); }
+.notfound-ways a:hover { border-color: var(--rubric); }
 .notfound-ways strong { font-family: var(--serif-latin); }
-.notfound-ways span { color: var(--ink-soft); font-size: 0.85rem; font-style: italic; }
+.notfound-ways span { color: var(--ink-soft); font-size: 0.85rem; }
 .rubric.why {
-  color: var(--gold); font-family: var(--serif-latin); font-style: italic;
+  color: var(--gold); font-family: var(--serif-latin);
   font-size: 1rem; margin: 0.2rem 0;
 }
 .record-title {
@@ -320,7 +311,7 @@ body {
 .mezmur-name { margin: 0.55rem 0 0.2rem; }
 .mezmur-label {
   display: block; font-family: var(--serif-latin); font-size: 0.7rem;
-  letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold);
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold);
 }
 .mezmur-geez {
   display: block; font-family: var(--ethiopic); font-weight: 800;
@@ -343,13 +334,13 @@ body {
 .scan-warning-text { font-size: 0.86rem; line-height: 1.55; color: var(--ink); }
 .scan-warning-text strong { color: var(--rubric); }
 .scan-source {
-  display: block; margin-top: 0.3rem; font-style: italic;
+  display: block; margin-top: 0.3rem;
   color: var(--ink-soft); font-size: 0.82rem;
 }
 
 /* Latin pronunciation under the Ge'ez of the misbak. */
 .translit-text {
-  font-family: var(--serif-latin); font-style: italic; color: var(--gold);
+  font-family: var(--serif-latin); font-style: italic; color: var(--ink-soft);
   margin: 0.15rem 0 0.3rem; font-size: 0.95rem; line-height: 1.6;
 }
 
@@ -368,7 +359,7 @@ body {
 }
 .epistle-reader {
   margin: 0; font-family: var(--serif-latin); font-size: 0.68rem;
-  letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+  letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold);
 }
 .epistle-slot {
   margin: 0.1rem 0 0.35rem; font-family: var(--ethiopic);
@@ -429,13 +420,13 @@ body {
 }
 .translation-label {
   margin: 0 0 0.25rem; font-family: var(--serif-latin); font-size: 0.7rem;
-  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+  letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold);
 }
 .misbak-translation .english-text { margin: 0 0 0.2rem; font-size: 0.99rem; line-height: 1.55; }
 .misbak-translation .english-text:last-child { margin-bottom: 0; }
 .amharic-text { font-family: var(--ethiopic); color: var(--ink-soft); margin: 0.25rem 0; line-height: 1.8; }
 .english-text {
-  font-family: var(--serif-latin); font-style: italic; font-size: 1.02rem;
+  font-family: var(--serif-body); font-size: 1.02rem;
   margin: 0.35rem 0 0.2rem; color: var(--ink);
 }
 .incipit { font-family: var(--ethiopic); margin: 0.2rem 0; line-height: 1.8; }
@@ -457,7 +448,7 @@ body {
 /* alternates */
 .alternates { margin-top: 1.8rem; }
 .alternates-title {
-  font-family: var(--serif-latin); font-size: 0.85rem; letter-spacing: 0.28em;
+  font-family: var(--serif-latin); font-size: 0.85rem; letter-spacing: 0.06em;
   text-transform: uppercase; color: var(--ink-soft); text-align: center;
   margin: 0 0 0.7rem;
 }
@@ -468,11 +459,11 @@ body {
   font-family: inherit; font-size: 0.95rem; border-radius: 2px;
   transition: background 0.15s, border-color 0.15s;
 }
-.alternate:hover { background: var(--panel); border-left-color: var(--gold); }
+.alternate:hover { background: var(--parchment-deep); border-left-color: var(--ink-soft); }
 .alternate.current {
   background: var(--panel); border-left-color: var(--rubric); cursor: default;
 }
-.alternate-reason { display: block; color: var(--gold); font-family: var(--serif-latin); font-style: italic; font-size: 0.88rem; }
+.alternate-reason { display: block; color: var(--gold); font-family: var(--serif-latin); font-size: 0.88rem; }
 .alternate-name { display: block; font-family: var(--ethiopic); font-weight: 600; margin-top: 0.1rem; }
 .alternate-state {
   display: block; margin-top: 0.3rem; font-family: var(--serif-latin);
@@ -487,7 +478,7 @@ body {
 .pdf-title { font-family: var(--ethiopic); font-weight: 700; font-size: 1.05rem; margin: 0; }
 .pdfframe { width: 100%; height: 78vh; border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--panel); }
 .pdf-fallback { padding: 2rem; text-align: center; }
-.pdf-credit { color: var(--ink-soft); font-size: 0.85rem; font-style: italic; }
+.pdf-credit { color: var(--ink-soft); font-size: 0.85rem; }
 
 /* about */
 .about { max-width: 62ch; margin: 1.6rem auto 0; }
@@ -499,7 +490,7 @@ body {
 /* footer */
 .colophon {
   margin-top: 3.5rem; text-align: center; color: var(--ink-soft);
-  font-size: 0.85rem; font-style: italic;
+  font-size: 0.85rem;
   border-top: 1px solid var(--line); padding-top: 1rem;
 }
 .colophon p { margin: 0 0 0.4rem; }
@@ -512,7 +503,7 @@ body {
 .error { color: var(--rubric); text-align: center; }
 .loading {
   text-align: center; color: var(--ink-soft);
-  font-family: var(--serif-latin); font-style: italic; font-size: 1rem;
+  font-family: var(--serif-latin); font-size: 1rem;
   padding: 2.5rem 0;
 }
 

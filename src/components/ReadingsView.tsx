@@ -93,8 +93,6 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
                 onClick={() => setSelected(idx)}
               >
                 <span className="alternate-reason">{lang === 'am' ? c.reasonAm : c.reasonEn}</span>
-                {c.mezmur && <span className="alternate-name">{t('mezmur', lang)}፦ {c.mezmur}</span>}
-                {!c.mezmur && c.record.title && <span className="alternate-name">{c.record.title}</span>}
                 <span className="alternate-state">
                   {current ? `✓ ${t('showingNow', lang)}` : t('switchTo', lang)}
                 </span>
