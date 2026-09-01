@@ -62,7 +62,8 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
 
       {SERVICES.map((svc) => (
         <ServiceBlock key={svc} name={svc} service={serviceOf(primary.record, svc)}
-          day={day} primary={primary} books={books} lang={lang} />
+          day={day} primary={primary} books={books} lang={lang}
+          hideMisbak={headless && svc === 'kidassie'} />
       ))}
 
       {(primary.record.sinksar?.length ?? 0) > 0 && (
@@ -119,8 +120,9 @@ function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Cand
   );
 }
 
-function ServiceBlock({ name, service, day, primary, books, lang }: {
-  name: string; service: Service | undefined; day: DayInfo; primary: Candidate; books: BookNames; lang: Lang;
+function ServiceBlock({ name, service, day, primary, books, lang, hideMisbak }: {
+  name: string; service: Service | undefined; day: DayInfo; primary: Candidate;
+  books: BookNames; lang: Lang; hideMisbak?: boolean;
 }) {
   const [done, setDone] = useState(false);
   if (!service) return null;
@@ -144,7 +146,7 @@ function ServiceBlock({ name, service, day, primary, books, lang }: {
         <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>{done ? '✓' : '⧉'}</button>
       </header>
 
-      {(service.msbak ?? []).map((r, i) => (
+      {!hideMisbak && (service.msbak ?? []).map((r, i) => (
         <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang} />
       ))}
 

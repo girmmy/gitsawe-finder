@@ -139,52 +139,84 @@ body {
   color: var(--rubric); font-family: var(--ethiopic); font-size: 1rem;
 }
 
-/* ── the coming Sunday: the app's headline ── */
+/* ── the coming Sunday ── */
 .hero {
-  text-align: center; margin: 1.8rem 0 1.4rem; padding: 1.8rem 1.1rem 1.6rem;
+  text-align: center; margin: 1.6rem 0 1.3rem; padding: 1.3rem 1.1rem 1.4rem;
   background: var(--panel); border: 1px solid var(--line);
   border-top: 3px solid var(--rubric); border-radius: 4px;
   box-shadow: var(--shadow); animation: rise 0.5s ease both;
 }
 .hero-kicker {
-  margin: 0; font-family: var(--serif-latin); font-size: 0.74rem;
+  margin: 0; font-family: var(--serif-latin); font-size: 0.7rem;
   letter-spacing: 0.06em; text-transform: uppercase; color: var(--rubric);
   font-weight: 700;
 }
-.hero-label {
-  margin: 1rem 0 0; font-family: var(--serif-latin); font-size: 0.7rem;
-  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold);
-}
-.hero-mezmur {
-  margin: 0.15rem 0 0.1rem; font-family: var(--ethiopic); font-weight: 800;
-  font-size: clamp(1.9rem, 8vw, 3.1rem); line-height: 1.25; color: var(--ink);
-}
-.hero-mezmur.hero-unnamed { font-size: clamp(1.15rem, 4vw, 1.5rem); font-weight: 600; }
-.hero-translit {
-  margin: 0; font-family: var(--serif-latin); font-style: italic;
-  color: var(--ink-soft); font-size: 1.08rem;
-}
 .hero-date {
-  margin: 1rem 0 0.2rem; font-family: var(--ethiopic);
-  font-size: 1rem; color: var(--ink);
+  margin: 0.3rem 0 0; font-family: var(--ethiopic);
+  font-size: 0.95rem; color: var(--ink-soft);
 }
-.hero-date-sep { color: var(--gold); }
-.hero-why {
-  margin: 0.2rem 0 0; font-family: var(--serif-latin);
-  color: var(--gold); font-size: 0.92rem;
+.hero-date-sep { color: var(--ink-soft); }
+
+/* The mezmur names the Sunday but sits quietly; the misbak is the headline. */
+.hero-mezmur-line {
+  margin: 0.9rem 0 0; display: flex; flex-direction: column;
+  align-items: center; gap: 0.05rem;
 }
+.hero-mezmur-label {
+  font-family: var(--serif-latin); font-size: 0.66rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--gold);
+}
+.hero-mezmur-name {
+  font-family: var(--ethiopic); font-weight: 700;
+  font-size: clamp(1.05rem, 3.4vw, 1.3rem); line-height: 1.4; color: var(--ink);
+}
+.hero-mezmur-translit {
+  font-family: var(--serif-latin); font-style: italic;
+  color: var(--ink-soft); font-size: 0.88rem;
+}
+.hero-unnamed { font-weight: 600; color: var(--ink-soft); }
+
+/* The misbak — what people open the app for. */
+.hero-misbak {
+  margin: 1.1rem auto 0; max-width: 46ch; text-align: left;
+  padding: 0.9rem 1rem; border-radius: 4px;
+  background: var(--parchment-deep); border: 1px solid var(--line);
+}
+.hero-misbak-label {
+  margin: 0 0 0.45rem; display: flex; align-items: baseline;
+  justify-content: space-between; gap: 0.6rem; flex-wrap: wrap;
+  font-family: var(--serif-latin); font-size: 0.68rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--rubric); font-weight: 700;
+}
+.hero-misbak-cite {
+  font-weight: 600; text-transform: none; letter-spacing: 0;
+  font-size: 0.82rem; color: var(--ink-soft);
+}
+.hero-misbak-geez {
+  margin: 0; font-family: var(--ethiopic); font-weight: 600;
+  font-size: 1.22rem; line-height: 2; color: var(--ink);
+}
+.hero-misbak-translit {
+  margin: 0.35rem 0 0; font-family: var(--serif-latin); font-style: italic;
+  color: var(--ink-soft); font-size: 0.95rem; line-height: 1.65;
+}
+.hero-misbak-english {
+  margin-top: 0.6rem; padding-top: 0.55rem; border-top: 1px dotted var(--line);
+}
+.hero-misbak-english p {
+  margin: 0 0 0.18rem; font-family: var(--serif-body);
+  font-size: 0.98rem; line-height: 1.55; color: var(--ink);
+}
+.hero-misbak-english p:last-child { margin-bottom: 0; }
+
 .hero-badges {
   display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap;
-  margin-top: 0.8rem;
+  margin-top: 0.9rem;
 }
 .badge.feast-badge {
   font-family: var(--ethiopic); border-color: var(--rubric-soft); color: var(--rubric);
 }
-.hero-hint {
-  margin: 1.2rem 0 0.2rem; font-family: var(--serif-latin);
-  color: var(--ink-soft); font-size: 0.9rem;
-}
-.hero-cta { margin-top: 0.5rem; }
+.hero-cta { margin-top: 0.9rem; }
 
 /* ── mezmur index ── */
 .mezmur-index { margin-top: 1.5rem; }
@@ -515,4 +547,9 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .banner, .readings { animation: none; }
+}
+
+.hero-misbak-amharic {
+  margin: 0.45rem 0 0; font-family: var(--ethiopic);
+  font-size: 0.95rem; line-height: 1.85; color: var(--ink-soft);
 }

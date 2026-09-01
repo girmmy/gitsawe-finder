@@ -151,6 +151,7 @@ export default function App() {
                 day={sunday}
                 lang={lang}
                 isToday={sunday.jdn === todayJDN()}
+                books={books}
                 onOpen={() => go({ name: 'date', iso: isoOf(sunday.jdn) })}
               />
               <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang}

@@ -29,6 +29,7 @@ export const UI = {
   readings: { en: 'Readings', am: 'ግጻዌ' },
   mezmur: { en: 'Mezmur', am: 'መዝሙር' },
   translation: { en: 'Translation', am: 'ትርጓሜ' },
+  mesbak: { en: 'Misbak', am: 'ምስባክ' },
   thisSunday: { en: 'Sunday', am: 'እሑድ' },
   byDay: { en: 'Any date', am: 'ቀን ምረጥ' },
   byMezmur: { en: 'Mezmurs', am: 'መዝሙራት' },
