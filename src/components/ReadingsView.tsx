@@ -60,10 +60,9 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
         <CopyAllBar day={day} primary={primary} books={books} lang={lang} />
       </div>
 
-      {SERVICES.map((svc) => (
+      {SERVICES.filter((svc) => !(headless && svc === 'kidassie')).map((svc) => (
         <ServiceBlock key={svc} name={svc} service={serviceOf(primary.record, svc)}
-          day={day} primary={primary} books={books} lang={lang}
-          hideMisbak={headless && svc === 'kidassie'} />
+          day={day} primary={primary} books={books} lang={lang} />
       ))}
 
       {(primary.record.sinksar?.length ?? 0) > 0 && (
@@ -120,9 +119,9 @@ function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Cand
   );
 }
 
-function ServiceBlock({ name, service, day, primary, books, lang, hideMisbak }: {
+function ServiceBlock({ name, service, day, primary, books, lang }: {
   name: string; service: Service | undefined; day: DayInfo; primary: Candidate;
-  books: BookNames; lang: Lang; hideMisbak?: boolean;
+  books: BookNames; lang: Lang;
 }) {
   const [done, setDone] = useState(false);
   if (!service) return null;
@@ -146,10 +145,20 @@ function ServiceBlock({ name, service, day, primary, books, lang, hideMisbak }: 
         <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>{done ? '✓' : '⧉'}</button>
       </header>
 
-      {!hideMisbak && (service.msbak ?? []).map((r, i) => (
+      {(service.msbak ?? []).map((r, i) => (
         <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang} />
       ))}
 
+      <LiturgyBody service={service} books={books} lang={lang} />
+    </section>
+  );
+}
+
+/** Epistles, gospel and anaphora for one service — shared by the panel and the hero. */
+export function LiturgyBody({ service, books, lang }: { service: Service; books: BookNames; lang: Lang }) {
+  const epistles = EPISTLES.filter((s) => service[s]?.length);
+  return (
+    <>
       {epistles.length > 0 && (
         <div className="epistle-grid" data-count={epistles.length}>
           {epistles.map((slot) => (
@@ -168,7 +177,7 @@ function ServiceBlock({ name, service, day, primary, books, lang, hideMisbak }: 
           <p className="anaphora-names">{service.anaphora.join(' ፣ ')}</p>
         </div>
       )}
-    </section>
+    </>
   );
 }
 

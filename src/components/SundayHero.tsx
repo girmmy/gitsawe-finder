@@ -4,6 +4,8 @@ import { translit } from '../lib/translit';
 import { citation, misbakEnglishLines } from '../lib/format';
 import { serviceOf, type DayInfo } from '../lib/types';
 import type { BookNames } from '../lib/data';
+import { LiturgyBody } from './ReadingsView';
+import { SERVICE_LABELS } from '../lib/labels';
 
 const GREG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'];
@@ -75,6 +77,15 @@ export default function SundayHero({ day, lang, isToday, books, onOpen }: {
               {english.map((line, i) => <p key={i}>{line}</p>)}
             </div>
           )}
+        </div>
+      )}
+
+      {liturgy && (
+        <div className="hero-liturgy">
+          <p className="hero-liturgy-label">
+            {SERVICE_LABELS.kidassie.am} · {SERVICE_LABELS.kidassie.en}
+          </p>
+          <LiturgyBody service={liturgy} books={books} lang={lang} />
         </div>
       )}
 
