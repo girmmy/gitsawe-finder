@@ -79,6 +79,8 @@ const arg = (flag, fallback) => {
 };
 const LIMIT = Number(arg('--limit', '25'));
 const ONLY = arg('--only', null);
+/** Refs to look at again even though videos.json already has one. */
+const REFRESH = (arg('--refresh', '') || '').split(',').map((r) => r.trim()).filter(Boolean);
 
 const load = (f) => JSON.parse(readFileSync(join(dataDir, f), 'utf8'));
 
@@ -123,12 +125,18 @@ function overlap(title, incipit) {
  * Sunday's name, the word ምስባክ, and — pushing the other way — መዝሙር alone,
  * which names the hymn rather than the chanted psalm.
  */
-function score(item, { incipit, mezmur }) {
+function score(item, { incipit, mezmur }, seconds) {
   const title = item.snippet.title;
   let s = overlap(title, incipit) * 100;
   if (mezmur && normalize(title).includes(normalize(mezmur))) s += 25;
-  if (/ምስባክ|misbak|mesbak/i.test(title)) s += 20;
+  if (/ምስባክ|misbak|mesbak|msbak/i.test(title)) s += 20;
   if (/መዝሙር|mezmur/i.test(title) && !/ምስባክ|misbak|mesbak/i.test(title)) s -= 35;
+  // A sermon quoting the verse outranked the chant itself for Psalm 86:5-6:
+  // twenty-two minutes of ስብከት, with the real misbak third. Length is the
+  // giveaway — a misbak runs a minute or three.
+  if (/^\s*ስብከት/.test(title.trim())) s -= 50;
+  if (seconds > 600) s -= 40;
+  if (seconds > 1200) s -= 40;
   return Math.round(s);
 }
 
@@ -146,6 +154,43 @@ function seconds(iso) {
   return m ? (+(m[1] ?? 0)) * 3600 + (+(m[2] ?? 0)) * 60 + (+(m[3] ?? 0)) : undefined;
 }
 
+/**
+ * Every misbak's opening words, so a candidate can be checked against the
+ * whole book rather than only against the one we asked for.
+ *
+ * Searching by a Sunday's name finds videos for the right Sunday and the wrong
+ * misbak — a Sunday appoints one to each office. The ዕርገት search returned ዐርገ
+ * እግዚአብሔር በይባቤ, which is a different misbak of that same feast. If a title
+ * quotes some other misbak's words better than the one in hand, it is theirs.
+ */
+function allIncipits() {
+  const records = [
+    ...load('seasonal.json'), ...load('monthly.json'), ...load('sunday-extra.json'),
+  ];
+  for (let m = 1; m <= 13; m++) {
+    const f = join(dataDir, 'daily', `${m}.json`);
+    if (existsSync(f)) records.push(...Object.values(JSON.parse(readFileSync(f, 'utf8'))));
+  }
+  const byRef = new Map();
+  for (const r of records) {
+    for (const svc of ['serk', 'negs', 'kidassie']) {
+      for (const m of r[svc]?.msbak ?? []) {
+        const ref = refKey(m);
+        if (ref && !byRef.has(ref)) byRef.set(ref, normalize(m.g).split(' ').slice(0, 6).join(' '));
+      }
+    }
+  }
+  return byRef;
+}
+
+/** The misbak whose words this title quotes better, if it is not ours. */
+function belongsElsewhere(incipits, title, ref, mine) {
+  for (const [other, inc] of incipits) {
+    if (other !== ref && overlap(title, inc) > mine + 0.15) return other;
+  }
+  return null;
+}
+
 /** Every distinct Sunday-cycle misbak we do not already have a video for. */
 function targets() {
   const have = existsSync(join(dataDir, 'videos.json')) ? load('videos.json') : {};
@@ -156,7 +201,8 @@ function targets() {
     for (const svc of ['serk', 'negs', 'kidassie']) {
       const m = r[svc]?.msbak?.[0];
       const ref = refKey(m);
-      if (!ref || have[ref] || byRef.has(ref)) continue;
+      if (!ref || byRef.has(ref)) continue;
+      if (have[ref] && !REFRESH.includes(ref)) continue;
       byRef.set(ref, { ref, mezmur, incipit: normalize(m.g).split(' ').slice(0, 6).join(' '), cite: m.kjv ?? m.en ?? null });
     }
   }
@@ -168,21 +214,35 @@ async function main() {
   if (!list.length) { process.stdout.write('Nothing left to look for.\n'); return; }
   process.stdout.write(`Searching for ${list.length} misbak (~${list.length * 101} quota units)\n\n`);
 
+  const incipits = allIncipits();
   const proposals = {};
   for (const target of list) {
-    const q = `ምስባክ ${target.incipit}`;
-    let found;
-    try {
-      found = await api('search', {
-        part: 'snippet', q, type: 'video', maxResults: '6',
-        relevanceLanguage: 'am', regionCode: 'ET',
-      });
-    } catch (err) {
-      process.stdout.write(`  ${target.ref}  search failed: ${err.message}\n`);
-      // Quota exhaustion ends the run rather than burning the rest of the list.
-      if (/quota/i.test(err.message)) break;
-      continue;
+    const queries = [`ምስባክ ${target.incipit}`];
+    // The incipit is the sharpest query, but four misbak came back empty on it
+    // and three drew a different psalm. Where it fails, the Sunday's name is
+    // the other way people title these.
+    if (target.mezmur) queries.push(`ምስባክ ዘ${target.mezmur}`);
+
+    const items = [];
+    let quotaGone = false;
+    for (const q of queries) {
+      try {
+        const found = await api('search', {
+          part: 'snippet', q, type: 'video', maxResults: '6',
+          relevanceLanguage: 'am', regionCode: 'ET',
+        });
+        items.push(...found.items);
+      } catch (err) {
+        process.stdout.write(`  ${target.ref}  search failed: ${err.message}\n`);
+        // Quota exhaustion ends the run rather than burning the rest of the list.
+        if (/quota/i.test(err.message)) { quotaGone = true; break; }
+      }
+      // A first query that already found the words is enough; do not spend
+      // another hundred units confirming it.
+      if (items.some((i) => overlap(i.snippet.title, target.incipit) >= 0.35)) break;
     }
+    if (quotaGone) break;
+    const found = { items: [...new Map(items.filter((i) => i.id?.videoId).map((i) => [i.id.videoId, i])).values()] };
 
     const ids = found.items.map((i) => i.id.videoId).filter(Boolean);
     const details = ids.length
@@ -194,13 +254,16 @@ async function main() {
       .filter((i) => i.id.videoId)
       .map((i) => {
         const d = byId.get(i.id.videoId);
+        const mine = overlap(i.snippet.title, target.incipit);
         return {
           id: i.id.videoId,
           title: i.snippet.title,
           channel: i.snippet.channelTitle,
           seconds: seconds(d?.contentDetails?.duration),
           embeddable: d?.status?.embeddable ?? undefined,
-          score: score(i, target),
+          score: score(i, target, seconds(d?.contentDetails?.duration)),
+          /** Set when the title quotes another misbak better than this one. */
+          belongsTo: belongsElsewhere(incipits, i.snippet.title, target.ref, mine),
         };
       })
       .sort((a, b) => b.score - a.score)
@@ -208,9 +271,10 @@ async function main() {
 
     proposals[target.ref] = { mezmur: target.mezmur, incipit: target.incipit, cite: target.cite, candidates: ranked };
     const top = ranked[0];
+    const warn = top?.belongsTo ? ` [belongs to ${top.belongsTo}]` : '';
     process.stdout.write(
       `  ${target.ref.padEnd(14)} ${(target.mezmur ?? '—').padEnd(12)} ` +
-      `${top ? `${String(top.score).padStart(3)}  ${top.title.slice(0, 60)}` : 'nothing found'}\n`);
+      `${top ? `${String(top.score).padStart(3)}${warn}  ${top.title.slice(0, 56)}` : 'nothing found'}\n`);
   }
 
   mkdirSync(outDir, { recursive: true });
@@ -219,6 +283,8 @@ async function main() {
     `\nWrote ${Object.keys(proposals).length} proposals to research/video-candidates.json\n` +
     'Nothing was added to public/data/videos.json — listen to the top candidates,\n' +
     'then copy the ones that are right into that file as { id, title, channel, seconds }.\n' +
+    'Anything marked [belongs to ...] quotes another misbak better than this one —\n' +
+    'usually the right Sunday but the wrong office. Do not take those.\n' +
     'Scores: above 100 the title quotes the misbak\'s opening words almost in full;\n' +
     '40-80 usually means it names the Sunday instead ("ገብር ኄር ... ምስባክ") — also a good\n' +
     'sign; at or below 0 it is most likely the መዝሙር, which is a different piece.\n');
