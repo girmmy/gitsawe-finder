@@ -5,7 +5,13 @@ import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/f
 import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
 
-const SERVICES = ['serk', 'negs', 'kidassie'] as const;
+/**
+ * The Divine Liturgy is what the day is prepared for, so it leads. ዘነግሥ, the
+ * ማኅሌት kept before dawn, is folded into a dropdown underneath: it is real and
+ * it is wanted, but it is not what most people open the app for.
+ */
+const SERVICES = ['kidassie', 'serk', 'negs'] as const;
+const COLLAPSED = new Set<string>(['negs']);
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 
@@ -62,7 +68,8 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
 
       {SERVICES.filter((svc) => !(headless && svc === 'kidassie')).map((svc) => (
         <ServiceBlock key={svc} name={svc} service={serviceOf(primary.record, svc)}
-          day={day} primary={primary} books={books} lang={lang} />
+          day={day} primary={primary} books={books} lang={lang}
+          collapsed={COLLAPSED.has(svc)} />
       ))}
 
       {(primary.record.sinksar?.length ?? 0) > 0 && (
@@ -119,9 +126,11 @@ function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Cand
   );
 }
 
-function ServiceBlock({ name, service, day, primary, books, lang }: {
+function ServiceBlock({ name, service, day, primary, books, lang, collapsed = false }: {
   name: string; service: Service | undefined; day: DayInfo; primary: Candidate;
   books: BookNames; lang: Lang;
+  /** Render shut, as a dropdown the reader opens. */
+  collapsed?: boolean;
 }) {
   const [done, setDone] = useState(false);
   if (!service) return null;
@@ -136,20 +145,45 @@ function ServiceBlock({ name, service, day, primary, books, lang }: {
     setTimeout(() => setDone(false), 1600);
   };
 
+  const body = (
+    <>
+      {(service.msbak ?? []).map((r, i) => (
+        <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang} />
+      ))}
+      <LiturgyBody service={service} books={books} lang={lang} />
+    </>
+  );
+
+  const copyButton = (
+    <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>{done ? '✓' : '⧉'}</button>
+  );
+
+  if (collapsed) {
+    return (
+      <details className="panel service service-fold">
+        <summary className="service-head service-summary">
+          <h3 className="panel-title">
+            <span className="panel-title-geez">{label.am}</span> {label.en}
+          </h3>
+          <span className="service-caret" aria-hidden="true">▸</span>
+        </summary>
+        <div className="service-fold-body">
+          <div className="service-fold-actions">{copyButton}</div>
+          {body}
+        </div>
+      </details>
+    );
+  }
+
   return (
     <section className="panel service">
       <header className="service-head">
         <h3 className="panel-title">
           <span className="panel-title-geez">{label.am}</span> {label.en}
         </h3>
-        <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>{done ? '✓' : '⧉'}</button>
+        {copyButton}
       </header>
-
-      {(service.msbak ?? []).map((r, i) => (
-        <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang} />
-      ))}
-
-      <LiturgyBody service={service} books={books} lang={lang} />
+      {body}
     </section>
   );
 }
@@ -266,6 +300,11 @@ function EpistleCard({ slot, readings, books, lang }: {
   );
 }
 
+/**
+ * The gospel is looked up by chapter and verse, not read off the page, so the
+ * citation leads — English and Amharic both — and the Ge'ez incipit sits under
+ * it as the confirmation that you have found the right passage.
+ */
 function GospelRow({ reading, books, lang }: { reading: Reading; books: BookNames; lang: Lang }) {
   const label = SLOT_LABELS.gospel;
   const cite = citation(reading, books);
@@ -275,13 +314,14 @@ function GospelRow({ reading, books, lang }: { reading: Reading; books: BookName
         {label.am} · {label.en}
         <span className="reader"> — {label.reader![lang]}</span>
       </p>
+      {cite.en && <p className="gospel-cite-en">{cite.en}</p>}
+      {cite.am && <p className="gospel-cite-am">{cite.am}</p>}
       {(reading.g || reading.a) && (
-        <p className="incipit">
+        <p className="incipit gospel-incipit">
           {reading.g ?? reading.a}
           {reading.et && <span className="until"> … {t('readUntil', lang)} «{reading.et}»</span>}
         </p>
       )}
-      <Citation cite={cite} />
     </div>
   );
 }
