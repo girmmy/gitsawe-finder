@@ -7,6 +7,7 @@
  *
  * Routes:
  *   #/                     the coming Sunday
+ *   #/sunday/2026-09-20    another Sunday, for preparing ahead
  *   #/date/2026-08-30      one date (Gregorian, ISO)
  *   #/mezmur               the mezmur index
  *   #/mezmur/<key>         one mezmur
@@ -16,7 +17,7 @@
  */
 
 export type Route =
-  | { name: 'sunday' }
+  | { name: 'sunday'; iso?: string }
   | { name: 'date'; iso: string }
   | { name: 'mezmur' }
   | { name: 'mezmurItem'; key: string }
@@ -35,7 +36,8 @@ export function parseHash(hash: string): Route {
 
   switch (head) {
     case 'sunday':
-      return { name: 'sunday' };
+      if (!arg) return { name: 'sunday' };
+      return ISO.test(arg) ? { name: 'sunday', iso: arg } : { name: 'notFound', path };
     case 'date':
       return ISO.test(arg) ? { name: 'date', iso: arg } : { name: 'notFound', path };
     case 'mezmur':
@@ -56,7 +58,7 @@ export function parseHash(hash: string): Route {
 
 export function hrefFor(route: Route): string {
   switch (route.name) {
-    case 'sunday': return '#/';
+    case 'sunday': return route.iso ? `#/sunday/${route.iso}` : '#/';
     case 'date': return `#/date/${route.iso}`;
     case 'mezmur': return '#/mezmur';
     case 'mezmurItem': return `#/mezmur/${encodeURIComponent(route.key)}`;

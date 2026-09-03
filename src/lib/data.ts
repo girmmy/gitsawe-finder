@@ -1,4 +1,5 @@
 /** Loads and caches the generated lectionary data from /data. */
+import type { AudioIndex, VideoIndex } from './media';
 import type { DayRecord, ExtraRecord, MonthlyRecord, SeasonalRecord } from './types';
 
 export interface BookNames { [code: string]: { en: string; am: string } }
@@ -34,3 +35,13 @@ export const loadMonthly = () => fetchJSON<MonthlyRecord[]>('/data/monthly.json'
 export const loadBooks = () => fetchJSON<BookNames>('/data/books.json');
 export const loadDaily = (ethMonth: number) =>
   fetchJSON<Record<string, DayRecord>>(`/data/daily/${ethMonth}.json`);
+
+/**
+ * Recordings are an extra, not part of the readings. A deacon who cannot
+ * reach them still needs the text, so both indexes resolve to an empty one
+ * rather than failing the page.
+ */
+export const loadAudio = () =>
+  fetchJSON<AudioIndex>('/data/audio.json').catch(() => ({}) as AudioIndex);
+export const loadVideos = () =>
+  fetchJSON<VideoIndex>('/data/videos.json').catch(() => ({}) as VideoIndex);

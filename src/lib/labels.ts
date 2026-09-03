@@ -55,6 +55,15 @@ export const UI = {
   readUntil: { en: 'read until', am: 'እስከ' },
   ethPsalter: { en: 'Ethiopian Psalter', am: 'መዝሙረ ዳዊት' },
   download: { en: 'Download PDF', am: 'PDF አውርድ' },
+  recordings: { en: 'Recordings', am: 'ቅጂዎች' },
+  recordingDayOnly: {
+    en: "for this day — the source doesn't say which service",
+    am: 'የዕለቱ ቅጂ — ምንጩ የትኛው ጸሎት እንደሆነ አልገለጸም',
+  },
+  recordingSource: { en: 'from', am: 'ምንጭ' },
+  watchOnYouTube: { en: 'Watch on YouTube', am: 'በዩቲዩብ ተመልከት' },
+  playRecording: { en: 'Play', am: 'አጫውት' },
+  mediaOffline: { en: 'Needs a connection', am: 'የበይነመረብ ግንኙነት ይፈልጋል' },
 } as const;
 
 export function t(key: keyof typeof UI, lang: Lang): string {

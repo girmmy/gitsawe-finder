@@ -4,7 +4,9 @@ import { SERVICE_LABELS, SLOT_LABELS, t, type Lang } from '../lib/labels';
 import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/format';
 import { copyText } from '../lib/clipboard';
 import { translit } from '../lib/translit';
-import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
+import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service, type ServiceName } from '../lib/types';
+import MisbakMedia from './MisbakMedia';
+import type { AudioIndex, VideoIndex } from '../lib/media';
 
 /**
  * Every service is a dropdown, so a long day folds down to three headings.
@@ -27,8 +29,11 @@ const foldState = new Map<string, boolean>();
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 
-export default function ReadingsView({ day, books, lang, headless = false, onOpenPdf }: {
+export default function ReadingsView({ day, books, lang, audio = null, videos = null, headless = false, onOpenPdf }: {
   day: DayInfo; books: BookNames; lang: Lang;
+  /** Recordings of the chanted misbak, when the indexes have loaded. */
+  audio?: AudioIndex | null;
+  videos?: VideoIndex | null;
   /** Hide the mezmur header when a hero above already carries it. */
   headless?: boolean;
   onOpenPdf?: (page: number) => void;
@@ -81,7 +86,7 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
       {SERVICES.filter((svc) => !(headless && svc.name === 'kidassie')).map((svc) => (
         <ServiceBlock key={svc.name} name={svc.name} service={serviceOf(primary.record, svc.name)}
           day={day} primary={primary} books={books} lang={lang}
-          defaultOpen={svc.open} />
+          audio={audio} videos={videos} defaultOpen={svc.open} />
       ))}
 
       {(primary.record.sinksar?.length ?? 0) > 0 && (
@@ -156,9 +161,10 @@ function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Cand
   );
 }
 
-function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = false }: {
+function ServiceBlock({ name, service, day, primary, books, lang, audio, videos, defaultOpen = false }: {
   name: string; service: Service | undefined; day: DayInfo; primary: Candidate;
   books: BookNames; lang: Lang;
+  audio: AudioIndex | null; videos: VideoIndex | null;
   /** Whether the dropdown starts open. */
   defaultOpen?: boolean;
 }) {
@@ -177,7 +183,9 @@ function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = 
   const body = (
     <>
       {(service.msbak ?? []).map((r, i) => (
-        <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang} />
+        <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang}
+          candidate={primary} service={name as ServiceName} eth={day.eth}
+          audio={audio} videos={videos} />
       ))}
       <LiturgyBody service={service} books={books} lang={lang} />
     </>
@@ -240,7 +248,11 @@ export function LiturgyBody({ service, books, lang }: { service: Service; books:
   );
 }
 
-function MisbakRow({ reading, books, lang }: { reading: Reading; books: BookNames; lang: Lang }) {
+function MisbakRow({ reading, books, lang, candidate, service, eth, audio, videos }: {
+  reading: Reading; books: BookNames; lang: Lang;
+  candidate: Candidate; service: ServiceName; eth: { month: number; day: number };
+  audio: AudioIndex | null; videos: VideoIndex | null;
+}) {
   const label = SLOT_LABELS.msbak;
   const cite = citation(reading, books);
   return (
@@ -252,6 +264,8 @@ function MisbakRow({ reading, books, lang }: { reading: Reading; books: BookName
       {reading.g && <MisbakLines reading={reading} lang={lang} />}
       {reading.a && <p className="amharic-text">{reading.a}</p>}
       <Citation cite={cite} />
+      <MisbakMedia reading={reading} candidate={candidate} service={service} eth={eth}
+        audio={audio} videos={videos} lang={lang} />
     </div>
   );
 }

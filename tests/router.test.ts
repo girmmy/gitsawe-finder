@@ -29,3 +29,19 @@ describe('routing', () => {
     expect(parseHash('#//date/2026-08-30//')).toEqual({ name: 'date', iso: '2026-08-30' });
   });
 });
+
+describe('a Sunday other than the coming one', () => {
+  it('round-trips through the hash', () => {
+    expect(parseHash('#/sunday/2026-09-20')).toEqual({ name: 'sunday', iso: '2026-09-20' });
+    expect(hrefFor({ name: 'sunday', iso: '2026-09-20' })).toBe('#/sunday/2026-09-20');
+  });
+
+  it('keeps the bare route for the Sunday being prepared for', () => {
+    expect(parseHash('#/sunday')).toEqual({ name: 'sunday' });
+    expect(hrefFor({ name: 'sunday' })).toBe('#/');
+  });
+
+  it('refuses a date it cannot read', () => {
+    expect(parseHash('#/sunday/next-week')).toEqual({ name: 'notFound', path: 'sunday/next-week' });
+  });
+});

@@ -20,7 +20,14 @@ and Amharic with English translations and citations.
 - **Copy and paste.** One button produces a formatted message for a group chat:
   mezmur, both dates, every reading with its reader, and the anaphora.
 - **The whole book.** The full 182-page PDF is bundled and readable in-app.
+- **Recordings.** Where a chanted misbak exists, it plays under the reading — 748
+  daily recordings from ethiopianorthodox.org, plus curated YouTube for the
+  mezmur cycle. Nothing loads from either until you press play.
 - Works offline after first load (PWA). No accounts, no tracking, no analytics.
+  The only outbound requests are Google Fonts on first visit, and a recording when
+  you press play on one.
+
+Recordings, their coverage and the gaps that remain: [docs/RECORDINGS.md](docs/RECORDINGS.md).
 
 ## Running it
 

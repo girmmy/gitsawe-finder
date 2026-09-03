@@ -6,9 +6,32 @@ import { serviceOf, type DayInfo } from '../lib/types';
 import type { BookNames } from '../lib/data';
 import { LiturgyBody } from './ReadingsView';
 import { SERVICE_LABELS } from '../lib/labels';
+import MisbakMedia from './MisbakMedia';
+import type { AudioIndex, VideoIndex } from '../lib/media';
 
 const GREG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'];
+
+/**
+ * Which Sunday this is, in the terms a deacon would use.
+ *
+ * Reading ahead is the point of the controls — a mezmur three weeks out is
+ * often the one to start learning now — so the card has to say plainly how far
+ * from this week it has been moved, or it reads as today's.
+ */
+function kicker(weeksAhead: number, isToday: boolean, lang: Lang): string {
+  if (weeksAhead === 0) {
+    return isToday
+      ? (lang === 'am' ? 'የዛሬው እሑድ' : 'This Sunday — today')
+      : (lang === 'am' ? 'የሚቀጥለው እሑድ' : 'The coming Sunday');
+  }
+  const n = Math.abs(weeksAhead);
+  const weeks = n === 1 ? 'week' : 'weeks';
+  if (lang === 'am') {
+    return weeksAhead > 0 ? `ከ${toGeez(n)} ሳምንት በኋላ` : `ከ${toGeez(n)} ሳምንት በፊት`;
+  }
+  return weeksAhead > 0 ? `${n} ${weeks} ahead` : `${n} ${weeks} back`;
+}
 
 /**
  * The landing card for the Sunday being served.
@@ -16,8 +39,20 @@ const GREG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
  * The mezmur names the Sunday, but the misbak is what people actually come
  * for, so the mezmur sits as a modest label and the misbak carries the card.
  */
-export default function SundayHero({ day, lang, isToday, books, onOpen }: {
-  day: DayInfo; lang: Lang; isToday: boolean; books: BookNames; onOpen: () => void;
+export default function SundayHero({
+  day, lang, isToday, weeksAhead = 0, books, audio = null, videos = null,
+  onStep, onBackToNext, onOpen,
+}: {
+  day: DayInfo; lang: Lang; isToday: boolean; books: BookNames;
+  /** 0 for the Sunday being prepared for, 1 for the one after, and so on. */
+  weeksAhead?: number;
+  /** Recordings of the chanted misbak, when the indexes have loaded. */
+  audio?: AudioIndex | null;
+  videos?: VideoIndex | null;
+  /** Move by whole weeks — the card only ever shows a Sunday. */
+  onStep?: (weeks: number) => void;
+  onBackToNext?: () => void;
+  onOpen: () => void;
 }) {
   const primary = day.candidates[0];
   const mezmur = primary?.mezmur ?? null;
@@ -31,17 +66,27 @@ export default function SundayHero({ day, lang, isToday, books, onOpen }: {
 
   return (
     <section className="hero" aria-label="The coming Sunday">
-      <p className="hero-kicker">
-        {isToday
-          ? (lang === 'am' ? 'የዛሬው እሑድ' : 'This Sunday — today')
-          : (lang === 'am' ? 'የሚቀጥለው እሑድ' : 'The coming Sunday')}
-      </p>
+      <p className="hero-kicker">{kicker(weeksAhead, isToday, lang)}</p>
 
       <p className="hero-date">
         {wd.am} · {m.am} {toGeez(day.eth.day)} {toGeez(day.eth.year)} ዓ.ም
         <span className="hero-date-sep"> — </span>
         {GREG_MONTHS[day.greg.month - 1]} {day.greg.day}, {day.greg.year}
       </p>
+
+      {onStep && (
+        <div className="hero-weeknav">
+          <button className="btn ghost" onClick={() => onStep(-1)}
+            aria-label={lang === 'am' ? 'ቀዳሚው እሑድ' : 'The Sunday before'}>‹</button>
+          {weeksAhead !== 0 && onBackToNext && (
+            <button className="btn small" onClick={onBackToNext}>
+              {lang === 'am' ? 'ወደ ሚቀጥለው እሑድ' : 'Back to this week'}
+            </button>
+          )}
+          <button className="btn ghost" onClick={() => onStep(1)}
+            aria-label={lang === 'am' ? 'ቀጣዩ እሑድ' : 'The Sunday after'}>›</button>
+        </div>
+      )}
 
       {mezmur ? (
         <p className="hero-mezmur-line">
@@ -76,6 +121,10 @@ export default function SundayHero({ day, lang, isToday, books, onOpen }: {
             <div className="hero-misbak-english">
               {english.map((line, i) => <p key={i}>{line}</p>)}
             </div>
+          )}
+          {primary && (
+            <MisbakMedia reading={misbak} candidate={primary} service="kidassie"
+              eth={day.eth} audio={audio} videos={videos} lang={lang} />
           )}
         </div>
       )}

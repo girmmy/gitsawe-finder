@@ -7,14 +7,20 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:data": "node scripts/build-data.mjs",
+    "build:audio": "node scripts/build-audio.mjs",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "find:videos": "node scripts/find-videos.mjs",
+    "transcode:wma": "node scripts/transcode-wma.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/node": "^26.4.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

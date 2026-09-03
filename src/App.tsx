@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gregToJDN, jdnToEth, jdnToGreg, jdnToWeekday, todayJDN, MONTHS, WEEKDAYS, toGeez } from './lib/ethiopic';
 import { resolveDay, type Dataset } from './lib/resolver';
-import { loadBooks, loadDaily, loadExtra, loadMonthly, loadSeasonal, type BookNames } from './lib/data';
+import { loadAudio, loadBooks, loadDaily, loadExtra, loadMonthly, loadSeasonal, loadVideos, type BookNames } from './lib/data';
+import type { AudioIndex, VideoIndex } from './lib/media';
 import type { DayInfo } from './lib/types';
 import { t, type Lang } from './lib/labels';
 import { gregDateString } from './lib/format';
@@ -36,11 +37,23 @@ export default function App() {
   const [sunday, setSunday] = useState<DayInfo | null>(null);
   const [books, setBooks] = useState<BookNames>({});
   const [index, setIndex] = useState<MezmurEntry[]>([]);
+  const [audio, setAudio] = useState<AudioIndex | null>(null);
+  const [videos, setVideos] = useState<VideoIndex | null>(null);
   const [error, setError] = useState<string | null>(null);
   // The Sunday card loads on its own, so it needs its own failure to report.
   const [sundayError, setSundayError] = useState<string | null>(null);
 
   useEffect(() => { localStorage.setItem('gitsawe-lang', lang); }, [lang]);
+
+  // Recordings load on their own, once, and never report a failure: they are
+  // an extra on top of the readings, and a deacon who cannot reach them still
+  // needs the text. Both loaders already resolve to {} if the file is missing.
+  useEffect(() => {
+    let alive = true;
+    loadAudio().then((a) => alive && setAudio(a));
+    loadVideos().then((v) => alive && setVideos(v));
+    return () => { alive = false; };
+  }, []);
 
   useEffect(() => {
     const onHash = () => setRoute(parseHash(window.location.hash));
@@ -66,11 +79,21 @@ export default function App() {
     return () => { alive = false; };
   }, [jdn]);
 
-  // The coming Sunday is resolved independently of the browsed date, so the
-  // landing card keeps showing the Sunday being prepared for.
+  /**
+   * Which Sunday the card is showing. Bare `#/` is the one being prepared for;
+   * `#/sunday/<iso>` is any other, so a deacon can read ahead — the mezmur of a
+   * Sunday three weeks out is often the one they need to start learning now.
+   * Snapped to the Sunday of that week, so a hand-typed weekday still lands.
+   */
+  const sundayJDN = useMemo(
+    () => comingSundayJDN(route.name === 'sunday' && route.iso ? jdnOfISO(route.iso) : todayJDN()),
+    [route],
+  );
+
+  // Resolved independently of the browsed date, so the two tabs do not fight.
   useEffect(() => {
     let alive = true;
-    const sundayJDN = comingSundayJDN(todayJDN());
+    setSundayError(null);
     const eth = jdnToEth(sundayJDN);
     Promise.all([loadSeasonal(), loadMonthly(), loadExtra(), loadDaily(eth.month)])
       .then(([seasonal, monthly, extra, daily]) => {
@@ -79,7 +102,7 @@ export default function App() {
       })
       .catch((e) => alive && setSundayError(String(e)));
     return () => { alive = false; };
-  }, []);
+  }, [sundayJDN]);
 
   const go = useCallback((r: Route) => navigate(r), []);
   const openPdfAt = useCallback((page: number) => go({ name: 'book', page }), [go]);
@@ -155,10 +178,16 @@ export default function App() {
                 day={sunday}
                 lang={lang}
                 isToday={sunday.jdn === todayJDN()}
+                weeksAhead={Math.round((sunday.jdn - comingSundayJDN(todayJDN())) / 7)}
                 books={books}
+                audio={audio}
+                videos={videos}
+                onStep={(weeks) => go({ name: 'sunday', iso: isoOf(sunday.jdn + weeks * 7) })}
+                onBackToNext={() => go({ name: 'sunday' })}
                 onOpen={() => go({ name: 'date', iso: isoOf(sunday.jdn) })}
               />
               <ReadingsView key={`sun-${sunday.jdn}`} day={sunday} books={books} lang={lang}
+                audio={audio} videos={videos}
                 headless onOpenPdf={openPdfAt} />
             </>
           ) : <p className="loading">{t('loadingReadings', lang)}</p>
@@ -180,7 +209,8 @@ export default function App() {
             </div>
             {error && <p className="error" role="alert">Could not load the readings: {error}</p>}
             {!error && !day && <p className="loading">{t('loadingReadings', lang)}</p>}
-            {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang} onOpenPdf={openPdfAt} />}
+            {day && <ReadingsView key={day.jdn} day={day} books={books} lang={lang}
+              audio={audio} videos={videos} onOpenPdf={openPdfAt} />}
           </>
         )}
 
@@ -215,6 +245,8 @@ export default function App() {
                   }}
                   books={books}
                   lang={lang}
+                  audio={audio}
+                  videos={videos}
                   onOpenPdf={openPdfAt}
                 />
               )}

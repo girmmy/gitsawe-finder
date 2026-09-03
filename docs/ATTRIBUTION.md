@@ -121,3 +121,36 @@ mapped from the Ethiopian (Septuagint) numbering to KJV numbering in
 ## Fonts
 
 Noto Serif Ethiopic, Fraunces and Literata, served from Google Fonts.
+
+## Recordings of the chanted misbak
+
+[The Ethiopian Orthodox Tewahedo Church](https://www.ethiopianorthodox.org/amharic/yeqolotbet/annualmisbak.html)
+publishes the ዓመታዊ ምስባክ collection on its own site. The church's webmaster gave
+permission for both of the uses below.
+
+Most of it we only link to. `scripts/build-audio.mjs` reads the index page and
+writes `public/data/audio.json`, which addresses each recording by Ethiopian
+month, day and office. The mp3 files stay on the church's server. Every player
+in the app names the source and links back to the page above, and the audio is
+marked `preload="none"`, so a page nobody listens to costs them no bandwidth.
+
+Nehase and Pagumen are the exception. Both months exist only as `.wma`, which no
+current browser plays, so they were out of reach until the church agreed we
+could convert them. `scripts/transcode-wma.mjs` re-encodes the 34 files covering
+those months to 48 kbps mono mp3, 25 MB in and 12 MB out, and the app serves
+those copies from `public/audio/`. They are still the church's recordings and
+the app credits them the same way. The other 88 `.wma` files duplicate mp3 we
+already link, so we left them alone.
+
+What the collection does not have:
+
+- Anything for ዘሠርክ. It covers ዘነግሥ and ዘቅዳሴ only. The app leaves its 365 serk
+  slots empty rather than hand a reader a chant from the wrong office.
+- An office for every file. Some months name the day and stop there. Those play
+  with a note saying as much.
+- 23 daily slots have no recording at all.
+
+The Sunday cycle is missing from it entirely, and as far as we can tell no
+equivalent collection exists; those recordings circulate through weekly YouTube
+posts and Telegram groups instead. `public/data/videos.json` is curated by hand
+for that half.
