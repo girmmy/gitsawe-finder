@@ -610,3 +610,72 @@ body {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* ── recordings ──
+   Sits under a misbak as a quiet aside, not a media block: the text is still
+   the reading, and the recording is there for the deacon learning the tune. */
+.misbak-media { margin: 0.85rem 0 0.2rem; }
+.media-label {
+  font-family: var(--serif-latin); font-size: 0.66rem; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--gold); margin: 0 0 0.45rem;
+}
+.media-item + .media-item { margin-top: 0.7rem; }
+
+/* Native controls: scrubbing, speed and lock-screen playback come free, and
+   they are what a chant being learned actually needs. */
+.media-audio { width: 100%; height: 2.2rem; display: block; }
+
+.media-caveat {
+  font-family: var(--serif-latin); font-size: 0.76rem; line-height: 1.45;
+  color: var(--rubric); margin: 0 0 0.35rem;
+}
+.media-offline {
+  font-family: var(--serif-latin); font-size: 0.8rem; color: var(--ink-soft);
+  border: 1px dashed var(--line); border-radius: 3px;
+  padding: 0.5rem 0.7rem; margin: 0;
+}
+.media-meta {
+  font-family: var(--serif-latin); font-size: 0.7rem;
+  color: var(--ink-soft); margin: 0.25rem 0 0;
+}
+.media-meta a { color: var(--ink-soft); text-decoration: underline; }
+.media-meta a:hover { color: var(--rubric); }
+.media-size { color: var(--gold); }
+
+/* The click-to-load facade. Nothing reaches YouTube until this is pressed. */
+.media-card {
+  display: flex; align-items: center; gap: 0.7rem; width: 100%;
+  text-align: left; cursor: pointer; font-family: inherit; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+.media-card:hover { border-color: var(--rubric); }
+.media-card-flat { cursor: default; }
+.media-card-flat:hover { border-color: var(--line); }
+.media-play { color: var(--rubric); font-size: 0.95rem; flex-shrink: 0; }
+.media-card-text { display: flex; flex-direction: column; min-width: 0; }
+.media-title {
+  font-family: var(--ethiopic); font-size: 0.95rem; line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.media-sub {
+  font-family: var(--serif-latin); font-size: 0.74rem; color: var(--ink-soft);
+}
+
+/* 16:9, held inside the column so a wide embed never scrolls the page. */
+.media-frame {
+  position: relative; width: 100%; aspect-ratio: 16 / 9;
+  border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  background: #000;
+}
+.media-frame iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+}
+
+/* Stepping between Sundays. Sits under the date so the card still leads with
+   which Sunday it is, not with the controls. */
+.hero-weeknav {
+  display: flex; gap: 0.5rem; align-items: center; justify-content: center;
+  margin: 0 0 1rem;
+}

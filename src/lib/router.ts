@@ -7,6 +7,7 @@
  *
  * Routes:
  *   #/                     the coming Sunday
+ *   #/sunday/2026-09-20    another Sunday, for preparing ahead
  *   #/date/2026-08-30      one date (Gregorian, ISO)
  *   #/mezmur               the mezmur index
  *   #/mezmur/<key>         one mezmur
@@ -16,7 +17,7 @@
  */
 
 export type Route =
-  | { name: 'sunday' }
+  | { name: 'sunday'; iso?: string }
   | { name: 'date'; iso: string }
   | { name: 'mezmur' }
   | { name: 'mezmurItem'; key: string }
@@ -24,7 +25,24 @@ export type Route =
   | { name: 'about' }
   | { name: 'notFound'; path: string };
 
-const ISO = /^\d{4}-\d{2}-\d{2}$/;
+const ISO = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/**
+ * A date that exists, not merely one shaped like a date.
+ *
+ * Matching the shape alone let "2026-13-45" through, and the calendar quietly
+ * rolled it into a real-looking February 2027; "0000-00-00" rendered as
+ * December -1. A reader who mistypes a URL should be told the route is wrong,
+ * not shown readings for a day that never happened.
+ */
+function isRealDate(iso: string): boolean {
+  const m = ISO.exec(iso);
+  if (!m) return false;
+  const [year, month, day] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) return false;
+  const d = new Date(Date.UTC(year, month - 1, day));
+  return d.getUTCFullYear() === year && d.getUTCMonth() === month - 1 && d.getUTCDate() === day;
+}
 
 export function parseHash(hash: string): Route {
   const path = hash.replace(/^#/, '').replace(/^\/+|\/+$/g, '');
@@ -35,9 +53,10 @@ export function parseHash(hash: string): Route {
 
   switch (head) {
     case 'sunday':
-      return { name: 'sunday' };
+      if (!arg) return { name: 'sunday' };
+      return isRealDate(arg) ? { name: 'sunday', iso: arg } : { name: 'notFound', path };
     case 'date':
-      return ISO.test(arg) ? { name: 'date', iso: arg } : { name: 'notFound', path };
+      return isRealDate(arg) ? { name: 'date', iso: arg } : { name: 'notFound', path };
     case 'mezmur':
       return arg ? { name: 'mezmurItem', key: arg } : { name: 'mezmur' };
     case 'book': {
@@ -56,7 +75,7 @@ export function parseHash(hash: string): Route {
 
 export function hrefFor(route: Route): string {
   switch (route.name) {
-    case 'sunday': return '#/';
+    case 'sunday': return route.iso ? `#/sunday/${route.iso}` : '#/';
     case 'date': return `#/date/${route.iso}`;
     case 'mezmur': return '#/mezmur';
     case 'mezmurItem': return `#/mezmur/${encodeURIComponent(route.key)}`;

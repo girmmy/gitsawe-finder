@@ -75,6 +75,12 @@ export default function AboutView({ lang }: { lang: Lang }) {
             No accounts, no tracking, no data collection. After the first visit the app works
             offline.
           </p>
+          <p>
+            Two things do reach outside. The Ethiopic typeface comes from Google Fonts on the
+            first visit, and is then cached. And a recording, when you press play on one, is
+            fetched from ethiopianorthodox.org or YouTube — nothing loads from either until
+            you do, but pressing play sends them a request, as visiting their site would.
+          </p>
         </>
       )}
     </section>

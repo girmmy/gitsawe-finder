@@ -4,3 +4,7 @@ research/
 *.local
 .DS_Store
 tsconfig.tsbuildinfo
+test-results/
+playwright-report/
+.env
+.env.*
