@@ -29,7 +29,7 @@ export interface Service {
   anaphora?: string[];   // appointed ቅዳሴ
 }
 
-export type ServiceName = 'serk' | 'negh' | 'kidassie';
+export type ServiceName = 'serk' | 'negs' | 'kidassie';
 
 /** Read one service off a record without widening the record's type. */
 export function serviceOf(record: DayRecord, name: string): Service | undefined {
@@ -40,7 +40,8 @@ export interface DayRecord {
   title: string | null;
   sinksar?: string[];
   serk?: Service;
-  negh?: Service;
+  /** ዘነግሥ — the ማኅሌት, the night office. Many days have none. */
+  negs?: Service;
   kidassie?: Service;
 }
 

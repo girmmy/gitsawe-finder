@@ -173,7 +173,7 @@ function heading(day: DayInfo, primary: Candidate): string[] {
 export function formatDay(day: DayInfo, primary: Candidate, books: BookNames): string {
   // The Liturgy is what gets shared; fall back to whatever the day has.
   const svc = serviceOf(primary.record, 'kidassie')
-    ?? serviceOf(primary.record, 'negh')
+    ?? serviceOf(primary.record, 'negs')
     ?? serviceOf(primary.record, 'serk');
   const lines = heading(day, primary);
   if (svc) lines.push(...serviceBody(svc, books));
@@ -184,7 +184,7 @@ export function formatDay(day: DayInfo, primary: Candidate, books: BookNames): s
 export function formatService(day: DayInfo, primary: Candidate, name: string, books: BookNames): string {
   const svc = serviceOf(primary.record, name);
   if (!svc) return '';
-  const label = { serk: 'ዘሠርክ (Vespers)', negh: 'ዘነግህ (Matins)', kidassie: 'ዘቅዳሴ (Divine Liturgy)' }[name] ?? name;
+  const label = { serk: 'ዘሠርክ (Vespers)', negs: 'ዘነግሥ (Mahlet)', kidassie: 'ዘቅዳሴ (Divine Liturgy)' }[name] ?? name;
   const lines = heading(day, primary);
   lines.splice(2, 0, label, '');
   lines.push(...serviceBody(svc, books));
