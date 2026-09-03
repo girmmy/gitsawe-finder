@@ -356,3 +356,28 @@ test.describe('a service with more than one misbak', () => {
     await expect(rows.nth(1).locator('.misbak-media audio')).toHaveCount(0);
   });
 });
+
+/**
+ * A misbak with nothing says so. Silence would leave a deacon wondering
+ * whether the app failed to load something, and ዘሠርክ gets its own wording
+ * because we know why it is empty and always will be.
+ */
+test.describe('a misbak with no recording', () => {
+  test('says there is none rather than showing nothing', async ({ page }) => {
+    await page.goto(SENE_5);
+    const vespers = await openFold(page, 'ዘሠርክ');
+    await expect(vespers.locator('.media-none'))
+      .toHaveText(/No recording yet — ዘሠርክ is not in the collections we have/);
+    await expect(vespers.locator('audio')).toHaveCount(0);
+  });
+
+  test('uses the plain wording where one could still turn up', async ({ page }) => {
+    // ዘነነዌ is a Sunday-cycle misbak, so it gets no dated audio, and no video
+    // has been found for it yet. It should say so plainly, without the ዘሠርክ
+    // explanation, because this one may well be filled later.
+    await page.goto(`#/mezmur/${encodeURIComponent('ዘነነዌ')}`);
+    const none = page.locator('.reading.misbak .media-none');
+    await expect(none).toHaveText('No recording yet');
+    await expect(page.locator('.misbak-media audio')).toHaveCount(0);
+  });
+});

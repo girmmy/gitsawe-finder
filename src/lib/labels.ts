@@ -64,6 +64,11 @@ export const UI = {
     en: "for this service — the source doesn't say which of today's misbak",
     am: 'የዚህ ጸሎት ቅጂ — ምንጩ ከዕለቱ ምስባካት የትኛው እንደሆነ አልገለጸም',
   },
+  recordingNone: { en: 'No recording yet', am: 'እስካሁን ቅጂ የለም' },
+  recordingNoneSerk: {
+    en: 'No recording yet — ዘሠርክ is not in the collections we have',
+    am: 'እስካሁን ቅጂ የለም — ዘሠርክ ባለን ስብስቦች ውስጥ የለም',
+  },
   recordingSource: { en: 'from', am: 'ምንጭ' },
   watchOnYouTube: { en: 'Watch on YouTube', am: 'በዩቲዩብ ተመልከት' },
   playRecording: { en: 'Play', am: 'አጫውት' },

@@ -679,3 +679,11 @@ body {
   display: flex; gap: 0.5rem; align-items: center; justify-content: center;
   margin: 0 0 1rem;
 }
+
+/* Said when we have no recording, in the same quiet register as the label it
+   replaces — a note, not a warning. */
+.media-none {
+  font-family: var(--serif-latin); font-size: 0.72rem;
+  color: var(--ink-soft); font-style: italic;
+  margin: 0.85rem 0 0.2rem;
+}

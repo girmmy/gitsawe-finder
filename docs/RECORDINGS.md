@@ -29,35 +29,38 @@ Nehase and Pagumen files we host. Of the 728 daily misbak slots in
 Before the conversion those last two were 124 and 88; Nehase and Pagumen were
 entirely empty.
 
-**Mezmur cycle — 42 of 58 distinct misbaks.** Every one was accepted on the
-same evidence: the video's title quotes the misbak's own opening words back,
-which is not something a wrong recording tends to do. Three were found by hand;
-the rest came from `find:videos`, kept only where the title reproduced at least
-a third of the incipit verbatim.
+**Mezmur cycle — 49 of 58 distinct misbaks.** Every one was accepted on the
+same evidence: the video's title quotes the misbak's own opening words back.
+Three were found by hand; the rest came from `find:videos`.
 
-Picking the top-scoring hit is not enough. For Psalm 86:5-6 the best incipit
-match was a twenty-two minute sermon that quotes the verse; the actual chant,
-one minute twenty, sat third. So the choice also prefers a title carrying the
-word ምስባክ, pushes down anything opening with ስብከት, and treats a recording over
-ten minutes as a service rather than a misbak. That reordering changed three
-picks.
+Three rules decide, and each was added because the previous set let something
+wrong through:
 
-Rejected, and worth knowing about because each looked plausible:
+- **The title must quote at least a third of the incipit.** Without it, a video
+  titled ምስባክ ዘትንሳኤ was proposed for ጸሎተ ሐሙስ.
+- **Length and wording matter.** For `PSA:86:5-6` the best incipit match was a
+  twenty-two minute ስብከት — a sermon quoting the verse — with the real chant, a
+  minute twenty, third. A misbak runs a minute or three.
+- **A title that quotes some other misbak better belongs to that one.**
+  Searching by a Sunday's name finds the right Sunday and the wrong office: the
+  ዕርገት search returned ዐርገ እግዚአብሔር በይባቤ, which is `PSA:46:5-6`. This rule alone
+  rejected four proposals.
 
-- `PSA:93:20-21` (ኒቆዲሞስ) — every candidate was the መዝ. 106÷16 misbak instead.
-- `PSA:50:7-8` (ጸሎተ ሐሙስ) — titled ምስባክ ዘትንሳኤ, quoting `PSA:77:85-86`'s incipit.
-- `PSA:67:33-34` (ዕርገት) — all three candidates were ሣህሉ ለእግዚአብሔር መልአ ምድረ, a
-  different psalm; the 54 they scored came from the word እግዚአብሔር alone.
-
-`PSA:2:12-13` (ዘነነዌ), `PSA:112:3-4`, `PSA:50:11-12` and `PSA:64:10-11` turned
-up nothing.
+Nine are still open. Three found nothing at all (`PSA:112:3-4`,
+`PSA:50:11-12`, `PSA:64:10-11`). Six drew a candidate that turned out to be
+another misbak, or too weak to trust — among them ኒቆዲሞስ and ጸሎተ ሐሙስ, where the
+videos are real recordings of that Sunday but there is no way to tell which of
+its offices they belong to.
 
 **These have not been listened to.** The titles are strong evidence and the
 worst case is a wrong tune rather than a wrong text, but a chant is not
-verified until someone hears it. Three from the first batch predate the
-duration rule and are long enough to be whole services — `PSA:95:5-6` at 14:57,
-`PSA:83:6-7` at 13:56, `PSA:22:4-5` at 10:20. Re-running `find:videos --only`
-for those would now pick better.
+verified until someone hears it. Two remain long enough to be whole services —
+`PSA:95:5-6` at 14:57 and `PSA:22:4-5` at 10:20 — and nothing shorter turned up
+for them.
+
+Where there is no recording the app says so, rather than leaving a gap a reader
+would read as a loading failure. ዘሠርክ gets its own wording, since neither
+collection records Vespers and it will not be filled.
 
 ## The open gaps, and what each would take
 

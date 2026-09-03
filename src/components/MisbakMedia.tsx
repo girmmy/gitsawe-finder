@@ -33,7 +33,19 @@ export default function MisbakMedia({ reading, candidate, service, eth, slot, au
   const clips = audioForCandidate(audio, candidate, eth, service, slot);
   const films = videosFor(videos, reading, candidate.mezmur);
 
-  if (!clips.length && !films.length) return null;
+  // Say so rather than leave a silent gap: a deacon who finds nothing here
+  // should know we have nothing, not wonder whether the app failed to load it.
+  // ዘሠርክ gets its own wording because we know why it is empty and always will
+  // be — neither collection records Vespers at all.
+  if (!clips.length && !films.length) {
+    // Deliberately not .misbak-media: that class means recordings are present,
+    // and both the styles and the tests read it that way.
+    return (
+      <p className="media-none">
+        {t(service === 'serk' ? 'recordingNoneSerk' : 'recordingNone', lang)}
+      </p>
+    );
+  }
 
   return (
     <section className="misbak-media" aria-label={t('recordings', lang)}>
