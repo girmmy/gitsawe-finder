@@ -5,7 +5,7 @@ import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/f
 import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
 
-const SERVICES = ['serk', 'negh', 'kidassie'] as const;
+const SERVICES = ['serk', 'negs', 'kidassie'] as const;
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 

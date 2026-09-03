@@ -157,7 +157,9 @@ function service(svc) {
 function services(rec) {
   const o = {};
   const serk = service(rec.serk); if (serk) o.serk = serk;
-  const negh = service(rec.negh); if (negh) o.negh = negh;
+  // Upstream calls this slot `negh`; the book prints ምስባክ ዘነግሥ — the misbak
+  // of the ማኅሌት, the night office — so that is what we emit and show.
+  const negs = service(rec.negh); if (negs) o.negs = negs;
   const kid = service(rec.kidassie); if (kid) o.kidassie = kid;
   return o;
 }

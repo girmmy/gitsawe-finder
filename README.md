@@ -3,8 +3,8 @@
 A web app for the **Metsafe Gitsawe**, the lectionary of the Ethiopian Orthodox
 Tewahedo Church. For any date it resolves which readings are appointed — the
 misbak (the deacon's psalm), the Pauline and Catholic epistles, Acts, the Gospel
-and the anaphora — for vespers, matins and the Divine Liturgy, in Ge'ez and
-Amharic with English translations and citations.
+and the anaphora — for vespers, the mahlet and the Divine Liturgy, in Ge'ez
+and Amharic with English translations and citations.
 
 ## What it does
 
@@ -39,6 +39,18 @@ npm run build
 
 `npm run build:data` regenerates `public/data/` from the vendored sources in
 `research/`. The generated data is committed, so a deploy never needs that clone.
+
+## The three services
+
+The book heads each misbak with the service it belongs to — **ምስባክ ዘሠርክ**,
+**ምስባክ ዘነግሥ**, **ምስባክ ዘቅዳሴ** — and the app uses those names as printed. ዘነግሥ
+is the ማኅሌት, the night office kept before dawn on feasts; the upstream dataset
+calls that slot `negh`, which the build step renames on the way in.
+
+Not every day has all three. The fixed daily cycle carries a ዘነግሥ misbak on 362
+of 366 days, but the Sunday cycle at the back of the book is ዘቅዳሴ only — 5 of
+its 43 records have a ዘነግሥ. Where a service is missing the app omits its panel
+rather than showing an empty one.
 
 ## How the resolver works
 

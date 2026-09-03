@@ -3,7 +3,7 @@ export type Lang = 'en' | 'am';
 
 export const SERVICE_LABELS: Record<string, { am: string; en: string; note: { am: string; en: string } }> = {
   serk: { am: 'ዘሠርክ', en: 'Vespers (Serk)', note: { am: 'የሠርክ ጸሎት', en: 'the evening office' } },
-  negh: { am: 'ዘነግህ', en: 'Matins (Negh)', note: { am: 'የነግህ ጸሎት', en: 'the morning office' } },
+  negs: { am: 'ዘነግሥ', en: 'Mahlet (Negs)', note: { am: 'የማኅሌት ጸሎት', en: 'the night office' } },
   kidassie: { am: 'ዘቅዳሴ', en: 'Divine Liturgy (Kidassie)', note: { am: 'ቅዳሴ', en: 'the Eucharistic liturgy' } },
 };
 
