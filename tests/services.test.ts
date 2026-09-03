@@ -39,3 +39,23 @@ describe('the three services the book names', () => {
     }
   });
 });
+
+describe('the gospel row', () => {
+  it('has a citation to lead with on all but a handful of readings', () => {
+    let total = 0, uncited = 0;
+    for (let m = 1; m <= 13; m++) {
+      for (const rec of Object.values(load(`daily/${m}.json`)) as DayRecord[]) {
+        for (const name of ['kidassie', 'serk', 'negs']) {
+          for (const g of serviceOf(rec, name)?.gospel ?? []) {
+            total++;
+            // Same test the row itself applies: with no reference in either
+            // script there is no headline, and the incipit carries the row.
+            if (!(g.en || g.kjv || ((g.bt || g.b) && g.c != null))) uncited++;
+          }
+        }
+      }
+    }
+    expect(total).toBeGreaterThan(1000);
+    expect(uncited).toBeLessThan(10);
+  });
+});

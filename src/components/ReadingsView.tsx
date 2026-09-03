@@ -313,6 +313,9 @@ function EpistleCard({ slot, readings, books, lang }: {
 function GospelRow({ reading, books, lang }: { reading: Reading; books: BookNames; lang: Lang }) {
   const label = SLOT_LABELS.gospel;
   const cite = citation(reading, books);
+  // A few readings carry no reference at all. With nothing to head the row,
+  // the incipit is the reading, so it keeps its full size.
+  const cited = Boolean(cite.en || cite.am);
   return (
     <div className="reading gospel-row">
       <p className="rubric">
@@ -322,7 +325,7 @@ function GospelRow({ reading, books, lang }: { reading: Reading; books: BookName
       {cite.en && <p className="gospel-cite-en">{cite.en}</p>}
       {cite.am && <p className="gospel-cite-am">{cite.am}</p>}
       {(reading.g || reading.a) && (
-        <p className="incipit gospel-incipit">
+        <p className={cited ? 'incipit gospel-incipit' : 'incipit'}>
           {reading.g ?? reading.a}
           {reading.et && <span className="until"> … {t('readUntil', lang)} «{reading.et}»</span>}
         </p>
