@@ -6,12 +6,15 @@ import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
 
 /**
- * The Divine Liturgy is what the day is prepared for, so it leads. ዘነግሥ, the
- * ማኅሌት kept before dawn, is folded into a dropdown underneath: it is real and
- * it is wanted, but it is not what most people open the app for.
+ * Every service is a dropdown, so a long day folds down to three headings.
+ * The Divine Liturgy leads and opens on load, because that is what the day is
+ * prepared for; ዘሠርክ and ዘነግሥ start shut and are one tap away.
  */
-const SERVICES = ['kidassie', 'serk', 'negs'] as const;
-const COLLAPSED = new Set<string>(['negs']);
+const SERVICES = [
+  { name: 'kidassie', open: true },
+  { name: 'serk', open: false },
+  { name: 'negs', open: false },
+] as const;
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 
@@ -66,10 +69,10 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
         <CopyAllBar day={day} primary={primary} books={books} lang={lang} />
       </div>
 
-      {SERVICES.filter((svc) => !(headless && svc === 'kidassie')).map((svc) => (
-        <ServiceBlock key={svc} name={svc} service={serviceOf(primary.record, svc)}
+      {SERVICES.filter((svc) => !(headless && svc.name === 'kidassie')).map((svc) => (
+        <ServiceBlock key={svc.name} name={svc.name} service={serviceOf(primary.record, svc.name)}
           day={day} primary={primary} books={books} lang={lang}
-          collapsed={COLLAPSED.has(svc)} />
+          defaultOpen={svc.open} />
       ))}
 
       {(primary.record.sinksar?.length ?? 0) > 0 && (
@@ -126,13 +129,16 @@ function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Cand
   );
 }
 
-function ServiceBlock({ name, service, day, primary, books, lang, collapsed = false }: {
+function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = false }: {
   name: string; service: Service | undefined; day: DayInfo; primary: Candidate;
   books: BookNames; lang: Lang;
-  /** Render shut, as a dropdown the reader opens. */
-  collapsed?: boolean;
+  /** Whether the dropdown starts open. */
+  defaultOpen?: boolean;
 }) {
   const [done, setDone] = useState(false);
+  // Held in state rather than left to the DOM: copying re-renders this block,
+  // and an uncontrolled <details open> would snap back shut mid-read.
+  const [open, setOpen] = useState(defaultOpen);
   if (!service) return null;
   const epistles = EPISTLES.filter((s) => service[s]?.length);
   const hasContent = service.msbak?.length || service.gospel?.length || epistles.length || service.anaphora?.length;
@@ -154,37 +160,27 @@ function ServiceBlock({ name, service, day, primary, books, lang, collapsed = fa
     </>
   );
 
-  const copyButton = (
-    <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>{done ? '✓' : '⧉'}</button>
-  );
-
-  if (collapsed) {
-    return (
-      <details className="panel service service-fold">
-        <summary className="service-head service-summary">
-          <h3 className="panel-title">
-            <span className="panel-title-geez">{label.am}</span> {label.en}
-          </h3>
-          <span className="service-caret" aria-hidden="true">▸</span>
-        </summary>
-        <div className="service-fold-body">
-          <div className="service-fold-actions">{copyButton}</div>
-          {body}
-        </div>
-      </details>
-    );
-  }
-
   return (
-    <section className="panel service">
-      <header className="service-head">
+    <details
+      className="panel service service-fold"
+      open={open}
+      onToggle={(e) => setOpen(e.currentTarget.open)}
+    >
+      <summary className="service-head service-summary">
         <h3 className="panel-title">
           <span className="panel-title-geez">{label.am}</span> {label.en}
         </h3>
-        {copyButton}
-      </header>
-      {body}
-    </section>
+        <span className="service-caret" aria-hidden="true">▸</span>
+      </summary>
+      <div className="service-fold-body">
+        <div className="service-fold-actions">
+          <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>
+            {done ? '✓' : '⧉'}
+          </button>
+        </div>
+        {body}
+      </div>
+    </details>
   );
 }
 
