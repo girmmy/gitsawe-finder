@@ -15,6 +15,14 @@ const SERVICES = [
   { name: 'serk', open: false },
   { name: 'negs', open: false },
 ] as const;
+
+/**
+ * Which folds are open, kept outside the component so it outlives the
+ * remount that every date change causes. Someone walking the calendar with
+ * ዘነግሥ open wants it to stay open. Session-only on purpose: a reload comes
+ * back to the defaults, with the Liturgy showing.
+ */
+const foldState = new Map<string, boolean>();
 /** The three epistle readings sit side by side; misbak and gospel frame them. */
 const EPISTLES = ['pauline', 'catholic', 'acts'] as const;
 
@@ -138,7 +146,8 @@ function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = 
   const [done, setDone] = useState(false);
   // Held in state rather than left to the DOM: copying re-renders this block,
   // and an uncontrolled <details open> would snap back shut mid-read.
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpenState] = useState(() => foldState.get(name) ?? defaultOpen);
+  const setOpen = (next: boolean) => { foldState.set(name, next); setOpenState(next); };
   if (!service) return null;
   const epistles = EPISTLES.filter((s) => service[s]?.length);
   const hasContent = service.msbak?.length || service.gospel?.length || epistles.length || service.anaphora?.length;
