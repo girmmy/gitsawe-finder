@@ -12,7 +12,7 @@
  */
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, statSync } from 'node:fs';
-import { join, dirname, extname, normalize } from 'node:path';
+import { join, dirname, extname, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -58,7 +58,7 @@ createServer((req, res) => {
   const path = decodeURIComponent((req.url ?? '/').split('?')[0]);
   // Keep a crafted path from climbing out of dist/.
   const target = join(dist, normalize(path).replace(/^(\.\.[/\\])+/, ''));
-  const file = target.startsWith(dist) && existsSync(target) && statSync(target).isFile()
+  const file = (target === dist || target.startsWith(dist + sep)) && existsSync(target) && statSync(target).isFile()
     ? target
     // Hash routing means every unknown path is still the app shell.
     : join(dist, 'index.html');

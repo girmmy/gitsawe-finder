@@ -6,7 +6,7 @@ import { copyText } from '../lib/clipboard';
 import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service, type ServiceName } from '../lib/types';
 import MisbakMedia from './MisbakMedia';
-import type { AudioIndex, VideoIndex } from '../lib/media';
+import type { AudioIndex, MisbakSlot, VideoIndex } from '../lib/media';
 
 /**
  * Every service is a dropdown, so a long day folds down to three headings.
@@ -182,9 +182,10 @@ function ServiceBlock({ name, service, day, primary, books, lang, audio, videos,
 
   const body = (
     <>
-      {(service.msbak ?? []).map((r, i) => (
+      {(service.msbak ?? []).map((r, i, all) => (
         <MisbakRow key={`msbak-${i}`} reading={r} books={books} lang={lang}
           candidate={primary} service={name as ServiceName} eth={day.eth}
+          slot={{ index: i, count: all.length }}
           audio={audio} videos={videos} />
       ))}
       <LiturgyBody service={service} books={books} lang={lang} />
@@ -248,10 +249,10 @@ export function LiturgyBody({ service, books, lang }: { service: Service; books:
   );
 }
 
-function MisbakRow({ reading, books, lang, candidate, service, eth, audio, videos }: {
+function MisbakRow({ reading, books, lang, candidate, service, eth, slot, audio, videos }: {
   reading: Reading; books: BookNames; lang: Lang;
   candidate: Candidate; service: ServiceName; eth: { month: number; day: number };
-  audio: AudioIndex | null; videos: VideoIndex | null;
+  slot: MisbakSlot; audio: AudioIndex | null; videos: VideoIndex | null;
 }) {
   const label = SLOT_LABELS.msbak;
   const cite = citation(reading, books);
@@ -265,7 +266,7 @@ function MisbakRow({ reading, books, lang, candidate, service, eth, audio, video
       {reading.a && <p className="amharic-text">{reading.a}</p>}
       <Citation cite={cite} />
       <MisbakMedia reading={reading} candidate={candidate} service={service} eth={eth}
-        audio={audio} videos={videos} lang={lang} />
+        slot={slot} audio={audio} videos={videos} lang={lang} />
     </div>
   );
 }

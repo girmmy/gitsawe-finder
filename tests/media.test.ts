@@ -135,6 +135,25 @@ describe('audioForCandidate', () => {
     expect(audioForCandidate(idx, candidate('extra'), eth, 'kidassie')).toEqual([]);
   });
 
+  /**
+   * 22 days appoint more than one misbak to a single office. The recording is
+   * addressed by date and office, so it belongs to no particular one of them:
+   * showing it under each would claim a recording of every misbak that day.
+   */
+  it('hangs a recording on the first misbak only when the office appoints several', () => {
+    const first = audioForCandidate(idx, candidate('daily'), eth, 'kidassie', { index: 0, count: 2 });
+    expect(first).toHaveLength(1);
+    expect(first[0].exact, 'it cannot be pinned to this one').toBe(false);
+
+    expect(audioForCandidate(idx, candidate('daily'), eth, 'kidassie', { index: 1, count: 2 }))
+      .toEqual([]);
+  });
+
+  it('still claims the office exactly when there is only one misbak', () => {
+    const [only] = audioForCandidate(idx, candidate('daily'), eth, 'kidassie', { index: 0, count: 1 });
+    expect(only.exact).toBe(true);
+  });
+
   it("withholds it on the mezmur page, which carries today's date around another week's record", () => {
     // App.tsx synthesises exactly this: today's DayInfo, a seasonal candidate.
     const mezmurPage: Candidate = {
@@ -153,9 +172,11 @@ describe('misbakRefKey', () => {
     expect(misbakRefKey({ b: 'PSA', c: 22, s: 4, n: 4 })).toBe('PSA:22:4');
   });
 
-  it('is null without a citable book and chapter', () => {
+  it('is null without a citable book, chapter and verse', () => {
     expect(misbakRefKey({ g: 'አድኅነኒ' })).toBeNull();
     expect(misbakRefKey({ b: 'PSA' })).toBeNull();
+    // "PSA:7:" could never match a key anyone would write.
+    expect(misbakRefKey({ b: 'PSA', c: 7 })).toBeNull();
   });
 });
 

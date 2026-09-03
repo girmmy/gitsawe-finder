@@ -65,7 +65,7 @@ export default function SundayHero({
   const english = misbak ? misbakEnglishLines(misbak) : [];
 
   return (
-    <section className="hero" aria-label="The coming Sunday">
+    <section className="hero" aria-label={kicker(weeksAhead, isToday, 'en')}>
       <p className="hero-kicker">{kicker(weeksAhead, isToday, lang)}</p>
 
       <p className="hero-date">
@@ -124,7 +124,8 @@ export default function SundayHero({
           )}
           {primary && (
             <MisbakMedia reading={misbak} candidate={primary} service="kidassie"
-              eth={day.eth} audio={audio} videos={videos} lang={lang} />
+              eth={day.eth} slot={{ index: 0, count: liturgy?.msbak?.length ?? 1 }}
+              audio={audio} videos={videos} lang={lang} />
           )}
         </div>
       )}

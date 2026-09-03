@@ -331,3 +331,28 @@ test.describe('the Sunday landing card', () => {
     await expect(page.locator('.hero-misbak audio')).toHaveCount(0);
   });
 });
+
+/**
+ * Meskerem 8's ዘቅዳሴ appoints two misbak, Psalm 131 and Psalm 57, and the
+ * source records one file for the office without saying which it is. Both rows
+ * used to show that same player, which claimed a recording of each.
+ */
+test.describe('a service with more than one misbak', () => {
+  test('hangs the recording on the first only, and says it cannot pin it', async ({ page }) => {
+    await page.goto('#/date/2026-09-18'); // Meskerem 8
+    const liturgy = await openFold(page, 'ዘቅዳሴ');
+
+    const rows = liturgy.locator('.reading.misbak');
+    expect(await rows.count(), 'this day should appoint several').toBeGreaterThan(1);
+
+    // That office has two recordings of its own; both belong to the first row.
+    const onFirst = await rows.nth(0).locator('.misbak-media audio').count();
+    expect(onFirst, 'the first row carries the office\'s recordings').toBeGreaterThan(0);
+    // Said once for the row, however many recordings hang on it.
+    await expect(rows.nth(0).locator('.media-caveat')).toHaveCount(1);
+    await expect(rows.nth(0).locator('.media-caveat'))
+      .toHaveText(/which of today's misbak/);
+    // The second must not repeat the same player as though it were its own.
+    await expect(rows.nth(1).locator('.misbak-media audio')).toHaveCount(0);
+  });
+});

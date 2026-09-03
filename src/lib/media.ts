@@ -38,6 +38,12 @@ export interface Video {
 export type AudioIndex = Record<string, Recording[]>;
 export type VideoIndex = Record<string, Video[]>;
 
+/** Where a misbak sits among the ones its office appoints that day. */
+export interface MisbakSlot {
+  index: number;
+  count: number;
+}
+
 /** One recording plus whether the source actually named this service. */
 export interface AudioMatch {
   rec: Recording;
@@ -77,9 +83,16 @@ export function audioForCandidate(
   candidate: Candidate,
   eth: { month: number; day: number },
   service: ServiceName,
+  slot: MisbakSlot = { index: 0, count: 1 },
 ): AudioMatch[] {
   if (candidate.kind !== 'daily') return [];
-  return audioFor(index, eth.month, eth.day, service);
+  // A recording is addressed by date and office. Where the office appoints
+  // more than one misbak — 22 days do — the source does not say which of them
+  // was recorded, so it hangs on the first and says so, rather than appearing
+  // under each in turn as though there were a recording of every one.
+  if (slot.index > 0) return [];
+  const found = audioFor(index, eth.month, eth.day, service);
+  return slot.count > 1 ? found.map((m) => ({ ...m, exact: false })) : found;
 }
 
 /**
@@ -110,10 +123,11 @@ export function audioFor(
  * recording to either.
  */
 export function misbakRefKey(r: Reading): string | null {
-  if (!r.b || r.c == null) return null;
-  const start = r.s ?? '';
+  // A chapter with no verse would key as "PSA:7:", which can never match
+  // anything and is not a reference anyone would write.
+  if (!r.b || r.c == null || r.s == null) return null;
   const end = r.n != null && r.n !== r.s ? `-${r.n}` : '';
-  return `${r.b}:${r.c}:${start}${end}`;
+  return `${r.b}:${r.c}:${r.s}${end}`;
 }
 
 /**

@@ -60,6 +60,10 @@ export const UI = {
     en: "for this day — the source doesn't say which service",
     am: 'የዕለቱ ቅጂ — ምንጩ የትኛው ጸሎት እንደሆነ አልገለጸም',
   },
+  recordingManyMisbak: {
+    en: "for this service — the source doesn't say which of today's misbak",
+    am: 'የዚህ ጸሎት ቅጂ — ምንጩ ከዕለቱ ምስባካት የትኛው እንደሆነ አልገለጸም',
+  },
   recordingSource: { en: 'from', am: 'ምንጭ' },
   watchOnYouTube: { en: 'Watch on YouTube', am: 'በዩቲዩብ ተመልከት' },
   playRecording: { en: 'Play', am: 'አጫውት' },

@@ -52,7 +52,13 @@ function apiKey() {
     : null;
 }
 
+const PLACEHOLDER = 'paste-your-key-here';
 const KEY = apiKey();
+if (KEY === PLACEHOLDER) {
+  process.stderr.write(
+    `.env still holds the placeholder. Replace ${PLACEHOLDER} with the real key.\n`);
+  process.exit(1);
+}
 if (!KEY) {
   process.stderr.write(
     'No YouTube API key found.\n\n' +
