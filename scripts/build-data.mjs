@@ -124,17 +124,26 @@ function reading(entry) {
   if (code) o.b = code;
   if (v.chapter != null) o.c = v.chapter;
   if (v.start != null) o.s = v.start;
-  if (v.end != null) o.n = v.end;
+  // A psalm reading is a misbak, two to four verses of it. Upstream carries a
+  // few ends that cannot be verses at all — Psalm 3:5–66 in a psalm with eight
+  // verses, 86:1–22 in one with seven — and printing them puts a citation in
+  // front of a deacon that does not exist. The start is trustworthy and the
+  // Ge'ez is right, so drop only the end rather than guess what it should have
+  // been. Long ranges elsewhere are real: gospels do run thirty verses.
+  const impossiblePsalmEnd =
+    code === 'PSA' && v.start != null && v.end != null && v.end - v.start > 20;
+  if (v.end != null && !impossiblePsalmEnd) o.n = v.end;
   if (v.endText) o.et = v.endText;
   // English citation string
   if (code && v.chapter != null) {
     const name = BOOKS[code].en;
-    const range = v.start != null ? (v.end != null && v.end !== v.start ? `${v.start}–${v.end}` : `${v.start}`) : '';
+    const end = impossiblePsalmEnd ? null : v.end;
+    const range = v.start != null ? (end != null && end !== v.start ? `${v.start}–${end}` : `${v.start}`) : '';
     if (code === 'PSA') {
       o.kjv = `Psalm ${kjvPsalm(v.chapter)}` + (range ? ` (Eth. ${v.chapter}:${range})` : '');
     } else {
       o.en = `${name} ${v.chapter}` + (range ? `:${range}` : (v.endText ? 'ff' : ''));
-      if (v.end == null && v.start != null) o.en += 'ff';
+      if (end == null && v.start != null) o.en += 'ff';
     }
   }
   return o;

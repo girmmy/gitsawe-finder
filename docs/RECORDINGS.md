@@ -29,26 +29,35 @@ Nehase and Pagumen files we host. Of the 728 daily misbak slots in
 Before the conversion those last two were 124 and 88; Nehase and Pagumen were
 entirely empty.
 
-**Mezmur cycle — 24 of 58 distinct misbaks.** Every one was accepted on the
+**Mezmur cycle — 42 of 58 distinct misbaks.** Every one was accepted on the
 same evidence: the video's title quotes the misbak's own opening words back,
 which is not something a wrong recording tends to do. Three were found by hand;
-the rest came from `find:videos` and were kept only where the title reproduced
-at least a third of the incipit verbatim.
+the rest came from `find:videos`, kept only where the title reproduced at least
+a third of the incipit verbatim.
 
-Two proposals were rejected by that rule and are worth knowing about, because
-both looked plausible at a glance:
+Picking the top-scoring hit is not enough. For Psalm 86:5-6 the best incipit
+match was a twenty-two minute sermon that quotes the verse; the actual chant,
+one minute twenty, sat third. So the choice also prefers a title carrying the
+word ምስባክ, pushes down anything opening with ስብከት, and treats a recording over
+ten minutes as a service rather than a misbak. That reordering changed three
+picks.
 
-- `PSA:93:20-21` (ኒቆዲሞስ) — the title cites መዝ. 106÷16, a different psalm.
-- `PSA:50:7-8` (ጸሎተ ሐሙስ) — titled ምስባክ ዘትንሳኤ and quoting ወተንሥአ እግዚአብሔር, which
-  is the incipit of `PSA:77:85-86`, not this one.
+Rejected, and worth knowing about because each looked plausible:
 
-`PSA:2:12-13` (ዘነነዌ) and `PSA:117:27-28` turned up nothing at all.
+- `PSA:93:20-21` (ኒቆዲሞስ) — every candidate was the መዝ. 106÷16 misbak instead.
+- `PSA:50:7-8` (ጸሎተ ሐሙስ) — titled ምስባክ ዘትንሳኤ, quoting `PSA:77:85-86`'s incipit.
+- `PSA:67:33-34` (ዕርገት) — all three candidates were ሣህሉ ለእግዚአብሔር መልአ ምድረ, a
+  different psalm; the 54 they scored came from the word እግዚአብሔር alone.
+
+`PSA:2:12-13` (ዘነነዌ), `PSA:112:3-4`, `PSA:50:11-12` and `PSA:64:10-11` turned
+up nothing.
 
 **These have not been listened to.** The titles are strong evidence and the
-worst case is a wrong tune rather than a wrong text, but a chant is not verified
-until someone hears it. Two are long enough to be full services rather than a
-clean misbak — `PSA:95:5-6` at 14:57 and `PSA:83:6-7` at 13:56 — and are the
-first ones worth checking.
+worst case is a wrong tune rather than a wrong text, but a chant is not
+verified until someone hears it. Three from the first batch predate the
+duration rule and are long enough to be whole services — `PSA:95:5-6` at 14:57,
+`PSA:83:6-7` at 13:56, `PSA:22:4-5` at 10:20. Re-running `find:videos --only`
+for those would now pick better.
 
 ## The open gaps, and what each would take
 

@@ -78,6 +78,28 @@ describe('the recordings index', () => {
   });
 });
 
+/**
+ * A psalm reading is a misbak, a few verses of it. Upstream carries ends that
+ * cannot be verses at all — Psalm 3:5–66 in a psalm with eight verses — and
+ * printing one puts a citation in front of a deacon that does not exist.
+ * build-data.mjs drops an end it cannot believe; this keeps it dropped.
+ */
+describe('the printed citations', () => {
+  it('never claims a psalm range that could not exist', () => {
+    const records = [...load('seasonal.json'), ...load('monthly.json'), ...load('sunday-extra.json')];
+    for (let m = 1; m <= 13; m++) records.push(...Object.values(daily[m]));
+
+    for (const rec of records) {
+      for (const office of ['serk', 'negs', 'kidassie'] as const) {
+        for (const m of (rec as DayRecord)[office]?.msbak ?? []) {
+          if (m.b !== 'PSA' || m.s == null || m.n == null) continue;
+          expect(m.n - m.s, `${m.b} ${m.c}:${m.s}-${m.n}`).toBeLessThanOrEqual(20);
+        }
+      }
+    }
+  });
+});
+
 describe('audioFor', () => {
   const idx: AudioIndex = {
     '1:1:negs': [{ url: 'https://www.ethiopianorthodox.org/a.mp3' }],
