@@ -3,15 +3,29 @@ import type { DayRecord, ExtraRecord, MonthlyRecord, SeasonalRecord } from './ty
 
 export interface BookNames { [code: string]: { en: string; am: string } }
 
-const cache = new Map<string, unknown>();
+/**
+ * Keyed by path, holding the request rather than its result.
+ *
+ * Two effects load on mount — the browsed date and the coming Sunday — and
+ * they ask for the same seasonal, monthly and extra files. Caching the
+ * resolved value let both miss the cache while the first request was still in
+ * flight, and every cold start fetched those files twice. Caching the promise
+ * means the second caller waits on the first.
+ */
+const cache = new Map<string, Promise<unknown>>();
 
-async function fetchJSON<T>(path: string): Promise<T> {
-  if (cache.has(path)) return cache.get(path) as T;
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
-  const json = (await res.json()) as T;
-  cache.set(path, json);
-  return json;
+function fetchJSON<T>(path: string): Promise<T> {
+  const cached = cache.get(path);
+  if (cached) return cached as Promise<T>;
+  const request = (async () => {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
+    return (await res.json()) as T;
+  })();
+  // A failed request must not be remembered, or the app can never retry it.
+  cache.set(path, request);
+  request.catch(() => cache.delete(path));
+  return request;
 }
 
 export const loadSeasonal = () => fetchJSON<SeasonalRecord[]>('/data/seasonal.json');

@@ -603,3 +603,10 @@ body {
 }
 .service-fold-actions { display: flex; justify-content: flex-end; padding-top: 0.6rem; }
 .service-fold-actions + .reading { border-top: none; padding-top: 0.2rem; }
+
+/* Announced to screen readers, invisible to everyone else. The copy buttons
+   report their outcome through this, since the visual change is a glyph. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

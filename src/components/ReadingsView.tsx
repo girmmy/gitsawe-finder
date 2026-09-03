@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { BookNames } from '../lib/data';
 import { SERVICE_LABELS, SLOT_LABELS, t, type Lang } from '../lib/labels';
 import { citation, formatDay, formatService, misbakEnglishLines } from '../lib/format';
+import { copyText } from '../lib/clipboard';
 import { translit } from '../lib/translit';
 import { serviceOf, type Candidate, type DayInfo, type DayRecord, type Reading, type Service } from '../lib/types';
 
@@ -117,22 +118,40 @@ export default function ReadingsView({ day, books, lang, headless = false, onOpe
   );
 }
 
+/** Idle, or what the last copy did — so a refusal says so instead of nothing. */
+type CopyState = 'idle' | 'done' | 'failed';
+
+/** Show the outcome of a copy, then go quiet again. */
+function useCopy(): [CopyState, (text: string) => Promise<void>] {
+  const [state, setState] = useState<CopyState>('idle');
+  const timer = useRef<number>();
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const run = async (text: string) => {
+    setState(await copyText(text) ? 'done' : 'failed');
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setState('idle'), 1600);
+  };
+  return [state, run];
+}
+
 function CopyAllBar({ day, primary, books, lang }: { day: DayInfo; primary: Candidate; books: BookNames; lang: Lang }) {
-  const [done, setDone] = useState(false);
+  const [state, copy] = useCopy();
   const text = () => formatDay(day, primary, books);
-  const copy = async () => {
-    await navigator.clipboard.writeText(text());
-    setDone(true);
-    setTimeout(() => setDone(false), 1600);
-  };
   const share = async () => {
+    // A cancelled share rejects with AbortError; that is the reader saying no,
+    // not a failure worth reporting.
     if (navigator.share) await navigator.share({ text: text() }).catch(() => undefined);
-    else copy();
+    else await copy(text());
   };
+  const label =
+    state === 'done' ? t('copied', lang)
+    : state === 'failed' ? `⚠ ${t('copyFailed', lang)}`
+    : `⧉ ${t('copyAll', lang)}`;
   return (
     <div className="copybar">
-      <button className="btn primary" onClick={copy}>{done ? t('copied', lang) : `⧉ ${t('copyAll', lang)}`}</button>
+      <button className="btn primary" onClick={() => copy(text())}>{label}</button>
       <button className="btn" onClick={share}>↗ {t('share', lang)}</button>
+      <span className="sr-only" role="status">{state === 'idle' ? '' : label}</span>
     </div>
   );
 }
@@ -143,7 +162,7 @@ function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = 
   /** Whether the dropdown starts open. */
   defaultOpen?: boolean;
 }) {
-  const [done, setDone] = useState(false);
+  const [copyState, copy] = useCopy();
   // Held in state rather than left to the DOM: copying re-renders this block,
   // and an uncontrolled <details open> would snap back shut mid-read.
   const [open, setOpenState] = useState(() => foldState.get(name) ?? defaultOpen);
@@ -154,11 +173,6 @@ function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = 
   if (!hasContent) return null;
 
   const label = SERVICE_LABELS[name];
-  const copy = async () => {
-    await navigator.clipboard.writeText(formatService(day, primary, name, books));
-    setDone(true);
-    setTimeout(() => setDone(false), 1600);
-  };
 
   const body = (
     <>
@@ -183,8 +197,14 @@ function ServiceBlock({ name, service, day, primary, books, lang, defaultOpen = 
       </summary>
       <div className="service-fold-body">
         <div className="service-fold-actions">
-          <button className="btn small" onClick={copy} aria-label={`Copy ${label.en}`}>
-            {done ? '✓' : '⧉'}
+          <button
+            className="btn small"
+            onClick={() => copy(formatService(day, primary, name, books))}
+            aria-label={copyState === 'failed'
+              ? `Could not copy ${label.en}`
+              : `Copy ${label.en}`}
+          >
+            {copyState === 'done' ? '✓' : copyState === 'failed' ? '⚠' : '⧉'}
           </button>
         </div>
         {body}

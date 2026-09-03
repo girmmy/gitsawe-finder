@@ -37,6 +37,8 @@ export default function App() {
   const [books, setBooks] = useState<BookNames>({});
   const [index, setIndex] = useState<MezmurEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
+  // The Sunday card loads on its own, so it needs its own failure to report.
+  const [sundayError, setSundayError] = useState<string | null>(null);
 
   useEffect(() => { localStorage.setItem('gitsawe-lang', lang); }, [lang]);
 
@@ -75,7 +77,7 @@ export default function App() {
         if (!alive) return;
         setSunday(resolveDay(sundayJDN, { seasonal, monthly, extra, daily }));
       })
-      .catch(() => undefined);
+      .catch((e) => alive && setSundayError(String(e)));
     return () => { alive = false; };
   }, []);
 
@@ -145,7 +147,9 @@ export default function App() {
         {route.name === 'book' && <PdfView lang={lang} page={route.page} />}
 
         {route.name === 'sunday' && (
-          sunday ? (
+          sundayError && !sunday
+            ? <p className="error" role="alert">Could not load the readings: {sundayError}</p>
+          : sunday ? (
             <>
               <SundayHero
                 day={sunday}
