@@ -21,6 +21,7 @@ export const UI = {
   nextSunday: { en: 'Next Sunday', am: 'የሚቀጥለው እሑድ' },
   copyAll: { en: 'Copy all', am: 'ሁሉንም ቅዳ' },
   copied: { en: 'Copied!', am: 'ተቀድቷል!' },
+  copyFailed: { en: 'Could not copy', am: 'መቅዳት አልተቻለም' },
   share: { en: 'Share', am: 'አጋራ' },
   sinksar: { en: 'Synaxarium (Sinksar)', am: 'ስንክሳር' },
   alsoToday: { en: 'Readings that meet this day', am: 'የዕለቱ ግጻዌዎች' },
