@@ -29,13 +29,26 @@ Nehase and Pagumen files we host. Of the 728 daily misbak slots in
 Before the conversion those last two were 124 and 88; Nehase and Pagumen were
 entirely empty.
 
-**Mezmur cycle — 3 of 58 distinct misbaks.** Seeded so far:
+**Mezmur cycle — 24 of 58 distinct misbaks.** Every one was accepted on the
+same evidence: the video's title quotes the misbak's own opening words back,
+which is not something a wrong recording tends to do. Three were found by hand;
+the rest came from `find:videos` and were kept only where the title reproduced
+at least a third of the incipit verbatim.
 
-| ref | Sunday | video |
-|---|---|---|
-| `PSA:39:8-9` | ገብር ኄር | `WqrDlZqvpfo` — its own title slide reads ፮ኛ ሰንበት ገብር ኄር, መዝሙረ ዳዊት ፴፱(፵)፥፰ |
-| `PSA:46:5-6` | ዕርገት | `nba5EcJ0KWY` — title quotes the incipit ዐርገ እግዚአብሔር በይባቤ |
-| `PSA:49:3-4` | ደብረ ዘይት, ጳጉሜን | `b07H_rgRT_w` — title quotes the incipit እግዚአብሔርሰ ገሃደ ይመጽእ |
+Two proposals were rejected by that rule and are worth knowing about, because
+both looked plausible at a glance:
+
+- `PSA:93:20-21` (ኒቆዲሞስ) — the title cites መዝ. 106÷16, a different psalm.
+- `PSA:50:7-8` (ጸሎተ ሐሙስ) — titled ምስባክ ዘትንሳኤ and quoting ወተንሥአ እግዚአብሔር, which
+  is the incipit of `PSA:77:85-86`, not this one.
+
+`PSA:2:12-13` (ዘነነዌ) and `PSA:117:27-28` turned up nothing at all.
+
+**These have not been listened to.** The titles are strong evidence and the
+worst case is a wrong tune rather than a wrong text, but a chant is not verified
+until someone hears it. Two are long enough to be full services rather than a
+clean misbak — `PSA:95:5-6` at 14:57 and `PSA:83:6-7` at 13:56 — and are the
+first ones worth checking.
 
 ## The open gaps, and what each would take
 

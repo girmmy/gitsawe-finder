@@ -15,7 +15,10 @@
  * says መዝሙር without ምስባክ is pushed down — that is the hymn that names the
  * Sunday, a different piece from the psalm verse chanted before the gospel.
  *
- *   YOUTUBE_API_KEY=... node scripts/find-videos.mjs [--limit 20] [--only 'ገብር ኄር']
+ *   node scripts/find-videos.mjs [--limit 20] [--only 'ገብር ኄር']
+ *
+ * The key comes from a gitignored .env at the repo root, so it stays out of
+ * shell history. See the message printed when it is missing.
  *
  * search.list costs 100 quota units of the free 10,000/day, so a full sweep of
  * the 58 refs fits in a single day. Results land in research/video-candidates
@@ -30,13 +33,37 @@ const dataDir = join(root, 'public', 'data');
 const outDir = join(root, 'research');
 const out = join(outDir, 'video-candidates.json');
 
-const KEY = process.env.YOUTUBE_API_KEY;
+/**
+ * The key, from a gitignored .env if there is one.
+ *
+ * Reading it from a file rather than the command line keeps it out of shell
+ * history and out of any terminal someone is sharing — `YOUTUBE_API_KEY=... npm
+ * run ...` leaves the secret sitting in ~/.zsh_history for anyone who looks.
+ */
+function apiKey() {
+  if (process.env.YOUTUBE_API_KEY) return process.env.YOUTUBE_API_KEY;
+  const envFile = join(root, '.env');
+  if (!existsSync(envFile)) return null;
+  const line = readFileSync(envFile, 'utf8')
+    .split('\n')
+    .find((l) => /^\s*(export\s+)?YOUTUBE_API_KEY\s*=/.test(l));
+  return line
+    ? line.split('=').slice(1).join('=').trim().replace(/^['"]|['"]$/g, '') || null
+    : null;
+}
+
+const KEY = apiKey();
 if (!KEY) {
   process.stderr.write(
-    'Set YOUTUBE_API_KEY first.\n' +
-    '  console.cloud.google.com -> a project -> enable "YouTube Data API v3" -> create an API key.\n' +
-    '  It is free: 10,000 quota units a day, and this uses ~101 per misbak.\n' +
-    '  The key stays on your machine; nothing about it reaches the built app.\n');
+    'No YouTube API key found.\n\n' +
+    '  Put it in a .env file at the repo root, which is gitignored:\n' +
+    '    echo \'YOUTUBE_API_KEY=your-key-here\' >> .env\n\n' +
+    '  Get one free at console.cloud.google.com: a project, then\n' +
+    '  APIs & Services -> Library -> "YouTube Data API v3" -> Enable,\n' +
+    '  then Credentials -> Create credentials -> API key. Restrict it to that\n' +
+    '  one API. The free quota is 10,000 units a day; this uses ~101 per misbak.\n\n' +
+    '  Prefer the file over `YOUTUBE_API_KEY=... npm run find:videos` — the\n' +
+    '  command line form leaves the key in your shell history.\n');
   process.exit(1);
 }
 
