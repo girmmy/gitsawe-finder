@@ -39,6 +39,7 @@ above and were read off the page scans for this app:
 
 | Record | Mezmur | Source |
 |---|---|---|
+| `meskel-2` | መስቀልከ እግዚኦ ተሰብሐ | printed p. 381 (ወርኀ መስከረም), supplied by the deacon |
 | `tsige-2` | ኪነ ጥበቡ መንክር ወዕፁብ | printed p. 382 (ወርኀ ጥቅምት) |
 | `tsige-4` | በዚአሁ ሐለፈ ክረምት | printed p. 382 (ወርኀ ጥቅምት) |
 | `tsige-5` | ጸገየ ወይን | printed p. 382–383 (ወርኀ ጥቅምት) |
@@ -51,8 +52,11 @@ above and were read off the page scans for this app:
 | `ayne-kulu-3` | ሰንበት ተዐቢ እምኵሉ ዕለት | old scan, p. 185 |
 | `goh-tsibah-4` | አምላኪየ ኄር | old scan, p. 185 |
 
-Each carries `"provenance": "scan"` and the UI labels it *“transcribed from the
-page scans — please check it against the book.”* Corrections belong in that file.
+Each carries a `provenance` and the UI labels it accordingly — `scan` for the
+ones read off the page scans, `deacon` for `meskel-2`, which the deacon who
+keeps the app sent in from the printed book for a Sunday we had not read
+ourselves. Either way it is not in the upstream dataset and the UI points at
+the book. Corrections belong in that file.
 
 `ayne-kulu-2` was corrected against the parish scan after the deacon's review:
 the mezmur is **ይሁበነ ዝናመ በጊዜሁ** (the earlier dataset spelling was wrong), and
@@ -60,6 +64,12 @@ the third line of the misbak is **ትሰፍሕ የማነከ ወታጸግብ ለ�
 the ትፈትሕ … ሕያው ሥምረተከ the upstream data carried.
 
 ዘመነ ጽጌ is now complete: all six Sundays resolve.
+
+`meskel-2` was added after the app served the wrong mezmur for Meskerem 24,
+2019 EC (4 October 2026). Its misbak is መዝ. ፷፯፥፳፰–፳፱ — Psalm 68:28–29 in the
+KJV — and the Ge'ez was set from the deacon's transliteration; the app's own
+transliterator round-trips it to the same reading, but the Ge'ez spelling in
+particular is worth a second eye against the page.
 
 ### How these were read
 
@@ -70,6 +80,29 @@ Matthew 7:24 whose incipit (ወበእንተዝ እብለክሙ ኢትትከዙ) 
 the record says 6:24. Citations the book does not print are left out rather
 than inferred: `tsige-4` carries its misbak text with no reference, because the
 book gives it as a cross-reference to Sene 24 vespers.
+
+### A day window is not always one Sunday
+
+The back of the book gives most Sundays as a window of dates — ከመስከረም ፲፮ እስከ ፳፭
+(መስቀል), ኢተዘከር for ኅዳር ፩–፲፪ — and several of those windows are wider than a
+week. When one holds two Sundays the book prints a mezmur for each, not one for
+the window: መስቀል opens with ዝንቱ ውእቱ መስቀል and gives its second Sunday
+መስቀልከ እግዚኦ ተሰብሐ.
+
+The resolver counts which Sunday of its window a date is (`windowSundays` in
+`src/lib/resolver.ts`) and looks for a record carrying that `windowSunday`.
+Where there is none and the window holds more than one, the candidate is marked
+`approximate` and the app says the mezmur shown may be the previous Sunday's,
+with the book's page one tap away. Three windows reach that state and are worth
+reading off the scans:
+
+- **ኅዳር ፩–፲፪ (ኢተዘከር)** — twelve days, so most years carry two Sundays. The
+  windows either side of it (፲፫–፲፱, ፳–፳፮) are exactly a week, which is reason
+  to suspect this one was read as a single window when the book gives two
+  mezmur. Printed pp. 384–385.
+- **መስከረም ፩–፰ (ዮሐንስ)** — a second Sunday whenever Meskerem 1 is one.
+  Printed p. 381.
+- **ሰኔ ፳፮ – ሐምሌ ፫ (ናኅብር ሰንበቶ)** — same shape, rarer. Printed pp. 409–410.
 
 ### A note on how the book indexes Sundays
 
@@ -107,6 +140,7 @@ what is sung is worse than none.
   looks like an artefact of its own scheme rather than something the book
   leaves out. Worth confirming with a deacon before chasing it further.
 - **Filseta** Sundays, printed pp. 411–415.
+- **The second Sunday of the wide windows** listed above, chiefly ኅዳር ፩–፲፪.
 
 Until they are read the app names the section and opens the book at that page.
 

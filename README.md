@@ -70,12 +70,18 @@ governs a given date:
 2. **The Sunday / month cycle** from the back of the book — Meskerem day
    windows, the nth Sunday of Tsige counted from Meskerem 26, the Hidar
    Sundays, the named weeks of Advent, Kremt, Filseta, and the end-of-year
-   Sundays (ደለያት / ዐይነ ኵሉ, then ጎህ ጽባሕ).
+   Sundays (ደለያት / ዐይነ ኵሉ, then ጎህ ጽባሕ). A day window is not always one
+   Sunday — ከመስከረም ፲፮ እስከ ፳፭ is ten days — so the resolver counts which
+   Sunday of its window a date is and matches the mezmur the book prints for
+   that one.
 3. **The fixed daily cycle**, one entry per Ethiopian month-day, which leads on
    ordinary weekdays and stays available as a secondary panel otherwise.
 
 Every candidate carries the reason it applies, and the user can switch between
 them.
+
+Where a window holds a second Sunday we have nothing of our own for, the app
+says the mezmur shown may be the previous Sunday's rather than asserting it.
 
 Where nothing is digitized for a Sunday the app says so rather than guessing —
 and names the page of the book that carries it, with a button that opens the

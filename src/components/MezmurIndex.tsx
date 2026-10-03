@@ -10,6 +10,8 @@ export interface MezmurEntry {
   group: string;
   record: DayRecord;
   unverified?: boolean;
+  /** Which of our own two transcriptions it came from, when it is one. */
+  provenance?: 'scan' | 'deacon';
 }
 
 type AnyRecord = SeasonalRecord | MonthlyRecord | ExtraRecord;
@@ -23,7 +25,7 @@ const periodIs = (r: AnyRecord, ...keys: string[]) =>
 
 /** Human-facing names for the book's cycles, in the order the year runs. */
 const GROUPS: { match: (r: AnyRecord) => boolean; name: string }[] = [
-  { name: 'መስከረም · Meskerem', match: (r) => monthIs(r, 'meskerem') },
+  { name: 'መስከረም · Meskerem', match: (r) => monthIs(r, 'meskerem') || periodIs(r, 'meskel') },
   { name: 'ዘመነ ጽጌ · Tsige', match: (r) => monthIs(r, 'tsige') || periodIs(r, 'tsige') },
   { name: 'ዘመነ አስተምህሮ · Astemhro', match: (r) => monthIs(r, 'hidar') || periodIs(r, 'astemhro') },
   { name: 'ጾመ ነቢያት · Advent', match: (r) => seasonIs(r, 'genaTsom') },
@@ -56,7 +58,8 @@ export function buildIndex(
       mezmur,
       group,
       record: r as DayRecord,
-      unverified: 'provenance' in r && r.provenance === 'scan',
+      unverified: 'provenance' in r && !!r.provenance,
+      provenance: 'provenance' in r ? r.provenance : undefined,
     });
   });
   return entries;
@@ -109,8 +112,8 @@ export default function MezmurIndex({ entries, lang, onOpen }: {
                 <span className="mezmur-card-geez">{e.mezmur}</span>
                 <span className="mezmur-card-translit">{translit(e.mezmur)}</span>
                 {e.unverified && (
-                  <span className="mezmur-card-flag" title="Transcribed from the page scans — verify against the book">
-                    {t('fromScan', lang)}
+                  <span className="mezmur-card-flag" title="Not in the upstream dataset — verify against the book">
+                    {t(e.provenance === 'deacon' ? 'fromDeacon' : 'fromScan', lang)}
                   </span>
                 )}
               </button>

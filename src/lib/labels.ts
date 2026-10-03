@@ -39,6 +39,7 @@ export const UI = {
   showingNow: { en: 'Showing now', am: 'አሁን የሚታየው' },
   switchTo: { en: 'Show these instead', am: 'ይህን አሳይ' },
   fromScan: { en: 'from the page scans', am: 'ከመጽሐፉ ገጽ' },
+  fromDeacon: { en: "from the deacon's lectionary", am: 'ከዲያቆኑ ግጻዌ' },
   scanTitle: { en: 'Some details here may be inaccurate. ', am: 'አንዳንድ ዝርዝሮች ትክክል ላይሆኑ ይችላሉ። ' },
   scanWarning: {
     en: 'For the exact text, open the book itself.',

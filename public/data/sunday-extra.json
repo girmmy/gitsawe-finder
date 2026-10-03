@@ -1,5 +1,76 @@
 [
   {
+    "id": "meskel-2",
+    "period": "meskel",
+    "order": 2,
+    "mezmur": "መስቀልከ እግዚኦ ተሰብሐ",
+    "month": 1,
+    "fromDay": 16,
+    "toDay": 25,
+    "windowSunday": 2,
+    "title": "፪ኛ መዝሙር ዘመስቀል፡ መስቀልከ እግዚኦ ተሰብሐ",
+    "periodAm": "ዘመነ መስቀል",
+    "periodEn": "Zemene Meskel — the Sundays of the Cross (Meskerem 16–25)",
+    "provenance": "deacon",
+    "source": "መጽሐፈ ግጻዌ ዘመዝሙር ወርኀ መስከረም — printed p. 381; supplied by the deacon",
+    "kidassie": {
+      "msbak": [
+        {
+          "g": "ወአጽንዖ እግዚኦ ለዝንቱ ዘሠራዕከ ለነ። ውስተ ጽርሐከ ዘኢየሩሳሌም። ለከ ያመጽኡ ነገሥት አምኃ።",
+          "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 67,
+          "s": 28,
+          "n": 29,
+          "el": [
+            "Strengthen, O God, what You have done for us.",
+            "Because of Your temple at Jerusalem,",
+            "Kings will bring presents to You."
+          ]
+        }
+      ],
+      "pauline": [
+        {
+          "bt": "፩ኛ ወደ ቆሮንቶስ ሰዎች",
+          "b": "1CO",
+          "c": 2,
+          "s": 1,
+          "n": 12
+        }
+      ],
+      "catholic": [
+        {
+          "bt": "፩ኛ የጴጥሮስ መልእክት",
+          "b": "1PE",
+          "c": 2,
+          "s": 20
+        }
+      ],
+      "acts": [
+        {
+          "bt": "ግብረ ሐዋርያት",
+          "b": "ACT",
+          "c": 4,
+          "s": 19,
+          "n": 31
+        }
+      ],
+      "gospel": [
+        {
+          "bt": "የሉቃስ ወንጌል",
+          "b": "LUK",
+          "c": 9,
+          "s": 18,
+          "n": 28
+        }
+      ],
+      "anaphora": [
+        "ዘእግዚእነ"
+      ]
+    },
+    "bookPage": 388
+  },
+  {
     "id": "tsige-2",
     "period": "tsige",
     "order": 2,

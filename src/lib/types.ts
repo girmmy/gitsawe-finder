@@ -69,10 +69,24 @@ export interface ExtraRecord extends DayRecord {
   mezmur: string;
   periodAm: string;
   periodEn: string;
-  provenance: 'scan';
+  /**
+   * How the record reached this file. `scan` was read off the page scans;
+   * `deacon` was supplied by the deacon who keeps the app, quoting the printed
+   * book for a Sunday we had not read ourselves. Either way it is not in the
+   * upstream dataset, so the UI points at the book.
+   */
+  provenance: 'scan' | 'deacon';
   /** Inclusive Ethiopian day window within one month, where the book gives one. */
   fromDay?: number;
   toDay?: number;
+  /** The Ethiopian month `fromDay`–`toDay` is counted in. */
+  month?: number;
+  /**
+   * Which Sunday inside that window the record belongs to. The book's windows
+   * are not all a week long, and where one holds two Sundays it prints a
+   * mezmur for each; this says which.
+   */
+  windowSunday?: number;
   /** A window that crosses a month boundary, e.g. Tahsas 29 – Tir 5. */
   monthWindow?: { fromMonth: number; fromDay: number; toMonth: number; toDay: number };
   source?: string;
@@ -90,6 +104,12 @@ export interface Candidate {
   mezmur?: string | null;
   /** True when the record came from our own reading of the page scans. */
   unverified?: boolean;
+  /**
+   * True when the record matched a day window that holds more than one Sunday
+   * and we have no record for this particular one — so it is the window's
+   * opening mezmur, not necessarily this Sunday's. The UI must say so.
+   */
+  approximate?: boolean;
 }
 
 export interface DayInfo {

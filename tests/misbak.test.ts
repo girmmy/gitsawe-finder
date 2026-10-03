@@ -20,6 +20,16 @@ describe('the misbak', () => {
     }
   });
 
+  it('follows the mezmur: መስቀልከ እግዚኦ ተሰብሐ belongs to መዝ. ፷፯፥፳፰–፳፱', () => {
+    const rec = extra.find((r) => r.mezmur === 'መስቀልከ እግዚኦ ተሰብሐ')!;
+    const m = rec.kidassie!.msbak![0];
+    expect(m.c).toBe(67);          // Ethiopian Psalter numbering — Psalm 68 in the KJV
+    expect(m.s).toBe(28);
+    expect(m.n).toBe(29);
+    expect(m.g).toContain('ጽርሐከ ዘኢየሩሳሌም');
+    expect(misbakEnglishLines(m)).toHaveLength(3);
+  });
+
   it('follows the mezmur: Ayne Kulu belongs to ይሁበነ ዝናመ በጊዜሁ', () => {
     const rec = extra.find((r) => r.mezmur === 'ይሁበነ ዝናመ በጊዜሁ')!;
     expect(rec.kidassie!.msbak![0].g).toContain('ዐይነ ኵሉ');

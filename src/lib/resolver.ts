@@ -90,9 +90,37 @@ function findSeasonal(data: Dataset, season: string, week: number | null, part: 
   return data.seasonal.find((r) => r.season === season && r.week === week && r.part === part) ?? null;
 }
 
-/** nth Sunday on-or-after startJDN for a given jdn (jdn must be a Sunday). */
+/**
+ * nth Sunday on-or-after startJDN for a given jdn (jdn must be a Sunday).
+ * startJDN need not be one: the first Sunday on or after it is the 1st.
+ */
 function nthSundaySince(startJDN: number, jdn: number): number {
   return Math.floor((jdn - startJDN) / 7) + 1;
+}
+
+/**
+ * Which Sunday of a day window a date is, and how many that window holds.
+ *
+ * The book's windows are not all a week long — ከመስከረም ፲፮ እስከ ፳፭ spans ten
+ * days — and where one holds two Sundays the book prints a mezmur for each,
+ * not one mezmur for the window. Matching on the window alone therefore hands
+ * the second Sunday the first Sunday's mezmur, which is the one answer a
+ * deacon must not be given: it looks right and is wrong.
+ */
+function windowSundays(fromJDN: number, toJDN: number, jdn: number): { nth: number; total: number } {
+  const first = fromJDN + ((SUNDAY - jdnToWeekday(fromJDN) + 7) % 7);
+  return {
+    nth: nthSundaySince(fromJDN, jdn),
+    total: first > toJDN ? 0 : Math.floor((toJDN - first) / 7) + 1,
+  };
+}
+
+/** The record the book prints for the nth Sunday of a month's day window. */
+function windowSundayRecord(
+  data: Dataset, month: number, fromDay: number, toDay: number, nth: number,
+): ExtraRecord | null {
+  return data.extra.find((r) =>
+    r.month === month && r.fromDay === fromDay && r.toDay === toDay && r.windowSunday === nth) ?? null;
 }
 
 /** The last Sunday falling on or before a jdn. */
@@ -239,9 +267,11 @@ function windowCandidates(ctx: Ctx, data: Dataset): Candidate[] {
     const from = ethToJDN(y, w.fromMonth, w.fromDay);
     const to = ethToJDN(w.toMonth < w.fromMonth ? y + 1 : y, w.toMonth, w.toDay);
     if (jdn >= from && jdn <= to) {
+      const span = windowSundays(from, to, jdn);
       out.push({
         kind: 'extra', record: rec, mezmur: rec.mezmur, unverified: true,
         reasonEn: rec.periodEn, reasonAm: rec.periodAm,
+        approximate: span.total > 1 && span.nth > 1,
       });
     }
   }
@@ -314,6 +344,7 @@ function windowCandidates(ctx: Ctx, data: Dataset): Candidate[] {
 function monthlyCandidates(ctx: Ctx, data: Dataset): Candidate[] {
   const { jdn, eth, weekday } = ctx;
   if (weekday !== SUNDAY) return [];
+  const at = (m: number, d: number) => ethToJDN(eth.year, m, d);
   const out: Candidate[] = [];
   const push = (rec: MonthlyRecord | undefined, reasonEn: string, reasonAm: string) => {
     if (rec) out.push({ kind: 'monthly', record: rec, reasonEn, reasonAm, mezmur: rec.mezmur });
@@ -325,10 +356,27 @@ function monthlyCandidates(ctx: Ctx, data: Dataset): Candidate[] {
     const special = data.monthly.find((r) => r.month === 'meskerem' && r.fromDay === 25 && r.toDay === 25 && eth.day === 25);
     if (special) push(special, 'Meskerem 25 falling on a Sunday', 'መስከረም ፳፭ በእሑድ');
     else {
-      push(
-        data.monthly.find((r) => r.month === 'meskerem' && r.fromDay != null && !r.crossMonth &&
-          eth.day >= r.fromDay! && eth.day <= r.toDay! && !(r.fromDay === 25 && r.toDay === 25)),
-        `Sunday of Meskerem ${eth.day}`, `ዘመስከረም እሑድ`);
+      const win = data.monthly.find((r) => r.month === 'meskerem' && r.fromDay != null && !r.crossMonth &&
+        eth.day >= r.fromDay! && eth.day <= r.toDay! && !(r.fromDay === 25 && r.toDay === 25));
+      if (win) {
+        // ከመስከረም ፲፮ እስከ ፳፭ (መስቀል) is ten days wide, so when Meskel falls early
+        // in the week the window carries a second Sunday with its own mezmur.
+        const span = windowSundays(at(1, win.fromDay!), at(1, win.toDay!), jdn);
+        const own = windowSundayRecord(data, 1, win.fromDay!, win.toDay!, span.nth);
+        if (own) {
+          out.push({
+            kind: 'extra', record: own, mezmur: own.mezmur, unverified: true,
+            reasonEn: `${ordinal(span.nth)} Sunday of ${own.periodEn}`,
+            reasonAm: `${own.periodAm} — ${span.nth}ኛ ሰንበት`,
+          });
+        } else {
+          out.push({
+            kind: 'monthly', record: win, mezmur: win.mezmur,
+            reasonEn: `Sunday of Meskerem ${eth.day}`, reasonAm: `ዘመስከረም እሑድ`,
+            approximate: span.total > 1 && span.nth > 1,
+          });
+        }
+      }
     }
   }
 
@@ -362,10 +410,17 @@ function monthlyCandidates(ctx: Ctx, data: Dataset): Candidate[] {
     const windowed = data.extra.find((r) =>
       r.period === 'astemhro' && r.fromDay != null && eth.day >= r.fromDay && eth.day <= r.toDay!);
     if (windowed) {
+      // ኢተዘከር covers Hidar 1–12, wider than a week. Where such a window holds
+      // a second Sunday we have nothing of its own for, say so rather than
+      // repeat the window's opening mezmur as if it were this Sunday's.
+      const span = windowSundays(at(3, windowed.fromDay!), at(3, windowed.toDay!), jdn);
+      const own = windowSundayRecord(data, 3, windowed.fromDay!, windowed.toDay!, span.nth);
+      const rec = own ?? windowed;
       out.push({
-        kind: 'extra', record: windowed, mezmur: windowed.mezmur, unverified: true,
+        kind: 'extra', record: rec, mezmur: rec.mezmur, unverified: true,
         reasonEn: `Sunday of Astemhro (Hidar ${windowed.fromDay}–${windowed.toDay})`,
         reasonAm: `ዘአስተምህሮ (ኅዳር ${toGeez(windowed.fromDay!)}–${toGeez(windowed.toDay!)})`,
+        approximate: !own && span.total > 1 && span.nth > 1,
       });
     } else {
       const nthOfMonth = Math.ceil(eth.day / 7);
@@ -491,10 +546,15 @@ export function resolveDay(jdn: number, data: Dataset): DayInfo {
     }
   }
 
-  const gap = isSunday && !hasOverride ? sundaySectionPage(ctx) : null;
-  const gapNote = gap
-    ? `This Sunday's own readings are not in the app yet, so the fixed daily reading is shown instead. The book has them: ${gap.label}.`
-    : null;
+  // Two kinds of gap. Either nothing in the Sunday cycle matched at all, or
+  // something matched a day window that holds more than one Sunday and we have
+  // no record for this one — a weaker claim, and the note has to say which.
+  const approximate = isSunday && candidates.some((c) => c.approximate);
+  const gap = isSunday && (!hasOverride || approximate) ? sundaySectionPage(ctx) : null;
+  const gapNote = !gap ? null
+    : approximate
+      ? `This window of the book holds two Sundays and the app has a mezmur for only the first, so the one shown may be the Sunday before this one's. The book settles it: ${gap.label}.`
+      : `This Sunday's own readings are not in the app yet, so the fixed daily reading is shown instead. The book has them: ${gap.label}.`;
 
   return {
     jdn, greg, eth, weekday, isSunday,
