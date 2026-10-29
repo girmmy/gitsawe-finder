@@ -32,6 +32,40 @@ fetched only when someone opens the Book tab.
 
 Its mezmur sections run by month; printed folio = PDF page − 7.
 
+## Corrected against the book
+
+The upstream dataset is a transcription, and a transcription of one printing.
+Where the book and the data disagree about a word, the book wins.
+`scripts/corrections.json` holds those corrections and `scripts/build-data.mjs`
+applies them on the way out, so `npm run build:data` cannot quietly put the
+dataset's wording back. Each entry quotes the text it expects to find and must
+match exactly one reading; if it stops matching, the build fails and writes
+nothing rather than leaving `public/data/` half rebuilt.
+`tests/corrections.test.ts` asserts the corrected wording is in the committed
+data, so a stale rebuild shows up in `npm test` too.
+
+| Record | Reads | Not |
+|---|---|---|
+| መስከረም ፱–፲፭ (ፍሬ), መዝሙር እኲት አንተ | ምድርኒ **ትሁብ** ፍሬሃ | ምድርኒ **ወሀበት** ፍሬሃ |
+
+### The two printings disagree here
+
+This one is not a transcription slip — the two books in `research/` print
+different words, and the correction picks a side:
+
+- the older ethiopianorthodox.org scan, printed p. 164 (ወርኀ መስከረም), reads
+  **ትሁብ** — the imperfect, *yields*;
+- the parish scan, printed p. 380, reads **ወሀበት** — the perfect, *yielded*,
+  which is also the received Ge'ez Psalter text of መዝ. ፷፮፥፯ and matches the
+  LXX aorist ἔδωκεν.
+
+ትሁብ is what is chanted here, so that is what the app prints. Two things still
+carry the other reading and are left alone deliberately: the Amharic line
+beneath it is the Amharic Bible's (ሰጠች, perfect), so the Ge'ez and the Amharic
+no longer agree in tense; and the YouTube recording keyed to this misbak in
+`public/data/videos.json` is titled with ወሀበት by its uploader, which is that
+video's own name and not ours to edit.
+
 ## Transcribed for this app
 
 `public/data/sunday-extra.json` holds Sunday records that are in no dataset

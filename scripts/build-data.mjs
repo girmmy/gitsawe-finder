@@ -4,7 +4,9 @@
  * Reads the vendored EOTCDevAPI sinq-gitsawe collections (research/EOTCDevAPI,
  * MIT — see docs/ATTRIBUTION.md), normalizes Amharic/Ge'ez book titles to USFM
  * codes with English names, adds KJV-numbering psalm citations (the Ethiopian
- * Psalter follows LXX numbering), and emits compact JSON under public/data/:
+ * Psalter follows LXX numbering), applies scripts/corrections.json where the
+ * dataset's wording differs from the book, and emits compact JSON under
+ * public/data/:
  *   daily/{1..13}.json  — fixed-cycle records for one Ethiopian month
  *   seasonal.json       — movable-cycle records
  *   monthly.json        — month/Sunday-cycle records
@@ -163,6 +165,59 @@ function service(svc) {
   return Object.keys(o).length ? o : null;
 }
 
+/**
+ * Corrections read off the page scans, applied on the way out.
+ *
+ * The upstream dataset is a transcription, and a transcription of one printing:
+ * where the book and the data disagree about a word, the book wins. Each entry
+ * names the cycle and the record it belongs to, quotes the text it expects to
+ * find, and must match exactly one reading — a correction that stops matching
+ * (because upstream was fixed, or reworded, or the record moved) fails the
+ * build rather than going quietly stale. docs/ATTRIBUTION.md carries the
+ * reasoning; `scripts/corrections.json` carries the evidence per entry.
+ */
+const corrections = JSON.parse(readFileSync(join(root, 'scripts', 'corrections.json'), 'utf8'))
+  .map((c) => ({ ...c, hits: 0 }));
+
+/**
+ * Apply every correction scoped to `cycle`. Takes {scope, record} pairs: the
+ * scope is what a correction's `match` is tested against (for daily records
+ * that is the month and day, which the emitted record itself does not carry),
+ * and the record is what gets rewritten, in place.
+ */
+function correct(cycle, entries) {
+  const scoped = corrections.filter((c) => c.cycle === cycle);
+  if (!scoped.length) return;
+  for (const { scope, record: rec } of entries) {
+    for (const c of scoped) {
+      if (c.match && Object.entries(c.match).some(([k, v]) => scope[k] !== v)) continue;
+      for (const svc of Object.values(rec)) {
+        if (!svc || typeof svc !== 'object') continue;
+        for (const slot of Object.values(svc)) {
+          if (!Array.isArray(slot)) continue;
+          for (const entry of slot) {
+            if (entry && entry[c.field] === c.from) {
+              entry[c.field] = c.to;
+              c.hits++;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/** Fail the build if a correction matched anything other than exactly one reading. */
+function assertCorrectionsApplied() {
+  const bad = corrections.filter((c) => c.hits !== 1);
+  if (!bad.length) return;
+  for (const c of bad) {
+    console.error(`CORRECTION matched ${c.hits} readings (expected 1): ${c.where}`);
+    console.error(`  looked for: ${c.from}`);
+  }
+  throw new Error(`${bad.length} correction(s) did not apply — see scripts/corrections.json`);
+}
+
 function services(rec) {
   const o = {};
   const serk = service(rec.serk); if (serk) o.serk = serk;
@@ -188,6 +243,7 @@ const audit = (rec, where) => {
     }
   }
 };
+const dailyOut = [];
 for (const rec of daily) {
   const [dd, mm] = rec.date.split('-').map(Number);
   audit(rec, `daily ${rec.date}`);
@@ -196,11 +252,10 @@ for (const rec of daily) {
     sinksar: (rec.snksar ?? []).map((s) => s.amharic).filter(Boolean),
     ...services(rec),
   };
+  dailyOut.push({ scope: { month: mm, day: dd }, record: byMonth[mm][dd] });
 }
-mkdirSync(join(out, 'daily'), { recursive: true });
-for (const [m, days] of Object.entries(byMonth)) {
-  writeFileSync(join(out, 'daily', `${m}.json`), JSON.stringify(days));
-}
+// Corrections rewrite the records in place, so this reaches byMonth too.
+correct('daily', dailyOut);
 
 // ---- seasonal ----
 const seasonal = JSON.parse(readFileSync(join(src, 'seasonal-gitsawe.json'), 'utf8'));
@@ -214,7 +269,7 @@ const seasonalOut = seasonal.map((rec) => {
     ...services(rec),
   };
 });
-writeFileSync(join(out, 'seasonal.json'), JSON.stringify(seasonalOut));
+correct('seasonal', seasonalOut.map((record) => ({ scope: record, record })));
 
 // ---- monthly ----
 const monthly = JSON.parse(readFileSync(join(src, 'monthly-gitsawe.json'), 'utf8'));
@@ -232,14 +287,24 @@ const monthlyOut = monthly.map((rec) => {
     ...services(rec),
   };
 });
-writeFileSync(join(out, 'monthly.json'), JSON.stringify(monthlyOut));
+correct('monthly', monthlyOut.map((record) => ({ scope: record, record })));
 
-// ---- book names for the app ----
+// ---- write ----
+// Nothing is written until every correction has found its reading, so a
+// correction that no longer applies leaves public/data/ as it was rather than
+// half rebuilt.
+assertCorrectionsApplied();
+mkdirSync(join(out, 'daily'), { recursive: true });
+for (const [m, days] of Object.entries(byMonth)) {
+  writeFileSync(join(out, 'daily', `${m}.json`), JSON.stringify(days));
+}
+writeFileSync(join(out, 'seasonal.json'), JSON.stringify(seasonalOut));
+writeFileSync(join(out, 'monthly.json'), JSON.stringify(monthlyOut));
 writeFileSync(join(out, 'books.json'), JSON.stringify(BOOKS));
 
 if (unmapped.size) {
   console.warn('UNMAPPED BOOK TITLES:');
   for (const [t, w] of unmapped) console.warn(`  "${t}" (${w})`);
 }
-const sizes = ['seasonal.json', 'monthly.json'].map((f) => f);
+
 console.log(`daily: 13 files; seasonal: ${seasonalOut.length}; monthly: ${monthlyOut.length}; unmapped titles: ${unmapped.size}`);

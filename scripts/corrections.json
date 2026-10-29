@@ -1,0 +1,12 @@
+[
+  {
+    "cycle": "monthly",
+    "where": "መስከረም ፱–፲፭ (ፍሬ) · መዝሙር፡ እኲት አንተ · ምስባክ ዘቅዳሴ",
+    "match": { "month": "meskerem", "fromDay": 9, "toDay": 15 },
+    "field": "g",
+    "from": "ምድርኒ ወሀበት ፍሬሃ። ወይባርከነ እግዚአብሔር አምላክነ። ወይባርከነ እግዚአብሔር።",
+    "to": "ምድርኒ ትሁብ ፍሬሃ። ወይባርከነ እግዚአብሔር አምላክነ። ወይባርከነ እግዚአብሔር።",
+    "source": "ethiopianorthodox.org scan, printed p. 164 (ወርኀ መስከረም): ምድርኒ ትሁብ ፍሬሃ።",
+    "note": "The two printed editions disagree on this one word. The older ethiopianorthodox.org book reads ትሁብ (imperfect — 'yields'); the parish scan at printed p. 380 reads ወሀበት (perfect — 'yielded'), which is also the received Ge'ez Psalter text of መዝ. ፷፮፥፯ and the LXX aorist. ትሁብ is what is chanted here, so that is what the app prints. The Amharic below it is left as the Amharic Bible has it (ሰጠች, perfect), so the two lines do not agree in tense."
+  }
+]
