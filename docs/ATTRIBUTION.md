@@ -68,8 +68,60 @@ once from the incipit beside it. Where the two disagree the incipit wins,
 because it identifies the verse on its own. That check caught a gospel read as
 Matthew 7:24 whose incipit (ወበእንተዝ እብለክሙ ኢትትከዙ) is plainly Matthew 6:25, so
 the record says 6:24. Citations the book does not print are left out rather
-than inferred: `tsige-4` carries its misbak text with no reference, because the
-book gives it as a cross-reference to Sene 24 vespers.
+than inferred.
+
+Where the book prints a cross-reference instead of the text, it is followed
+rather than treated as a dead end. `tsige-4` is the case: the misbak row gives
+the incipit and then **እም ፳ወ፭ ለሰኔ ገብ ሠርክ** — take it from the ዘሠርክ of Sene 25.
+That day is ወበዐተ ክረምት, the entry of the rains, which is why the Sunday that
+sings በዚአሁ ሐለፈ ክረምት borrows its misbak. The ዘሠርክ there is መዝ. ፸፫፥፲፮–፲፯ and
+carries all three chanted clauses, so `tsige-4` now holds the whole misbak and
+its reference rather than the opening clause alone. An earlier reading of this
+page took the numeral for ፳ወ፬ and pointed at Sene 24, whose ዘሠርክ is a different
+psalm altogether (፻፲፫፥፲፫–፲፬, ዐይን ቦሙ ወኢይሬእዩ); the incipit beside the
+cross-reference is what settles it, as above.
+
+Four more rows read the same way, and all five had been transcribed as though
+the incipit were the whole misbak — which leaves a deacon a line he cannot
+chant and, in two cases, no verse he can look up:
+
+| Record | The book's row | Resolved from | Now |
+|---|---|---|---|
+| `tsige-2` | ተዘከር እግዚኦ … ገብ ፍትሐት ዘምዕራፍ ፯ (ገጽ ፪፻፺፪) | ጥቅምት ፩ ዘቅዳሴ | መዝ. ፻፪፥፲፬–፲፭ |
+| `tsige-4` | አንተ ፈጠርከ … እም ፳ወ፭ ለሰኔ ገብ ሠርክ | ሰኔ ፳፭ ዘሠርክ | መዝ. ፸፫፥፲፮–፲፯ |
+| `astemhro-1` | ኢትዝክር ለነ … ገብ ምዕራፍ ዘዐርብ | ጾመ ነቢያት ፩ኛ | መዝ. ፸፰፥፰–፱ |
+| `astemhro-2` | ኵሎ ዘፈቀደ … ገብ ምዕራፍ | ጾመ ነቢያት ፪ኛ | መዝ. ፻፴፬፥፮–፯ |
+| `astemhro-3` | ቅረቡ ኀቤሁ … ገብ ምዕራፍ | ጾመ ነቢያት ፫ኛ | መዝ. ፴፫፥፭–፮ |
+
+`tsige-2` also read ፻፪፥፲፬–፲፬, a single verse, which is what you get by
+numbering the incipit rather than the misbak. Its third clause — ወከመ ጽጌ ገዳም
+ከማሁ ይፈሪ, *as a flower of the field, so he flourisheth* — is the line that
+earns the Sunday its place in ዘመነ ጽጌ, and it was the clause missing.
+
+The three ዘአስተምህር rows point at a page of the ፍትሐት section rather than at a
+date, and those page numerals do not survive this scan legibly. They are
+resolved instead through the propers: the book indexes these Sundays by day
+window (ኅዳር ፩–፲፪, ፲፫–፲፱, ፳–፳፮) and the upstream dataset indexes the same three
+by nth Sunday of ጾመ ነቢያት, and the two agree on every epistle, the Acts and the
+gospel, bar a verse either way, as well as on the order of the three misbak.
+`tests/misbak.test.ts` holds that pairing, so if either side is ever re-read
+into a different Sunday the link breaks loudly rather than quietly.
+
+The two schemes do not land these on the same dates — ኅዳር ፳–፳፮ and the ፩ኛ
+Sunday of ጾመ ነቢያት can be the same Sunday — so both records stay, and the app
+offers whichever the day matches with the other beside it, as it already does
+for Christmastide below. The pairing is about which propers belong together,
+not about which Sunday they fall on.
+
+Correcting a misbak's citation moves the key its recordings are filed under in
+`public/data/videos.json`, which is written by hand. `tsige-2` went from
+፻፪፥፲፬–፲፬ to ፻፪፥፲፬–፲፭ and left its chant (ምስባክ ጥቅምት ፯ ተዘከር እግዚኦ) stranded under
+the old key, where nothing could reach it; the key was moved to match.
+`tests/media.test.ts` now fails on any recording no misbak can reach. Giving
+the three ዘአስተምህር records a reference had the opposite effect: with no `b`/`c`
+to key on they could never match a recording, and all three turned out to have
+one waiting — one of which names its own window, ከኅዳር ፳ እስከ ኅዳር ፳፮, and so
+confirms the Sunday as well as the chant.
 
 ### A note on how the book indexes Sundays
 

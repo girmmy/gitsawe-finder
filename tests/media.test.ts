@@ -241,4 +241,32 @@ describe('the curated videos', () => {
       expect(ref, key).toMatch(/^[A-Z0-9]{3}:\d+:\d+(-\d+)?$/);
     }
   });
+
+  /**
+   * These keys are written by hand against a citation in the data, so
+   * correcting a citation silently detaches the recording from the misbak it
+   * was found for — the misbak goes back to saying there is none, and nothing
+   * else complains. Correcting ፻፪፥፲፬–፲፬ to ፻፪፥፲፬–፲፭ did exactly that.
+   */
+  it('has nothing stranded by a citation that has since been corrected', () => {
+    const reachable = new Set<string>();
+    const cycles: DayRecord[] = [
+      ...Object.values(daily).flatMap((month) => Object.values(month)),
+      ...load('seasonal.json'),
+      ...load('monthly.json'),
+      ...load('sunday-extra.json'),
+    ];
+    for (const rec of cycles) {
+      for (const svc of ['serk', 'negs', 'kidassie'] as const) {
+        for (const m of rec[svc]?.msbak ?? []) {
+          const ref = misbakRefKey(m);
+          if (ref) reachable.add(ref);
+        }
+      }
+    }
+    for (const key of Object.keys(videos)) {
+      const ref = key.includes('|') ? key.split('|')[1] : key;
+      expect(reachable.has(ref), `${key} reaches no misbak`).toBe(true);
+    }
+  });
 });

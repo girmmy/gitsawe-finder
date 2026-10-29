@@ -12,14 +12,16 @@
     "kidassie": {
       "msbak": [
         {
-          "g": "ተዘከር እግዚኦ ከመ መሬት ንሕነ።",
+          "g": "ተዘከር እግዚኦ ከመ መሬት ንሕነ። ሰብእሰ ከመ ሣዕር መዋዕሊሁ። ወከመ ጽጌ ገዳም ከማሁ ይፈሪ።",
           "bt": "መዝሙረ ዳዊት",
           "b": "PSA",
           "c": 102,
           "s": 14,
-          "n": 14,
+          "n": 15,
           "el": [
-            "Remember, O Lord, that we are dust."
+            "Remember, O Lord, that we are dust;",
+            "as for man, his days are as grass;",
+            "as a flower of the field, so he flourisheth."
           ]
         }
       ],
@@ -82,10 +84,16 @@
     "kidassie": {
       "msbak": [
         {
-          "g": "አንተ ፈጠርከ ፀሐየ ወወርኀ።",
+          "g": "አንተ ፈጠርከ ፀሐየ ወወርኀ። ወአንተ ገበርከ አድባረ ምድር ኵሎ። ክረምተ ወሐጋየ ዘአንተ ፈጠርከ።",
           "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 73,
+          "s": 16,
+          "n": 17,
           "el": [
-            "Thou hast made the sun and the moon."
+            "Thou hast made the sun and the moon;",
+            "and thou hast set all the borders of the earth;",
+            "winter and summer, thou hast made them."
           ]
         }
       ],
@@ -218,10 +226,16 @@
     "kidassie": {
       "msbak": [
         {
-          "g": "ኢትዝክር ለነ አበሳነ ዘትካት።",
+          "g": "ኢትዝክር ለነ አበሳነ ዘትካት። ፍጡነ ይርከበነ ሣህልከ እግዚኦ። እስመ ተመንደብነ ፈድፋደ።",
           "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 78,
+          "s": 8,
+          "n": 9,
           "el": [
-            "Remember not against us our former iniquities."
+            "O remember not against us former iniquities;",
+            "let thy tender mercies speedily prevent us;",
+            "for we are brought very low."
           ]
         }
       ],
@@ -285,10 +299,16 @@
     "kidassie": {
       "msbak": [
         {
-          "g": "ኵሎ ዘፈቀደ ገብረ እግዚአብሔር።",
+          "g": "ኵሎ ዘፈቀደ ገብረ እግዚአብሔር። በሰማይኒ ወበምድርኒ። በባሕርኒ ወበኵሉ ቀላያት።",
           "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 134,
+          "s": 6,
+          "n": 7,
           "el": [
-            "Whatsoever the Lord pleased, that did he."
+            "Whatsoever the Lord pleased, that did he,",
+            "in heaven, and in earth,",
+            "in the seas, and all deep places."
           ]
         }
       ],
@@ -351,10 +371,16 @@
     "kidassie": {
       "msbak": [
         {
-          "g": "ቅረቡ ኀቤሁ።",
+          "g": "ቅረቡ ኀቤሁ ወያበርህ ለክሙ። ወኢይትኀፈር ገጽክሙ። ዝንቱ ነዳይ ጸርሐ ወእግዚአብሔር ሰምዖ።",
           "bt": "መዝሙረ ዳዊት",
+          "b": "PSA",
+          "c": 33,
+          "s": 5,
+          "n": 6,
           "el": [
-            "Draw near unto him."
+            "Draw near unto him, and he shall enlighten you;",
+            "and your faces shall not be ashamed.",
+            "This poor man cried, and the Lord heard him."
           ]
         }
       ],
